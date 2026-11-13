@@ -67,6 +67,9 @@ input.ro{background:#101b27!important;color:var(--muted)!important}
 .curbar button.on{background:rgba(77,156,255,.18);border-color:var(--a1);color:#9ec8ff}
 .curbar .rate{margin-left:auto;font-size:11.5px;color:var(--muted);line-height:1.5}
 .curbar .cap{width:100%;margin:0;font-size:11.5px;color:var(--muted)}
+.curbar .cap b{color:var(--a1)}
+select:disabled{opacity:.72;cursor:not-allowed}
+[data-amt]{font-variant-numeric:tabular-nums}
 nav .wrap{flex-wrap:nowrap;overflow-x:auto;white-space:nowrap;scrollbar-width:thin}
 nav .wrap::-webkit-scrollbar{height:5px}
 nav .wrap::-webkit-scrollbar-thumb{background:var(--line);border-radius:5px}
@@ -110,13 +113,15 @@ def nav(active):
            "".join('<a href="%s">%s</a>' % (u, t) for u, t in anchors) + '</div></nav>'
 
 
-def frow(id_, label, val, unit="", hint="", typ="number", step="any", ro=False):
+def frow(id_, label, val, unit="", hint="", typ="number", step="any", ro=False,
+         money=None, hint_raw=False):
     roattr = ' readonly class="ro"' if ro else ''
-    inp = ('<input type="%s" id="%s" value="%s" step="%s"%s data-k="%s">'
-           % (typ, id_, E(val), step, roattr, id_))
-    h = '<div class="hint">%s</div>' % E(hint) if hint else ""
-    return ('<div class="frow"><label for="%s">%s</label>%s<span class="unit">%s</span></div>%s'
-            % (id_, label, inp, E(unit), h))
+    mattr = ' data-money="%s"' % money if money else ''
+    inp = ('<input type="%s" id="%s" value="%s" step="%s"%s%s data-k="%s">'
+           % (typ, id_, E(val), step, roattr, mattr, id_))
+    h = '<div class="hint">%s</div>' % (hint if hint_raw else E(hint)) if hint else ""
+    return ('<div class="frow"><label for="%s">%s</label>%s<span class="unit" data-u="%s">%s</span></div>%s'
+            % (id_, label, inp, id_, E(unit), h))
 
 
 def sel(id_, label, options, selected=""):
@@ -202,8 +207,14 @@ FORM = r"""
 """
 
 FORM = FORM.format(
-    sel_priceCcy=sel("priceCcy", "<b>车价币种</b>", [("CNY", "人民币 CNY"), ("USD", "美元 USD"), ("RUB", "卢布 RUB")], "CNY"),
-    f_price=frow("price", "<b>单台车价（含税）</b>", "128000", "", "二手车以收购发票价为准"),
+    sel_priceCcy=('<div class="frow"><label for="priceCcy">车价币种</label>'
+                  '<select id="priceCcy" data-k="priceCcy" disabled>'
+                  '<option value="RUB">跟随全局 · RUB</option>'
+                  '<option value="USD">跟随全局 · USD</option>'
+                  '<option value="CNY">跟随全局 · CNY</option>'
+                  '</select></div>'),
+    f_price=frow("price", "<b>单台车价（含税）</b>", "128000", "CNY",
+                 "二手车以收购发票价为准；数值随上方全局计价币种自动折算", money="CNY"),
     f_cnyUsd=frow("cnyUsd", "CNY / USD 汇率", "6.70", "", "由俄央行 2026-11-12 交叉价推算，请按实际结汇价改"),
     f_qty=frow("qty", "数量", "1", "台"),
     sel_importer=sel("importer", "进口主体", [("company", "法人 · 商业进口"), ("personal", "个人 · 自用（限 1 辆/年）")], "company"),
@@ -214,27 +225,33 @@ FORM = FORM.format(
     check_utilAuto=check("utilCoefAuto", "自动查表选系数", True),
     sel_term=sel("term", "<b>贸易术语 / 报价口径</b>", [("EXW", "EXW 工厂交货"), ("FOB", "FOB 装运港"), ("CIF", "CIF 到岸"), ("DDP", "DDP 完税落地")], "CIF"),
     sel_freightPreset=sel("freightPreset", "运输方式预设", [(k, t) for k, t, _, _ in FREIGHT_PRESETS], "rail"),
-    f_freight=frow("freight", "国际运费（单台）", "4000", "USD"),
+    f_freight=frow("freight", "国际运费（单台）", "4000", "USD", money="USD"),
     f_insRate=frow("insRate", "保险费率", "0.30", "%"),
-    f_exportLocal=frow("exportLocal", "中国出口本地费", "300", "USD"),
+    f_exportLocal=frow("exportLocal", "中国出口本地费", "300", "USD", money="USD"),
     f_usdRub=frow("usdRub", "<b>USD / RUB 汇率</b>", "82.98", "", "俄央行 2026-11-13 官方 82.9803"),
     f_customsAdj=frow("customsAdj", "海关估价调整", "0", "%", "低报会被重新核价并罚款"),
     sel_dutyPreset=sel("dutyPreset", "关税快速预设", [("15", "15% 从价"), ("20", "20%（默认）"), ("25", "25%"), ("30", "30%"), ("38", "38% 上限")], "20"),
     f_dutyRate=frow("dutyRate", "进口关税", "20", "%"),
     sel_vatPreset=sel("vatPreset", "增值税口径", [("20", "20%（旧口径）"), ("22", "22%（425-ФЗ）")], "22"),
     f_vatRate=frow("vatRate", "增值税 НДС", "22", "%"),
-    f_utilBase=frow("utilBase", "报废税基准", "20000", "RUB", "乘用车 20,000；卡车/客车/挂车 150,000"),
-    f_exciseManual=frow("exciseManual", "消费税总额（手填）", "0", "RUB"),
+    f_utilBase=frow("utilBase", "报废税基准", "20000", "RUB",
+                    '乘用车 <span data-amt="20000" data-from="RUB">20,000 ₽</span>；'
+                    '卡车/客车/挂车 <span data-amt="150000" data-from="RUB">150,000 ₽</span>',
+                    money="RUB", hint_raw=True),
+    f_exciseManual=frow("exciseManual", "消费税总额（手填）", "0", "RUB", money="RUB"),
     check_exciseAuto=check("exciseAuto", "按马力阶梯自动算消费税", True),
-    f_customsFeeManual=frow("customsFeeManual", "清关手续费（手填）", "13541", "RUB"),
+    f_customsFeeManual=frow("customsFeeManual", "清关手续费（手填）", "13541", "RUB", money="RUB"),
     check_feeAuto=check("customsFeeAuto", "按 2026 分档自动算", True),
-    f_sbkts=frow("sbkts", "СБКТС / ОТТС 认证", "40000", "RUB"),
-    f_era=frow("era", "ЭРА-ГЛОНАСС 加装", "0", "RUB"),
-    f_broker=frow("broker", "报关代理 + 装卸", "40000", "RUB"),
-    f_inland=frow("inland", "俄境内运输", "0", "RUB", "DDP 才计入；海参崴→莫斯科 150K–250K"),
-    f_pdi=frow("pdi", "PDI / 整备 / 仓储", "15000", "RUB"),
+    f_sbkts=frow("sbkts", "СБКТС / ОТТС 认证", "40000", "RUB", money="RUB"),
+    f_era=frow("era", "ЭРА-ГЛОНАСС 加装", "0", "RUB", money="RUB"),
+    f_broker=frow("broker", "报关代理 + 装卸", "40000", "RUB", money="RUB"),
+    f_inland=frow("inland", "俄境内运输", "0", "RUB",
+                  'DDP 才计入；海参崴→莫斯科 <span data-amt="150000" data-from="RUB">150,000 ₽</span>–'
+                  '<span data-amt="250000" data-from="RUB">250,000 ₽</span>',
+                  money="RUB", hint_raw=True),
+    f_pdi=frow("pdi", "PDI / 整备 / 仓储", "15000", "RUB", money="RUB"),
     f_warrantyRate=frow("warrantyRate", "质保售后准备金", "2.0", "% 车价"),
-    f_otherFee=frow("otherFee", "其他杂费", "0", "RUB"),
+    f_otherFee=frow("otherFee", "其他杂费", "0", "RUB", money="RUB"),
     f_margin=frow("margin", "<b>目标毛利 / 加成</b>", "12", "%"),
     sel_marginMode=sel("marginMode", "利润算法", [("gross", "毛利率法 成本÷(1−r)"), ("markup", "加成法 成本×(1+r)")], "gross"),
     f_refundRate=frow("refundRate", "中国出口退税", "13", "%", "计入我方收益，不影响对客报价"),
@@ -242,9 +259,22 @@ FORM = FORM.format(
 )
 
 # 参数来源表
+def amt_default(val, unit, name):
+    """金额型默认值包一层动态标记；汇率那两行是无量纲比率，不参与换算。"""
+    if "汇率" in name:
+        return E(val)
+    try:
+        x = float(str(val).replace(",", ""))
+    except (TypeError, ValueError):
+        return E(val)
+    if unit not in ("RUB", "CNY", "USD"):
+        return E(val)
+    return '<span data-amt="%s" data-from="%s">%s %s</span>' % (x, unit, E(val), E(unit))
+
+
 param_rows = "".join(
     "<tr><td><b>%s</b></td><td class=\"num\">%s</td><td>%s</td><td><span class=\"tag %s\">%s</span></td><td>%s</td><td>%s</td></tr>"
-    % (E(a), E(b), E(c), "a" if d.startswith("A") else "c" if d.startswith("C") else "",
+    % (E(a), amt_default(b, c, a), E(c), "a" if d.startswith("A") else "c" if d.startswith("C") else "",
        E(d), E(e), E(f))
     for a, b, c, d, e, f in PARAMS)
 src_rows = "".join(
@@ -255,11 +285,14 @@ conf_rows = "".join(
     "<tr><td><b>%s</b></td><td>%s</td><td>%s</td></tr>" % (E(a), E(b), E(c))
     for a, b, c in CONFLICTS)
 freight_rows = "".join(
-    "<tr><td><b>%s</b></td><td class=\"num\">$%s</td><td>%s</td></tr>" % (E(t), f"{v:,}", E(n))
+    "<tr><td><b>%s</b></td><td class=\"num\"><span data-amt=\"%s\" data-from=\"USD\">$%s</span></td><td>%s</td></tr>"
+    % (E(t), v, f"{v:,}", E(n))
     for _, t, v, n in FREIGHT_PRESETS)
 util_rows = "".join(
-    "<tr><td><b>%s</b></td><td class=\"num\">%.2f</td><td class=\"num\">%.2f</td><td class=\"num\">%s ₽</td><td class=\"num\">%s ₽</td></tr>"
-    % (E(n), a, b, f"{int(20000*a):,}", f"{int(20000*b):,}")
+    "<tr><td><b>%s</b></td><td class=\"num\">%.2f</td><td class=\"num\">%.2f</td>"
+    "<td class=\"num\"><span data-amt=\"%d\" data-from=\"RUB\">%s ₽</span></td>"
+    "<td class=\"num\"><span data-amt=\"%d\" data-from=\"RUB\">%s ₽</span></td></tr>"
+    % (E(n), a, b, int(20000*a), f"{int(20000*a):,}", int(20000*b), f"{int(20000*b):,}")
     for _, _, a, b, n in UTIL_COMMERCIAL)
 
 DL = [
@@ -315,15 +348,78 @@ var refCur=function(n,v){
   var vv=v||CV||{usdRub:82.98,cnyUsd:6.70};
   return CUR==="RUB" ? "$"+f2((n||0)/(vv.usdRub||82.98)) : fmt(n)+" ₽";
 };
+/* ===== 全站计价币种：每个金额字段各有一个「锚定币种」 =====
+   price 锚 CNY（中国采购）、freight/exportLocal 锚 USD（国际物流）、
+   其余俄方费用锚 RUB（法规/本地服务）。BASE[k] 存锚定币种的金额，
+   输入框与所有结果只是它按当前汇率的投影，切换币种不改变锚定值。 */
+var MONEY={
+ price:{base:"CNY",native:"RUB"},
+ freight:{base:"USD",native:"USD"},
+ exportLocal:{base:"USD",native:"USD"},
+ utilBase:{base:"RUB",native:"RUB"},
+ exciseManual:{base:"RUB",native:"RUB"},
+ customsFeeManual:{base:"RUB",native:"RUB"},
+ sbkts:{base:"RUB",native:"RUB"},
+ era:{base:"RUB",native:"RUB"},
+ broker:{base:"RUB",native:"RUB"},
+ inland:{base:"RUB",native:"RUB"},
+ pdi:{base:"RUB",native:"RUB"},
+ otherFee:{base:"RUB",native:"RUB"}
+};
+var MK=Object.keys(MONEY),BASE={};
+function ratesOf(over){
+ var ue=$("usdRub"),ce=$("cnyUsd");
+ var r=ue?(parseFloat(ue.value)||82.98):82.98;
+ var c=ce?(parseFloat(ce.value)||6.70):6.70;
+ if(over){if(over.usdRub)r=over.usdRub;if(over.cnyUsd)c=over.cnyUsd}
+ return {usdRub:r,cnyUsd:c};
+}
+function rubPer(ccy,v){
+ if(ccy==="USD")return v.usdRub;
+ if(ccy==="CNY")return v.usdRub/v.cnyUsd;
+ return 1;
+}
+function conv(x,from,to,v){return (x||0)*rubPer(from,v)/rubPer(to,v)}
+function putNum(x){
+ var s=(x||0).toFixed(2);
+ if(s.slice(-3)===".00")s=s.slice(0,-3);
+ return s;
+}
+function dispAmt(x,from,v){
+ var y=conv(x,from,CUR,v),d=CUR==="RUB"?0:2;
+ return (CUR==="RUB"?"":sym())+Number(y).toLocaleString(CUR_INFO[CUR].loc,{minimumFractionDigits:d,maximumFractionDigits:d})+(CUR==="RUB"?" "+sym():"");
+}
+function initBase(){MK.forEach(function(k){var e=$(k);BASE[k]=e?(parseFloat(e.value)||0):0})}
+function syncFromInput(k){
+ if(!MONEY[k])return;var e=$(k);if(!e)return;
+ BASE[k]=conv(parseFloat(e.value)||0,CUR,MONEY[k].base,ratesOf());
+ e.setAttribute("data-proj",e.value);
+}
+function projectAll(){
+ var v=ratesOf();
+ MK.forEach(function(k){
+  var e=$(k);if(!e)return;
+  var s=putNum(conv(BASE[k]||0,MONEY[k].base,CUR,v));
+  e.value=s;e.setAttribute("data-proj",s);
+  var u=document.querySelector('[data-u="'+k+'"]');if(u)u.textContent=ctag();
+ });
+ var pc=$("priceCcy");if(pc)pc.value=CUR;
+}
+function applyStaticCurrency(){
+ var v=ratesOf();
+ document.querySelectorAll("[data-amt][data-from]").forEach(function(s){
+  s.textContent=dispAmt(parseFloat(s.getAttribute("data-amt"))||0,s.getAttribute("data-from"),v);
+ });
+}
 var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})};
 var COLORS={car:"#4d9cff",local:"#7c8fb0",freight:"#34c9a1",adj:"#aa84f7",duty:"#f5aa3c",
             excise:"#e9784f",vat:"#eb6950",util:"#d94f6a",fee:"#8fa3b8",svc:"#5bc0be"};
 
 var PRESETS={
- base:{price:128000,priceCcy:"CNY",disp:1500,power:150,engine:"ice",age:"new",importer:"company",model:"中国产 SUV 1.5T / 150hp"},
- power:{price:238000,priceCcy:"CNY",disp:2000,power:200,engine:"ice",age:"new",importer:"company",model:"中国产 2.0T 中大型 SUV / 200hp"},
- bev:{price:168000,priceCcy:"CNY",disp:0,power:204,engine:"bev",age:"new",importer:"company",model:"中国产纯电 SUV / 150kW"},
- used:{price:86000,priceCcy:"CNY",disp:1800,power:150,engine:"ice",age:"old",importer:"company",model:"3 年车龄二手 SUV / 150hp"}
+ base:{price:128000,disp:1500,power:150,engine:"ice",age:"new",importer:"company",model:"中国产 SUV 1.5T / 150hp"},
+ power:{price:238000,disp:2000,power:200,engine:"ice",age:"new",importer:"company",model:"中国产 2.0T 中大型 SUV / 200hp"},
+ bev:{price:168000,disp:0,power:204,engine:"bev",age:"new",importer:"company",model:"中国产纯电 SUV / 150kW"},
+ used:{price:86000,disp:1800,power:150,engine:"ice",age:"old",importer:"company",model:"3 年车龄二手 SUV / 150hp"}
 };
 var FREIGHT={sea:2500,rail:4000,truck:1200,container:3000};
 var EXCISE=[[0,90,0],[90,150,63],[150,200,610],[200,300,1000],[300,400,1036],[400,1e9,1128]];
@@ -342,10 +438,11 @@ function utilAuto(disp,age,power,importer){
   return {c:137,personal:false,note:"排量超表，取 137+ 下限"};
 }
 function readV(over){
-  var v={};
-  ["model","price","cnyUsd","qty","disp","power","utilCoefManual","freight","insRate","exportLocal",
-   "usdRub","customsAdj","dutyRate","vatRate","utilBase","exciseManual","customsFeeManual","sbkts",
-   "era","broker","inland","pdi","warrantyRate","otherFee","margin","refundRate"].forEach(function(k){v[k]=N(k)});
+  var v={},rt=ratesOf(over);
+  ["cnyUsd","qty","disp","power","utilCoefManual","insRate","usdRub","customsAdj",
+   "dutyRate","vatRate","warrantyRate","margin","refundRate"].forEach(function(k){v[k]=N(k)});
+  v.usdRub=rt.usdRub;v.cnyUsd=rt.cnyUsd;
+  MK.forEach(function(k){v[k]=conv(BASE[k]||0,MONEY[k].base,MONEY[k].native,v)});
   ["priceCcy","importer","age","engine","term","marginMode","freightPreset","dutyPreset","vatPreset"].forEach(function(k){v[k]=S(k)});
   ["utilCoefAuto","exciseAuto","customsFeeAuto","refundOn"].forEach(function(k){v[k]=C(k)});
   v.model=S("model");
@@ -354,8 +451,8 @@ function readV(over){
   return v;
 }
 function compute(v){
-  var priceUSD = v.priceCcy==="CNY" ? v.price/v.cnyUsd : (v.priceCcy==="RUB" ? v.price/v.usdRub : v.price);
-  var priceCNY = v.priceCcy==="CNY" ? v.price : (v.priceCcy==="RUB" ? v.price/v.usdRub*v.cnyUsd : v.price*v.cnyUsd);
+  var priceUSD = v.price/v.usdRub;          /* v.price 已归一化为 RUB */
+  var priceCNY = priceUSD*v.cnyUsd;
   var r = v.usdRub;
   var insurance = (priceUSD+v.exportLocal+v.freight)*v.insRate/100;
   var carRUB=priceUSD*r, localRUB=v.exportLocal*r, frtRUB=(v.freight+insurance)*r;
@@ -404,7 +501,7 @@ function rowsTable(head,rows,cls){
     '</tr></thead><tbody>'+rows.join("")+'</tbody></table></div>';
 }
 function render(x){
-  var v=x.v;CV=v;updateRate();
+  var v=x.v;CV=v;updateRate();applyStaticCurrency();
   // KPI
   var kp=[["DDP 完税落地成本",moneyS(x.landed,v),altStr(x.landed,v),"hl"],
     ["对客报价 · "+v.term,moneyS(x.quote,v),altStr(x.quote,v),"hl2"],
@@ -457,7 +554,7 @@ function render(x){
   $("scenesTbl").innerHTML=rowsTable(["情景","报废税系数","俄方税费 "+ctag(),"落地成本 "+ctag(),"较基准 "+ctag(),"变化 %"],sr,"");
   // 提示
   var warns=[];
-  if(v.importer==="personal"&&v.power>160)warns.push("个人自用优惠档已失效：功率 >160hp，已按商业系数 "+f2(x.uc)+" 计算，报废税从 3,400 ₽ 级别跳到 "+moneyS(x.util,v)+"。");
+  if(v.importer==="personal"&&v.power>160)warns.push("个人自用优惠档已失效：功率 >160hp，已按商业系数 "+f2(x.uc)+" 计算，报废税从 "+moneyS(3400,v)+" 级别跳到 "+moneyS(x.util,v)+"。");
   if(v.importer==="personal"&&v.power<=160&&v.disp<=3000)warns.push("使用个人自用优惠系数 "+f2(x.uc)+"：须同时满足 ≤3 年 / ≤3.0L / ≤160hp / 一年 1 辆 / 12 个月内不得转售，商业批量不适用。");
   if(v.power>160&&v.importer==="company")warns.push("功率 >160hp：公开资料未给出完整的商业功率分档表，当前系数来自排量×车龄查表，请按报关行核定后手动覆盖。");
   if(v.exciseAuto&&v.engine!=="bev"&&v.power>=145&&v.power<=165)warns.push("消费税阶梯边界公开资料写法含糊，本工具按「≤150hp 归 63 ₽/hp、>150 归 610 ₽/hp」处理；当前 "+fmt(v.power)+"hp 适用 "+excisePerHp(v.power)+" ₽/hp。若报关行按另一口径核定，请取消自动并手填总额。");
@@ -465,7 +562,7 @@ function render(x){
   if(v.term==="DDP")warns.push("DDP 需俄方具备进口主体与清关资质，中方通常不能直接作为俄进口商；且需垫付全部俄方税费，资金与合规风险最高。");
   if(v.customsAdj!==0)warns.push("已计入海关估价调整 "+f2(v.customsAdj)+"%：低报货值会被俄海关重新核价并罚款，也会连带影响国内退税单证一致性。");
   warns.push("报废税系数与增值税率存在来源冲突，且 2027-01-01 预计再上调 10–20%；正式报价请让俄方报关行书面确认后重算。");
-  if(CUR!=="RUB")warns.push("当前展示币种为 "+ctag()+"，按 USD/RUB "+f2(v.usdRub)+"、CNY/USD "+f2(v.cnyUsd)+" 换算；内部计算、税率与法规阈值仍以卢布为准。");
+  warns.push("全站计价币种 "+ctag()+"：左侧金额输入、单位、预设与右侧结果、报价单、CSV 均按此币种；车价锚人民币、运费锚美元、俄方费用锚卢布，按 USD/RUB "+f2(v.usdRub)+"、CNY/USD "+f2(v.cnyUsd)+" 折算，切换币种不改变落地成本。");
   $("warns").innerHTML=warns.map(function(w){return "<li>"+esc(w)+"</li>"}).join("");
   // 参数快照 + 报价单
   window.__X=x;
@@ -557,19 +654,40 @@ function downloadCSV(){
   a.download="russia-quotation-"+ctag()+".csv";a.click();URL.revokeObjectURL(a.href);
 }
 function saveParams(){
-  var d={};document.querySelectorAll("[data-k]").forEach(function(e){d[e.id]=e.type==="checkbox"?e.checked:e.value});
-  try{localStorage.setItem("ru_quote_params",JSON.stringify(d));$("saveMsg").textContent="参数已保存到本机浏览器（"+Object.keys(d).length+" 项）"}catch(e){$("saveMsg").textContent="保存失败："+e.message}
+  var d={__ccy:CUR,__base:{}};
+  MK.forEach(function(k){d.__base[k]=BASE[k]});
+  document.querySelectorAll("[data-k]").forEach(function(e){
+    if(MONEY[e.id])return;                       /* 金额存锚定值，不存显示值 */
+    d[e.id]=e.type==="checkbox"?e.checked:e.value;
+  });
+  try{localStorage.setItem("ru_quote_params",JSON.stringify(d));
+    $("saveMsg").textContent="参数已保存到本机浏览器（"+Object.keys(d).length+" 项，金额按锚定币种存储）"}catch(e){$("saveMsg").textContent="保存失败："+e.message}
 }
 function loadParams(){
-  try{var s=localStorage.getItem("ru_quote_params");if(!s)return false;var d=JSON.parse(s);
-    Object.keys(d).forEach(function(k){var e=$(k);if(!e)return;if(e.type==="checkbox")e.checked=!!d[k];else e.value=d[k]});
-    $("saveMsg").textContent="已恢复上次保存的参数";return true}catch(e){return false}
+  try{
+    var s=localStorage.getItem("ru_quote_params");if(!s)return null;
+    var d=JSON.parse(s);
+    Object.keys(d).forEach(function(k){
+      if(k.charAt(0)==="_")return;
+      var e=$(k);if(!e)return;
+      if(e.type==="checkbox")e.checked=!!d[k];else e.value=d[k];
+    });
+    if(d.__base)MK.forEach(function(k){if(typeof d.__base[k]==="number")BASE[k]=d.__base[k]});
+    $("saveMsg").textContent="已恢复上次保存的参数（金额按锚定值存储，随当前计价币种折算）";
+    return d.__ccy||null;
+  }catch(e){return null}
 }
 function applyPreset(name){
   var p=PRESETS[name];if(!p)return;
-  Object.keys(p).forEach(function(k){var e=$(k);if(!e)return;if(e.type==="checkbox")e.checked=!!p[k];else e.value=p[k]});
+  BASE.price=p.price;                              /* 预设车价按人民币锚定 */
+  Object.keys(p).forEach(function(k){
+    if(k==="price")return;
+    var e=$(k);if(!e)return;
+    if(e.type==="checkbox")e.checked=!!p[k];else e.value=p[k];
+  });
+  projectAll();
   syncCoef();render(compute(readV()));
-  try{history.replaceState(null,"","?preset="+name)}catch(e){}
+  try{history.replaceState(null,"","?preset="+name+(CUR!=="RUB"?"&ccy="+CUR:""))}catch(e){}
 }
 function syncCoef(){
   var v=readV(),ua=utilAuto(v.disp,v.age,v.power,v.importer);
@@ -580,23 +698,37 @@ function updateRate(){
   var v=readV(),e=$("curRate");
   if(e)e.textContent="1 USD = "+f2(v.usdRub)+" ₽ ｜ 1 USD = "+f2(v.cnyUsd)+" CNY";
 }
-function setCur(c,save){
+function setCur(c,save,noSync){
   if(!CUR_INFO[c])c="RUB";
+  if(!noSync)MK.forEach(function(k){
+    var e=$(k);
+    if(e&&e.value!==e.getAttribute("data-proj"))syncFromInput(k);
+  });   /* 只固化未同步的手工编辑，避免显示精度被反复回算造成漂移 */
   CUR=c;
   document.querySelectorAll("#curbar button[data-ccy]").forEach(function(b){
     b.classList.toggle("on",b.getAttribute("data-ccy")===c)});
   if(save)try{localStorage.setItem("ru_quote_ccy",c)}catch(e){}
+  projectAll();applyStaticCurrency();
   syncCoef();render(compute(readV()));
 }
 function bind(){
   document.querySelectorAll("[data-preset]").forEach(function(b){b.addEventListener("click",function(){applyPreset(b.dataset.preset)})});
-  $("freightPreset").addEventListener("change",function(){$("freight").value=FREIGHT[this.value]||0;render(compute(readV()))});
+  $("freightPreset").addEventListener("change",function(){BASE.freight=FREIGHT[this.value]||0;projectAll();render(compute(readV()))});
   $("dutyPreset").addEventListener("change",function(){$("dutyRate").value=this.value;render(compute(readV()))});
   $("vatPreset").addEventListener("change",function(){$("vatRate").value=this.value;render(compute(readV()))});
-  $("priceCcy").addEventListener("change",function(){render(compute(readV()))});
+  /* 车价币种已跟随全站计价币种，不再单独绑定 */
   document.querySelectorAll(".form-panel input,.form-panel select").forEach(function(e){
-    e.addEventListener("input",function(){if(["disp","age","power","importer","utilCoefAuto"].indexOf(e.id)>=0)syncCoef();render(compute(readV()))});
-    e.addEventListener("change",function(){if(["disp","age","power","importer","utilCoefAuto"].indexOf(e.id)>=0)syncCoef();render(compute(readV()))});
+    e.addEventListener("input",function(){
+      if(MONEY[e.id])syncFromInput(e.id);
+      if(["disp","age","power","importer","utilCoefAuto"].indexOf(e.id)>=0)syncCoef();
+      render(compute(readV()));
+    });
+    e.addEventListener("change",function(){
+      if(MONEY[e.id])syncFromInput(e.id);
+      if(e.id==="usdRub"||e.id==="cnyUsd")projectAll();  /* 汇率失焦后按新汇率重投影 */
+      if(["disp","age","power","importer","utilCoefAuto"].indexOf(e.id)>=0)syncCoef();
+      render(compute(readV()));
+    });
   });
   document.querySelectorAll("#curbar button[data-ccy]").forEach(function(b){
     b.addEventListener("click",function(){setCur(b.getAttribute("data-ccy"),true)});
@@ -609,10 +741,13 @@ function bind(){
   $("btnCsv").addEventListener("click",downloadCSV);
   $("btnPrint").addEventListener("click",function(){window.print()});
 }
-loadParams();bind();
+initBase();
+var loadedCcy=loadParams();
+bind();
 var cm=/[?&]ccy=(RUB|USD|CNY)/i.exec(location.search),saved=null;
 try{saved=localStorage.getItem("ru_quote_ccy")}catch(e){}
-setCur(cm?cm[1].toUpperCase():(saved&&CUR_INFO[saved]?saved:"RUB"),false);
+var target=cm?cm[1].toUpperCase():((loadedCcy&&CUR_INFO[loadedCcy])?loadedCcy:((saved&&CUR_INFO[saved])?saved:"RUB"));
+setCur(target,false,true);
 var pm=/[?&]preset=(base|power|bev|used)/.exec(location.search);
 if(pm)applyPreset(pm[1]);
 })();
@@ -637,18 +772,18 @@ BODY = r"""<!DOCTYPE html>
 默认参数取自 2026 年公开法规与行业实操资料，逐条标了来源与证据等级（见「参数来源」）。俄罗斯整车进口税率存在 <b>20%/22% 增值税</b>、<b>15–25% / 20–38% 关税</b>、<b>EAEU 补差新规是否生效</b> 三处来源冲突，报废税系数还按排量、车龄、功率、进口主体四维变化。<b>正式报价前必须让俄方报关行按 HS 子目书面核定税率与系数</b>，并预留 2027-01-01 报废税再上调 10–20% 的调价条款。报价单里请把税费分行列出，别让客户在清关时才发现价格翻番。</div>
 
 <section id="calc"><h2><span class="n">01</span>报价计算器</h2>
-<p class="lead">默认示例：一台 12.8 万元、1.5L / 150hp 的中国产 SUV，法人商业进口、CIF 口径、铁路班列运输。可点上方预设切换车型，感受 160 马力门槛对落地成本的影响。</p>
-<div class="calc">
-@@FORM@@
-<div class="result-panel">
- <div class="curbar" id="curbar">
-   <span class="lab">结果金额按</span>
+<p class="lead">默认示例：一台约 12.8 万元、1.5L / 150hp 的中国产 SUV，法人商业进口、CIF 口径、铁路班列运输。先在下面选一个计价币种，整个计算器的输入与输出都会统一到该币种；点预设可切换车型，感受 160 马力门槛对落地成本的影响。</p>
+<div class="curbar" id="curbar">
+   <span class="lab">全站计价币种</span>
    <button type="button" data-ccy="RUB" class="on">₽ 卢布 RUB</button>
    <button type="button" data-ccy="USD">$ 美元 USD</button>
    <button type="button" data-ccy="CNY">¥ 人民币 CNY</button>
    <span class="rate" id="curRate"></span>
-   <p class="cap">只切换展示币种，不改变任何计算与税率参数；左侧「车价币种」可另选输入单位（含卢布）。报价单、CSV 与打印都按当前展示币种输出；法规里的 RUB 起征点、阶梯单价仍按卢布原文标注。</p>
+   <p class="cap">选一个币种，<b>整个计算器都跟着变</b>：左侧所有金额输入框的数值与单位、车型 / 运输预设、右侧成本阶梯、四种口径报价、情景敏感性、中俄文报价单、CSV 与打印，以及下方参考表的金额，全部按该币种显示。内部仍以卢布为基准计算，切换币种<b>不改变任何结果</b>；车价锚定人民币、运费与出口本地费锚定美元、俄方费用与法规阈值锚定卢布，因此改汇率只影响外币计价项，卢布法定金额不会被汇率带走。</p>
  </div>
+<div class="calc">
+@@FORM@@
+<div class="result-panel">
  <div class="kpis4" id="kpis"></div>
  <div class="card"><h3 style="margin-top:0">成本构成（占 DDP 落地成本）</h3>
    <div class="stack" id="stack"></div><div class="legend" id="legend"></div>
@@ -684,7 +819,7 @@ BODY = r"""<!DOCTYPE html>
 </section>
 
 <section id="params"><h2><span class="n">02</span>默认参数与来源</h2>
-<p class="lead">A = 官方法规 / 海关 / 俄央行；B = 权威机构经媒体转述或行业实操指南；C = 行业调研、二手转述或口径存疑。所有值都能在左侧直接改。</p>
+<p class="lead">A = 官方法规 / 海关 / 俄央行；B = 权威机构经媒体转述或行业实操指南；C = 行业调研、二手转述或口径存疑。所有值都能在左侧直接改；表中金额型默认值随上方计价币种换算，两行汇率是无量纲比率、不参与换算。</p>
 <div class="card"><div class="tbl-scroll"><table><thead><tr><th>参数</th><th>默认值</th><th>单位</th><th>等级</th><th>来源</th><th>说明</th></tr></thead><tbody>@@PARAMROWS@@</tbody></table></div></div>
 <div class="card" style="margin-top:14px"><h3 style="margin-top:0">运输方式预设（单台运费参考）</h3>
 <div class="tbl-scroll"><table><thead><tr><th>方式 / 时效</th><th>默认 USD</th><th>说明</th></tr></thead><tbody>@@FREIGHTROWS@@</tbody></table></div></div>

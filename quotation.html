@@ -159,6 +159,9 @@ input.ro{background:#101b27!important;color:var(--muted)!important}
 .curbar button.on{background:rgba(77,156,255,.18);border-color:var(--a1);color:#9ec8ff}
 .curbar .rate{margin-left:auto;font-size:11.5px;color:var(--muted);line-height:1.5}
 .curbar .cap{width:100%;margin:0;font-size:11.5px;color:var(--muted)}
+.curbar .cap b{color:var(--a1)}
+select:disabled{opacity:.72;cursor:not-allowed}
+[data-amt]{font-variant-numeric:tabular-nums}
 nav .wrap{flex-wrap:nowrap;overflow-x:auto;white-space:nowrap;scrollbar-width:thin}
 nav .wrap::-webkit-scrollbar{height:5px}
 nav .wrap::-webkit-scrollbar-thumb{background:var(--line);border-radius:5px}
@@ -207,7 +210,15 @@ html.embedded .form-panel{position:static!important;max-height:none!important;ov
 默认参数取自 2026 年公开法规与行业实操资料，逐条标了来源与证据等级（见「参数来源」）。俄罗斯整车进口税率存在 <b>20%/22% 增值税</b>、<b>15–25% / 20–38% 关税</b>、<b>EAEU 补差新规是否生效</b> 三处来源冲突，报废税系数还按排量、车龄、功率、进口主体四维变化。<b>正式报价前必须让俄方报关行按 HS 子目书面核定税率与系数</b>，并预留 2027-01-01 报废税再上调 10–20% 的调价条款。报价单里请把税费分行列出，别让客户在清关时才发现价格翻番。</div>
 
 <section id="calc"><h2><span class="n">01</span>报价计算器</h2>
-<p class="lead">默认示例：一台 12.8 万元、1.5L / 150hp 的中国产 SUV，法人商业进口、CIF 口径、铁路班列运输。可点上方预设切换车型，感受 160 马力门槛对落地成本的影响。</p>
+<p class="lead">默认示例：一台约 12.8 万元、1.5L / 150hp 的中国产 SUV，法人商业进口、CIF 口径、铁路班列运输。先在下面选一个计价币种，整个计算器的输入与输出都会统一到该币种；点预设可切换车型，感受 160 马力门槛对落地成本的影响。</p>
+<div class="curbar" id="curbar">
+   <span class="lab">全站计价币种</span>
+   <button type="button" data-ccy="RUB" class="on">₽ 卢布 RUB</button>
+   <button type="button" data-ccy="USD">$ 美元 USD</button>
+   <button type="button" data-ccy="CNY">¥ 人民币 CNY</button>
+   <span class="rate" id="curRate"></span>
+   <p class="cap">选一个币种，<b>整个计算器都跟着变</b>：左侧所有金额输入框的数值与单位、车型 / 运输预设、右侧成本阶梯、四种口径报价、情景敏感性、中俄文报价单、CSV 与打印，以及下方参考表的金额，全部按该币种显示。内部仍以卢布为基准计算，切换币种<b>不改变任何结果</b>；车价锚定人民币、运费与出口本地费锚定美元、俄方费用与法规阈值锚定卢布，因此改汇率只影响外币计价项，卢布法定金额不会被汇率带走。</p>
+ </div>
 <div class="calc">
 
 <div class="form-panel">
@@ -220,15 +231,15 @@ html.embedded .form-panel{position:static!important;max-height:none!important;ov
 
  <div class="fgroup"><h4>A · 车辆与进口主体</h4>
   <div class="frow"><label for="model"><b>车型 / 配置描述</b></label><input type="text" id="model" value="中国产 SUV 1.5T / 150hp" data-k="model"></div>
-  <div class="frow"><label for="priceCcy"><b>车价币种</b></label><select id="priceCcy" data-k="priceCcy"><option value="CNY" selected>人民币 CNY</option><option value="USD">美元 USD</option><option value="RUB">卢布 RUB</option></select></div>
-  <div class="frow"><label for="price"><b>单台车价（含税）</b></label><input type="number" id="price" value="128000" step="any" data-k="price"><span class="unit"></span></div><div class="hint">二手车以收购发票价为准</div>
-  <div class="frow"><label for="cnyUsd">CNY / USD 汇率</label><input type="number" id="cnyUsd" value="6.70" step="any" data-k="cnyUsd"><span class="unit"></span></div><div class="hint">由俄央行 2026-11-12 交叉价推算，请按实际结汇价改</div>
-  <div class="frow"><label for="qty">数量</label><input type="number" id="qty" value="1" step="any" data-k="qty"><span class="unit">台</span></div>
+  <div class="frow"><label for="priceCcy">车价币种</label><select id="priceCcy" data-k="priceCcy" disabled><option value="RUB">跟随全局 · RUB</option><option value="USD">跟随全局 · USD</option><option value="CNY">跟随全局 · CNY</option></select></div>
+  <div class="frow"><label for="price"><b>单台车价（含税）</b></label><input type="number" id="price" value="128000" step="any" data-money="CNY" data-k="price"><span class="unit" data-u="price">CNY</span></div><div class="hint">二手车以收购发票价为准；数值随上方全局计价币种自动折算</div>
+  <div class="frow"><label for="cnyUsd">CNY / USD 汇率</label><input type="number" id="cnyUsd" value="6.70" step="any" data-k="cnyUsd"><span class="unit" data-u="cnyUsd"></span></div><div class="hint">由俄央行 2026-11-12 交叉价推算，请按实际结汇价改</div>
+  <div class="frow"><label for="qty">数量</label><input type="number" id="qty" value="1" step="any" data-k="qty"><span class="unit" data-u="qty">台</span></div>
   <div class="frow"><label for="importer">进口主体</label><select id="importer" data-k="importer"><option value="company" selected>法人 · 商业进口</option><option value="personal">个人 · 自用（限 1 辆/年）</option></select></div>
   <div class="frow"><label for="age">车龄</label><select id="age" data-k="age"><option value="new" selected>≤3 年 / 新车</option><option value="old">&gt;3 年 / 二手车</option></select></div>
   <div class="frow"><label for="engine">动力类型</label><select id="engine" data-k="engine"><option value="ice" selected>汽油 / 柴油</option><option value="hybrid">混动 / 增程</option><option value="bev">纯电</option></select></div>
-  <div class="frow"><label for="disp">排量</label><input type="number" id="disp" value="1500" step="any" data-k="disp"><span class="unit">cc</span></div><div class="hint">纯电填 0</div>
-  <div class="frow"><label for="power">功率</label><input type="number" id="power" value="150" step="any" data-k="power"><span class="unit">hp</span></div><div class="hint">160hp 是报废税资格线，不是加价线</div>
+  <div class="frow"><label for="disp">排量</label><input type="number" id="disp" value="1500" step="any" data-k="disp"><span class="unit" data-u="disp">cc</span></div><div class="hint">纯电填 0</div>
+  <div class="frow"><label for="power">功率</label><input type="number" id="power" value="150" step="any" data-k="power"><span class="unit" data-u="power">hp</span></div><div class="hint">160hp 是报废税资格线，不是加价线</div>
   <div class="frow"><label for="utilNote">当前报废税系数<br>（自动查表，可覆盖）</label><input type="number" id="utilCoefManual" value="12.95" step="0.01" data-k="utilCoefManual"><span class="unit">×</span></div>
   <div class="frow"><label for="utilCoefAuto">自动查表选系数</label><input type="checkbox" id="utilCoefAuto" checked data-k="utilCoefAuto"></div>
   <div class="hint" id="coefHint">个人自用需同时满足 ≤3 年 / ≤3.0L / ≤160hp；功率过线即转商业系数。</div>
@@ -237,37 +248,37 @@ html.embedded .form-panel{position:static!important;max-height:none!important;ov
  <div class="fgroup"><h4>B · 贸易条款与物流</h4>
   <div class="frow"><label for="term"><b>贸易术语 / 报价口径</b></label><select id="term" data-k="term"><option value="EXW">EXW 工厂交货</option><option value="FOB">FOB 装运港</option><option value="CIF" selected>CIF 到岸</option><option value="DDP">DDP 完税落地</option></select></div>
   <div class="frow"><label for="freightPreset">运输方式预设</label><select id="freightPreset" data-k="freightPreset"><option value="sea">海运滚装（35–45 天）</option><option value="rail" selected>中欧班列 / 铁路笼车（18–25 天）</option><option value="truck">公路 TIR 笼车（10–18 天）</option><option value="container">海运整箱（18–25 天）</option></select></div>
-  <div class="frow"><label for="freight">国际运费（单台）</label><input type="number" id="freight" value="4000" step="any" data-k="freight"><span class="unit">USD</span></div>
-  <div class="frow"><label for="insRate">保险费率</label><input type="number" id="insRate" value="0.30" step="any" data-k="insRate"><span class="unit">%</span></div>
-  <div class="frow"><label for="exportLocal">中国出口本地费</label><input type="number" id="exportLocal" value="300" step="any" data-k="exportLocal"><span class="unit">USD</span></div>
-  <div class="frow"><label for="usdRub"><b>USD / RUB 汇率</b></label><input type="number" id="usdRub" value="82.98" step="any" data-k="usdRub"><span class="unit"></span></div><div class="hint">俄央行 2026-11-13 官方 82.9803</div>
-  <div class="frow"><label for="customsAdj">海关估价调整</label><input type="number" id="customsAdj" value="0" step="any" data-k="customsAdj"><span class="unit">%</span></div><div class="hint">低报会被重新核价并罚款</div>
+  <div class="frow"><label for="freight">国际运费（单台）</label><input type="number" id="freight" value="4000" step="any" data-money="USD" data-k="freight"><span class="unit" data-u="freight">USD</span></div>
+  <div class="frow"><label for="insRate">保险费率</label><input type="number" id="insRate" value="0.30" step="any" data-k="insRate"><span class="unit" data-u="insRate">%</span></div>
+  <div class="frow"><label for="exportLocal">中国出口本地费</label><input type="number" id="exportLocal" value="300" step="any" data-money="USD" data-k="exportLocal"><span class="unit" data-u="exportLocal">USD</span></div>
+  <div class="frow"><label for="usdRub"><b>USD / RUB 汇率</b></label><input type="number" id="usdRub" value="82.98" step="any" data-k="usdRub"><span class="unit" data-u="usdRub"></span></div><div class="hint">俄央行 2026-11-13 官方 82.9803</div>
+  <div class="frow"><label for="customsAdj">海关估价调整</label><input type="number" id="customsAdj" value="0" step="any" data-k="customsAdj"><span class="unit" data-u="customsAdj">%</span></div><div class="hint">低报会被重新核价并罚款</div>
  </div>
 
  <div class="fgroup"><h4>C · 俄方税费参数</h4>
   <div class="frow"><label for="dutyPreset">关税快速预设</label><select id="dutyPreset" data-k="dutyPreset"><option value="15">15% 从价</option><option value="20" selected>20%（默认）</option><option value="25">25%</option><option value="30">30%</option><option value="38">38% 上限</option></select></div>
-  <div class="frow"><label for="dutyRate">进口关税</label><input type="number" id="dutyRate" value="20" step="any" data-k="dutyRate"><span class="unit">%</span></div>
+  <div class="frow"><label for="dutyRate">进口关税</label><input type="number" id="dutyRate" value="20" step="any" data-k="dutyRate"><span class="unit" data-u="dutyRate">%</span></div>
   <div class="frow"><label for="vatPreset">增值税口径</label><select id="vatPreset" data-k="vatPreset"><option value="20">20%（旧口径）</option><option value="22" selected>22%（425-ФЗ）</option></select></div>
-  <div class="frow"><label for="vatRate">增值税 НДС</label><input type="number" id="vatRate" value="22" step="any" data-k="vatRate"><span class="unit">%</span></div>
-  <div class="frow"><label for="utilBase">报废税基准</label><input type="number" id="utilBase" value="20000" step="any" data-k="utilBase"><span class="unit">RUB</span></div><div class="hint">乘用车 20,000；卡车/客车/挂车 150,000</div>
-  <div class="frow"><label for="exciseManual">消费税总额（手填）</label><input type="number" id="exciseManual" value="0" step="any" data-k="exciseManual"><span class="unit">RUB</span></div>
+  <div class="frow"><label for="vatRate">增值税 НДС</label><input type="number" id="vatRate" value="22" step="any" data-k="vatRate"><span class="unit" data-u="vatRate">%</span></div>
+  <div class="frow"><label for="utilBase">报废税基准</label><input type="number" id="utilBase" value="20000" step="any" data-money="RUB" data-k="utilBase"><span class="unit" data-u="utilBase">RUB</span></div><div class="hint">乘用车 <span data-amt="20000" data-from="RUB">20,000 ₽</span>；卡车/客车/挂车 <span data-amt="150000" data-from="RUB">150,000 ₽</span></div>
+  <div class="frow"><label for="exciseManual">消费税总额（手填）</label><input type="number" id="exciseManual" value="0" step="any" data-money="RUB" data-k="exciseManual"><span class="unit" data-u="exciseManual">RUB</span></div>
   <div class="frow"><label for="exciseAuto">按马力阶梯自动算消费税</label><input type="checkbox" id="exciseAuto" checked data-k="exciseAuto"></div>
-  <div class="frow"><label for="customsFeeManual">清关手续费（手填）</label><input type="number" id="customsFeeManual" value="13541" step="any" data-k="customsFeeManual"><span class="unit">RUB</span></div>
+  <div class="frow"><label for="customsFeeManual">清关手续费（手填）</label><input type="number" id="customsFeeManual" value="13541" step="any" data-money="RUB" data-k="customsFeeManual"><span class="unit" data-u="customsFeeManual">RUB</span></div>
   <div class="frow"><label for="customsFeeAuto">按 2026 分档自动算</label><input type="checkbox" id="customsFeeAuto" checked data-k="customsFeeAuto"></div>
   <div class="hint">消费税按马力阶梯 ≤90 免 / ≤150 63 / ≤200 610 / ≤300 1,000 / ≤400 1,036 / &gt;400 1,128 RUB 每马力（边界按上界闭合）；纯电默认 0，如俄方按电机功率核定请取消自动并手填总额。</div>
  </div>
 
  <div class="fgroup"><h4>D · 落地费用与利润</h4>
-  <div class="frow"><label for="sbkts">СБКТС / ОТТС 认证</label><input type="number" id="sbkts" value="40000" step="any" data-k="sbkts"><span class="unit">RUB</span></div>
-  <div class="frow"><label for="era">ЭРА-ГЛОНАСС 加装</label><input type="number" id="era" value="0" step="any" data-k="era"><span class="unit">RUB</span></div>
-  <div class="frow"><label for="broker">报关代理 + 装卸</label><input type="number" id="broker" value="40000" step="any" data-k="broker"><span class="unit">RUB</span></div>
-  <div class="frow"><label for="inland">俄境内运输</label><input type="number" id="inland" value="0" step="any" data-k="inland"><span class="unit">RUB</span></div><div class="hint">DDP 才计入；海参崴→莫斯科 150K–250K</div>
-  <div class="frow"><label for="pdi">PDI / 整备 / 仓储</label><input type="number" id="pdi" value="15000" step="any" data-k="pdi"><span class="unit">RUB</span></div>
-  <div class="frow"><label for="warrantyRate">质保售后准备金</label><input type="number" id="warrantyRate" value="2.0" step="any" data-k="warrantyRate"><span class="unit">% 车价</span></div>
-  <div class="frow"><label for="otherFee">其他杂费</label><input type="number" id="otherFee" value="0" step="any" data-k="otherFee"><span class="unit">RUB</span></div>
-  <div class="frow"><label for="margin"><b>目标毛利 / 加成</b></label><input type="number" id="margin" value="12" step="any" data-k="margin"><span class="unit">%</span></div>
+  <div class="frow"><label for="sbkts">СБКТС / ОТТС 认证</label><input type="number" id="sbkts" value="40000" step="any" data-money="RUB" data-k="sbkts"><span class="unit" data-u="sbkts">RUB</span></div>
+  <div class="frow"><label for="era">ЭРА-ГЛОНАСС 加装</label><input type="number" id="era" value="0" step="any" data-money="RUB" data-k="era"><span class="unit" data-u="era">RUB</span></div>
+  <div class="frow"><label for="broker">报关代理 + 装卸</label><input type="number" id="broker" value="40000" step="any" data-money="RUB" data-k="broker"><span class="unit" data-u="broker">RUB</span></div>
+  <div class="frow"><label for="inland">俄境内运输</label><input type="number" id="inland" value="0" step="any" data-money="RUB" data-k="inland"><span class="unit" data-u="inland">RUB</span></div><div class="hint">DDP 才计入；海参崴→莫斯科 <span data-amt="150000" data-from="RUB">150,000 ₽</span>–<span data-amt="250000" data-from="RUB">250,000 ₽</span></div>
+  <div class="frow"><label for="pdi">PDI / 整备 / 仓储</label><input type="number" id="pdi" value="15000" step="any" data-money="RUB" data-k="pdi"><span class="unit" data-u="pdi">RUB</span></div>
+  <div class="frow"><label for="warrantyRate">质保售后准备金</label><input type="number" id="warrantyRate" value="2.0" step="any" data-k="warrantyRate"><span class="unit" data-u="warrantyRate">% 车价</span></div>
+  <div class="frow"><label for="otherFee">其他杂费</label><input type="number" id="otherFee" value="0" step="any" data-money="RUB" data-k="otherFee"><span class="unit" data-u="otherFee">RUB</span></div>
+  <div class="frow"><label for="margin"><b>目标毛利 / 加成</b></label><input type="number" id="margin" value="12" step="any" data-k="margin"><span class="unit" data-u="margin">%</span></div>
   <div class="frow"><label for="marginMode">利润算法</label><select id="marginMode" data-k="marginMode"><option value="gross" selected>毛利率法 成本÷(1−r)</option><option value="markup">加成法 成本×(1+r)</option></select></div>
-  <div class="frow"><label for="refundRate">中国出口退税</label><input type="number" id="refundRate" value="13" step="any" data-k="refundRate"><span class="unit">%</span></div><div class="hint">计入我方收益，不影响对客报价</div>
+  <div class="frow"><label for="refundRate">中国出口退税</label><input type="number" id="refundRate" value="13" step="any" data-k="refundRate"><span class="unit" data-u="refundRate">%</span></div><div class="hint">计入我方收益，不影响对客报价</div>
   <div class="frow"><label for="refundOn">计入退税收益</label><input type="checkbox" id="refundOn" checked data-k="refundOn"></div>
  </div>
  <button class="btn pri" id="btnCalc">重新计算 →</button>
@@ -279,14 +290,6 @@ html.embedded .form-panel{position:static!important;max-height:none!important;ov
 </div>
 
 <div class="result-panel">
- <div class="curbar" id="curbar">
-   <span class="lab">结果金额按</span>
-   <button type="button" data-ccy="RUB" class="on">₽ 卢布 RUB</button>
-   <button type="button" data-ccy="USD">$ 美元 USD</button>
-   <button type="button" data-ccy="CNY">¥ 人民币 CNY</button>
-   <span class="rate" id="curRate"></span>
-   <p class="cap">只切换展示币种，不改变任何计算与税率参数；左侧「车价币种」可另选输入单位（含卢布）。报价单、CSV 与打印都按当前展示币种输出；法规里的 RUB 起征点、阶梯单价仍按卢布原文标注。</p>
- </div>
  <div class="kpis4" id="kpis"></div>
  <div class="card"><h3 style="margin-top:0">成本构成（占 DDP 落地成本）</h3>
    <div class="stack" id="stack"></div><div class="legend" id="legend"></div>
@@ -322,12 +325,12 @@ html.embedded .form-panel{position:static!important;max-height:none!important;ov
 </section>
 
 <section id="params"><h2><span class="n">02</span>默认参数与来源</h2>
-<p class="lead">A = 官方法规 / 海关 / 俄央行；B = 权威机构经媒体转述或行业实操指南；C = 行业调研、二手转述或口径存疑。所有值都能在左侧直接改。</p>
-<div class="card"><div class="tbl-scroll"><table><thead><tr><th>参数</th><th>默认值</th><th>单位</th><th>等级</th><th>来源</th><th>说明</th></tr></thead><tbody><tr><td><b>USD/RUB 汇率</b></td><td class="num">82.98</td><td>RUB</td><td><span class="tag ">S01</span></td><td>A</td><td>俄央行 2026-11-13 官方 1 USD = 82.9803 RUB。签约日请改，卢布波动大</td></tr><tr><td><b>CNY/USD 汇率</b></td><td class="num">6.70</td><td>CNY</td><td><span class="tag ">S01</span></td><td>B</td><td>由俄央行 USD/RUB 82.66 与 CNY/RUB 12.39 交叉推算（2026-11-12），仅作示例；请填实际结汇价</td></tr><tr><td><b>车辆采购/出厂价</b></td><td class="num">128000</td><td>CNY</td><td><span class="tag ">—</span></td><td>用户填</td><td>含税采购价，二手车以收购发票价为准；单台</td></tr><tr><td><b>国际运费（单台）</b></td><td class="num">3000</td><td>USD</td><td><span class="tag ">S09</span></td><td>B</td><td>海运滚装 $2,000–4,000 / 铁路班列 $3,500–5,500 / 公路 TIR $800–1,200；按预设切换</td></tr><tr><td><b>保险费率</b></td><td class="num">0.30</td><td>%</td><td><span class="tag ">—</span></td><td>行业惯例</td><td>基数 = FOB（车价 + 出口本地费）+ 运费；新车建议投足额车辆运输险</td></tr><tr><td><b>中国出口本地费用</b></td><td class="num">300</td><td>USD</td><td><span class="tag ">S09</span></td><td>B</td><td>报关、许可证、拖车、装卸、单证等，单台分摊</td></tr><tr><td><b>海关估价调整</b></td><td class="num">0</td><td>%</td><td><span class="tag ">S10</span></td><td>B</td><td>俄海关可按市场价重新估价；低报会被重新核价并罚款，建议如实申报</td></tr><tr><td><b>进口关税</b></td><td class="num">20</td><td>%</td><td><span class="tag ">S02</span></td><td>B</td><td>2025-01 起系数上调至 20–38%；另有资料按 HS 8703 法人 15–25% 从价。差异大，须按报关行核定</td></tr><tr><td><b>增值税 НДС</b></td><td class="num">22</td><td>%</td><td><span class="tag ">S03</span></td><td>A/B</td><td>联邦法 425-ФЗ：2026-01-01 起 20%→22%；部分行业资料仍写 20%，见冲突说明</td></tr><tr><td><b>报废税基准费率</b></td><td class="num">20000</td><td>RUB</td><td><span class="tag ">S04</span></td><td>A</td><td>乘用车 20,000 卢布；卡车/客车/挂车 150,000 卢布</td></tr><tr><td><b>报废税系数</b></td><td class="num">12.95</td><td>—</td><td><span class="tag ">S05</span></td><td>B</td><td>按排量档 / 车龄 / 进口主体自动查表，可手动覆盖；2027-01-01 预计再上调 10–20%</td></tr><tr><td><b>消费税</b></td><td class="num">自动</td><td>RUB/hp</td><td><span class="tag ">S06</span></td><td>B</td><td>按马力阶梯：≤90 免 / ≤150 63 / ≤200 610 / ≤300 1,000 / ≤400 1,036 / &gt;400 1,128 RUB 每马力（边界按上界闭合）；纯电默认 0 可改</td></tr><tr><td><b>清关手续费</b></td><td class="num">自动</td><td>RUB</td><td><span class="tag ">S07</span></td><td>A</td><td>2026-01-01 起第 1638 号决议新分档，按完税价格自动取值</td></tr><tr><td><b>СБКТС / ОТТС 认证</b></td><td class="num">40000</td><td>RUB</td><td><span class="tag ">S08</span></td><td>B</td><td>СБКТС 约 40K；无 ОТТС 时逐车 100K–250K + 30–60 天；整车认证另有 $1,500–5,000 口径</td></tr><tr><td><b>ЭРА-ГЛОНАСС</b></td><td class="num">0</td><td>RUB</td><td><span class="tag ">S08</span></td><td>B</td><td>缺装需俄认证机构加装 35K–65K 卢布；中规出口车通常需确认</td></tr><tr><td><b>报关代理 / 装卸</b></td><td class="num">40000</td><td>RUB</td><td><span class="tag ">S08</span></td><td>B</td><td>报关行 5K–25K/柜，装卸 PRR 25K–35K/台，合计取中值</td></tr><tr><td><b>俄境内运输</b></td><td class="num">0</td><td>RUB</td><td><span class="tag ">S08</span></td><td>B</td><td>海参崴→莫斯科 150K–250K 卢布 / 7–14 天；FOB/CIF 报价由买方承担，DDP 才计入</td></tr><tr><td><b>PDI / 整备 / 仓储</b></td><td class="num">15000</td><td>RUB</td><td><span class="tag ">S09</span></td><td>B</td><td>到店整备、冬季适配、防腐、防冻液、俄语车机刷写等</td></tr><tr><td><b>质保与售后准备金</b></td><td class="num">2.0</td><td>% 车价</td><td><span class="tag ">—</span></td><td>建议</td><td>平行进口无原厂质保，须自备/第三方服务方案，这是长期最大隐性成本</td></tr><tr><td><b>目标毛利率</b></td><td class="num">12</td><td>%</td><td><span class="tag ">—</span></td><td>用户填</td><td>按「毛利率法」报价 = 成本 ÷ (1 − 毛利率)；可切换为加成法</td></tr><tr><td><b>中国出口退税</b></td><td class="num">13</td><td>%</td><td><span class="tag ">S11</span></td><td>A</td><td>整车/二手车出口退税率 13%；计入我方收益，不计入对客报价；需单证与报关单金额一致</td></tr></tbody></table></div></div>
+<p class="lead">A = 官方法规 / 海关 / 俄央行；B = 权威机构经媒体转述或行业实操指南；C = 行业调研、二手转述或口径存疑。所有值都能在左侧直接改；表中金额型默认值随上方计价币种换算，两行汇率是无量纲比率、不参与换算。</p>
+<div class="card"><div class="tbl-scroll"><table><thead><tr><th>参数</th><th>默认值</th><th>单位</th><th>等级</th><th>来源</th><th>说明</th></tr></thead><tbody><tr><td><b>USD/RUB 汇率</b></td><td class="num">82.98</td><td>RUB</td><td><span class="tag ">S01</span></td><td>A</td><td>俄央行 2026-11-13 官方 1 USD = 82.9803 RUB。签约日请改，卢布波动大</td></tr><tr><td><b>CNY/USD 汇率</b></td><td class="num">6.70</td><td>CNY</td><td><span class="tag ">S01</span></td><td>B</td><td>由俄央行 USD/RUB 82.66 与 CNY/RUB 12.39 交叉推算（2026-11-12），仅作示例；请填实际结汇价</td></tr><tr><td><b>车辆采购/出厂价</b></td><td class="num"><span data-amt="128000.0" data-from="CNY">128000 CNY</span></td><td>CNY</td><td><span class="tag ">—</span></td><td>用户填</td><td>含税采购价，二手车以收购发票价为准；单台</td></tr><tr><td><b>国际运费（单台）</b></td><td class="num"><span data-amt="3000.0" data-from="USD">3000 USD</span></td><td>USD</td><td><span class="tag ">S09</span></td><td>B</td><td>海运滚装 $2,000–4,000 / 铁路班列 $3,500–5,500 / 公路 TIR $800–1,200；按预设切换</td></tr><tr><td><b>保险费率</b></td><td class="num">0.30</td><td>%</td><td><span class="tag ">—</span></td><td>行业惯例</td><td>基数 = FOB（车价 + 出口本地费）+ 运费；新车建议投足额车辆运输险</td></tr><tr><td><b>中国出口本地费用</b></td><td class="num"><span data-amt="300.0" data-from="USD">300 USD</span></td><td>USD</td><td><span class="tag ">S09</span></td><td>B</td><td>报关、许可证、拖车、装卸、单证等，单台分摊</td></tr><tr><td><b>海关估价调整</b></td><td class="num">0</td><td>%</td><td><span class="tag ">S10</span></td><td>B</td><td>俄海关可按市场价重新估价；低报会被重新核价并罚款，建议如实申报</td></tr><tr><td><b>进口关税</b></td><td class="num">20</td><td>%</td><td><span class="tag ">S02</span></td><td>B</td><td>2025-01 起系数上调至 20–38%；另有资料按 HS 8703 法人 15–25% 从价。差异大，须按报关行核定</td></tr><tr><td><b>增值税 НДС</b></td><td class="num">22</td><td>%</td><td><span class="tag ">S03</span></td><td>A/B</td><td>联邦法 425-ФЗ：2026-01-01 起 20%→22%；部分行业资料仍写 20%，见冲突说明</td></tr><tr><td><b>报废税基准费率</b></td><td class="num"><span data-amt="20000.0" data-from="RUB">20000 RUB</span></td><td>RUB</td><td><span class="tag ">S04</span></td><td>A</td><td>乘用车 20,000 卢布；卡车/客车/挂车 150,000 卢布</td></tr><tr><td><b>报废税系数</b></td><td class="num">12.95</td><td>—</td><td><span class="tag ">S05</span></td><td>B</td><td>按排量档 / 车龄 / 进口主体自动查表，可手动覆盖；2027-01-01 预计再上调 10–20%</td></tr><tr><td><b>消费税</b></td><td class="num">自动</td><td>RUB/hp</td><td><span class="tag ">S06</span></td><td>B</td><td>按马力阶梯：≤90 免 / ≤150 63 / ≤200 610 / ≤300 1,000 / ≤400 1,036 / &gt;400 1,128 RUB 每马力（边界按上界闭合）；纯电默认 0 可改</td></tr><tr><td><b>清关手续费</b></td><td class="num">自动</td><td>RUB</td><td><span class="tag ">S07</span></td><td>A</td><td>2026-01-01 起第 1638 号决议新分档，按完税价格自动取值</td></tr><tr><td><b>СБКТС / ОТТС 认证</b></td><td class="num"><span data-amt="40000.0" data-from="RUB">40000 RUB</span></td><td>RUB</td><td><span class="tag ">S08</span></td><td>B</td><td>СБКТС 约 40K；无 ОТТС 时逐车 100K–250K + 30–60 天；整车认证另有 $1,500–5,000 口径</td></tr><tr><td><b>ЭРА-ГЛОНАСС</b></td><td class="num"><span data-amt="0.0" data-from="RUB">0 RUB</span></td><td>RUB</td><td><span class="tag ">S08</span></td><td>B</td><td>缺装需俄认证机构加装 35K–65K 卢布；中规出口车通常需确认</td></tr><tr><td><b>报关代理 / 装卸</b></td><td class="num"><span data-amt="40000.0" data-from="RUB">40000 RUB</span></td><td>RUB</td><td><span class="tag ">S08</span></td><td>B</td><td>报关行 5K–25K/柜，装卸 PRR 25K–35K/台，合计取中值</td></tr><tr><td><b>俄境内运输</b></td><td class="num"><span data-amt="0.0" data-from="RUB">0 RUB</span></td><td>RUB</td><td><span class="tag ">S08</span></td><td>B</td><td>海参崴→莫斯科 150K–250K 卢布 / 7–14 天；FOB/CIF 报价由买方承担，DDP 才计入</td></tr><tr><td><b>PDI / 整备 / 仓储</b></td><td class="num"><span data-amt="15000.0" data-from="RUB">15000 RUB</span></td><td>RUB</td><td><span class="tag ">S09</span></td><td>B</td><td>到店整备、冬季适配、防腐、防冻液、俄语车机刷写等</td></tr><tr><td><b>质保与售后准备金</b></td><td class="num">2.0</td><td>% 车价</td><td><span class="tag ">—</span></td><td>建议</td><td>平行进口无原厂质保，须自备/第三方服务方案，这是长期最大隐性成本</td></tr><tr><td><b>目标毛利率</b></td><td class="num">12</td><td>%</td><td><span class="tag ">—</span></td><td>用户填</td><td>按「毛利率法」报价 = 成本 ÷ (1 − 毛利率)；可切换为加成法</td></tr><tr><td><b>中国出口退税</b></td><td class="num">13</td><td>%</td><td><span class="tag ">S11</span></td><td>A</td><td>整车/二手车出口退税率 13%；计入我方收益，不计入对客报价；需单证与报关单金额一致</td></tr></tbody></table></div></div>
 <div class="card" style="margin-top:14px"><h3 style="margin-top:0">运输方式预设（单台运费参考）</h3>
-<div class="tbl-scroll"><table><thead><tr><th>方式 / 时效</th><th>默认 USD</th><th>说明</th></tr></thead><tbody><tr><td><b>海运滚装（35–45 天）</b></td><td class="num">$2,500</td><td>单台 $2,000–4,000，大批量成本最低；盐雾需做底盘防锈</td></tr><tr><td><b>中欧班列 / 铁路笼车（18–25 天）</b></td><td class="num">$4,000</td><td>40 尺箱 $3,500–5,500，一箱一车；需提前 1–2 个月订舱</td></tr><tr><td><b>公路 TIR 笼车（10–18 天）</b></td><td class="num">$1,200</td><td>单台 $800–1,700（8,500–12,000 元），适合东北/新疆口岸小批量</td></tr><tr><td><b>海运整箱（18–25 天）</b></td><td class="num">$3,000</td><td>上海→莫斯科整箱 $2,500–3,500，一车占整柜，防刮蹭</td></tr></tbody></table></div></div>
+<div class="tbl-scroll"><table><thead><tr><th>方式 / 时效</th><th>默认 USD</th><th>说明</th></tr></thead><tbody><tr><td><b>海运滚装（35–45 天）</b></td><td class="num"><span data-amt="2500" data-from="USD">$2,500</span></td><td>单台 $2,000–4,000，大批量成本最低；盐雾需做底盘防锈</td></tr><tr><td><b>中欧班列 / 铁路笼车（18–25 天）</b></td><td class="num"><span data-amt="4000" data-from="USD">$4,000</span></td><td>40 尺箱 $3,500–5,500，一箱一车；需提前 1–2 个月订舱</td></tr><tr><td><b>公路 TIR 笼车（10–18 天）</b></td><td class="num"><span data-amt="1200" data-from="USD">$1,200</span></td><td>单台 $800–1,700（8,500–12,000 元），适合东北/新疆口岸小批量</td></tr><tr><td><b>海运整箱（18–25 天）</b></td><td class="num"><span data-amt="3000" data-from="USD">$3,000</span></td><td>上海→莫斯科整箱 $2,500–3,500，一车占整柜，防刮蹭</td></tr></tbody></table></div></div>
 <div class="card" style="margin-top:14px"><h3 style="margin-top:0">商业进口报废税系数表（基准 20,000 ₽ × 系数）</h3>
-<div class="tbl-scroll"><table><thead><tr><th>排量档</th><th>≤3 年</th><th>&gt;3 年</th><th>新车报废税</th><th>旧车报废税</th></tr></thead><tbody><tr><td><b>≤1.0L</b></td><td class="num">8.92</td><td class="num">20.70</td><td class="num">178,400 ₽</td><td class="num">414,000 ₽</td></tr><tr><td><b>1.0–2.0L</b></td><td class="num">12.95</td><td class="num">33.84</td><td class="num">259,000 ₽</td><td class="num">676,800 ₽</td></tr><tr><td><b>2.0–3.0L</b></td><td class="num">27.51</td><td class="num">84.01</td><td class="num">550,200 ₽</td><td class="num">1,680,200 ₽</td></tr><tr><td><b>&gt;3.0L（系数 137+，实际以俄工贸部表为准）</b></td><td class="num">137.00</td><td class="num">137.00</td><td class="num">2,740,000 ₽</td><td class="num">2,740,000 ₽</td></tr></tbody></table></div>
+<div class="tbl-scroll"><table><thead><tr><th>排量档</th><th>≤3 年</th><th>&gt;3 年</th><th>新车报废税</th><th>旧车报废税</th></tr></thead><tbody><tr><td><b>≤1.0L</b></td><td class="num">8.92</td><td class="num">20.70</td><td class="num"><span data-amt="178400" data-from="RUB">178,400 ₽</span></td><td class="num"><span data-amt="414000" data-from="RUB">414,000 ₽</span></td></tr><tr><td><b>1.0–2.0L</b></td><td class="num">12.95</td><td class="num">33.84</td><td class="num"><span data-amt="259000" data-from="RUB">259,000 ₽</span></td><td class="num"><span data-amt="676800" data-from="RUB">676,800 ₽</span></td></tr><tr><td><b>2.0–3.0L</b></td><td class="num">27.51</td><td class="num">84.01</td><td class="num"><span data-amt="550200" data-from="RUB">550,200 ₽</span></td><td class="num"><span data-amt="1680200" data-from="RUB">1,680,200 ₽</span></td></tr><tr><td><b>&gt;3.0L（系数 137+，实际以俄工贸部表为准）</b></td><td class="num">137.00</td><td class="num">137.00</td><td class="num"><span data-amt="2740000" data-from="RUB">2,740,000 ₽</span></td><td class="num"><span data-amt="2740000" data-from="RUB">2,740,000 ₽</span></td></tr></tbody></table></div>
 <p class="cap">个人自用另有优惠档：≤3 年 0.17（3,400 ₽）、&gt;3 年 0.26（5,200 ₽），但必须同时满足 ≤3.0L / ≤160hp / 一年 1 辆 / 12 个月内不转售。功率一过 160hp 即转商业系数 [S04][S05][S17]。</p></div>
 </section>
 
@@ -396,15 +399,78 @@ var refCur=function(n,v){
   var vv=v||CV||{usdRub:82.98,cnyUsd:6.70};
   return CUR==="RUB" ? "$"+f2((n||0)/(vv.usdRub||82.98)) : fmt(n)+" ₽";
 };
+/* ===== 全站计价币种：每个金额字段各有一个「锚定币种」 =====
+   price 锚 CNY（中国采购）、freight/exportLocal 锚 USD（国际物流）、
+   其余俄方费用锚 RUB（法规/本地服务）。BASE[k] 存锚定币种的金额，
+   输入框与所有结果只是它按当前汇率的投影，切换币种不改变锚定值。 */
+var MONEY={
+ price:{base:"CNY",native:"RUB"},
+ freight:{base:"USD",native:"USD"},
+ exportLocal:{base:"USD",native:"USD"},
+ utilBase:{base:"RUB",native:"RUB"},
+ exciseManual:{base:"RUB",native:"RUB"},
+ customsFeeManual:{base:"RUB",native:"RUB"},
+ sbkts:{base:"RUB",native:"RUB"},
+ era:{base:"RUB",native:"RUB"},
+ broker:{base:"RUB",native:"RUB"},
+ inland:{base:"RUB",native:"RUB"},
+ pdi:{base:"RUB",native:"RUB"},
+ otherFee:{base:"RUB",native:"RUB"}
+};
+var MK=Object.keys(MONEY),BASE={};
+function ratesOf(over){
+ var ue=$("usdRub"),ce=$("cnyUsd");
+ var r=ue?(parseFloat(ue.value)||82.98):82.98;
+ var c=ce?(parseFloat(ce.value)||6.70):6.70;
+ if(over){if(over.usdRub)r=over.usdRub;if(over.cnyUsd)c=over.cnyUsd}
+ return {usdRub:r,cnyUsd:c};
+}
+function rubPer(ccy,v){
+ if(ccy==="USD")return v.usdRub;
+ if(ccy==="CNY")return v.usdRub/v.cnyUsd;
+ return 1;
+}
+function conv(x,from,to,v){return (x||0)*rubPer(from,v)/rubPer(to,v)}
+function putNum(x){
+ var s=(x||0).toFixed(2);
+ if(s.slice(-3)===".00")s=s.slice(0,-3);
+ return s;
+}
+function dispAmt(x,from,v){
+ var y=conv(x,from,CUR,v),d=CUR==="RUB"?0:2;
+ return (CUR==="RUB"?"":sym())+Number(y).toLocaleString(CUR_INFO[CUR].loc,{minimumFractionDigits:d,maximumFractionDigits:d})+(CUR==="RUB"?" "+sym():"");
+}
+function initBase(){MK.forEach(function(k){var e=$(k);BASE[k]=e?(parseFloat(e.value)||0):0})}
+function syncFromInput(k){
+ if(!MONEY[k])return;var e=$(k);if(!e)return;
+ BASE[k]=conv(parseFloat(e.value)||0,CUR,MONEY[k].base,ratesOf());
+ e.setAttribute("data-proj",e.value);
+}
+function projectAll(){
+ var v=ratesOf();
+ MK.forEach(function(k){
+  var e=$(k);if(!e)return;
+  var s=putNum(conv(BASE[k]||0,MONEY[k].base,CUR,v));
+  e.value=s;e.setAttribute("data-proj",s);
+  var u=document.querySelector('[data-u="'+k+'"]');if(u)u.textContent=ctag();
+ });
+ var pc=$("priceCcy");if(pc)pc.value=CUR;
+}
+function applyStaticCurrency(){
+ var v=ratesOf();
+ document.querySelectorAll("[data-amt][data-from]").forEach(function(s){
+  s.textContent=dispAmt(parseFloat(s.getAttribute("data-amt"))||0,s.getAttribute("data-from"),v);
+ });
+}
 var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})};
 var COLORS={car:"#4d9cff",local:"#7c8fb0",freight:"#34c9a1",adj:"#aa84f7",duty:"#f5aa3c",
             excise:"#e9784f",vat:"#eb6950",util:"#d94f6a",fee:"#8fa3b8",svc:"#5bc0be"};
 
 var PRESETS={
- base:{price:128000,priceCcy:"CNY",disp:1500,power:150,engine:"ice",age:"new",importer:"company",model:"中国产 SUV 1.5T / 150hp"},
- power:{price:238000,priceCcy:"CNY",disp:2000,power:200,engine:"ice",age:"new",importer:"company",model:"中国产 2.0T 中大型 SUV / 200hp"},
- bev:{price:168000,priceCcy:"CNY",disp:0,power:204,engine:"bev",age:"new",importer:"company",model:"中国产纯电 SUV / 150kW"},
- used:{price:86000,priceCcy:"CNY",disp:1800,power:150,engine:"ice",age:"old",importer:"company",model:"3 年车龄二手 SUV / 150hp"}
+ base:{price:128000,disp:1500,power:150,engine:"ice",age:"new",importer:"company",model:"中国产 SUV 1.5T / 150hp"},
+ power:{price:238000,disp:2000,power:200,engine:"ice",age:"new",importer:"company",model:"中国产 2.0T 中大型 SUV / 200hp"},
+ bev:{price:168000,disp:0,power:204,engine:"bev",age:"new",importer:"company",model:"中国产纯电 SUV / 150kW"},
+ used:{price:86000,disp:1800,power:150,engine:"ice",age:"old",importer:"company",model:"3 年车龄二手 SUV / 150hp"}
 };
 var FREIGHT={sea:2500,rail:4000,truck:1200,container:3000};
 var EXCISE=[[0,90,0],[90,150,63],[150,200,610],[200,300,1000],[300,400,1036],[400,1e9,1128]];
@@ -423,10 +489,11 @@ function utilAuto(disp,age,power,importer){
   return {c:137,personal:false,note:"排量超表，取 137+ 下限"};
 }
 function readV(over){
-  var v={};
-  ["model","price","cnyUsd","qty","disp","power","utilCoefManual","freight","insRate","exportLocal",
-   "usdRub","customsAdj","dutyRate","vatRate","utilBase","exciseManual","customsFeeManual","sbkts",
-   "era","broker","inland","pdi","warrantyRate","otherFee","margin","refundRate"].forEach(function(k){v[k]=N(k)});
+  var v={},rt=ratesOf(over);
+  ["cnyUsd","qty","disp","power","utilCoefManual","insRate","usdRub","customsAdj",
+   "dutyRate","vatRate","warrantyRate","margin","refundRate"].forEach(function(k){v[k]=N(k)});
+  v.usdRub=rt.usdRub;v.cnyUsd=rt.cnyUsd;
+  MK.forEach(function(k){v[k]=conv(BASE[k]||0,MONEY[k].base,MONEY[k].native,v)});
   ["priceCcy","importer","age","engine","term","marginMode","freightPreset","dutyPreset","vatPreset"].forEach(function(k){v[k]=S(k)});
   ["utilCoefAuto","exciseAuto","customsFeeAuto","refundOn"].forEach(function(k){v[k]=C(k)});
   v.model=S("model");
@@ -435,8 +502,8 @@ function readV(over){
   return v;
 }
 function compute(v){
-  var priceUSD = v.priceCcy==="CNY" ? v.price/v.cnyUsd : (v.priceCcy==="RUB" ? v.price/v.usdRub : v.price);
-  var priceCNY = v.priceCcy==="CNY" ? v.price : (v.priceCcy==="RUB" ? v.price/v.usdRub*v.cnyUsd : v.price*v.cnyUsd);
+  var priceUSD = v.price/v.usdRub;          /* v.price 已归一化为 RUB */
+  var priceCNY = priceUSD*v.cnyUsd;
   var r = v.usdRub;
   var insurance = (priceUSD+v.exportLocal+v.freight)*v.insRate/100;
   var carRUB=priceUSD*r, localRUB=v.exportLocal*r, frtRUB=(v.freight+insurance)*r;
@@ -485,7 +552,7 @@ function rowsTable(head,rows,cls){
     '</tr></thead><tbody>'+rows.join("")+'</tbody></table></div>';
 }
 function render(x){
-  var v=x.v;CV=v;updateRate();
+  var v=x.v;CV=v;updateRate();applyStaticCurrency();
   // KPI
   var kp=[["DDP 完税落地成本",moneyS(x.landed,v),altStr(x.landed,v),"hl"],
     ["对客报价 · "+v.term,moneyS(x.quote,v),altStr(x.quote,v),"hl2"],
@@ -538,7 +605,7 @@ function render(x){
   $("scenesTbl").innerHTML=rowsTable(["情景","报废税系数","俄方税费 "+ctag(),"落地成本 "+ctag(),"较基准 "+ctag(),"变化 %"],sr,"");
   // 提示
   var warns=[];
-  if(v.importer==="personal"&&v.power>160)warns.push("个人自用优惠档已失效：功率 >160hp，已按商业系数 "+f2(x.uc)+" 计算，报废税从 3,400 ₽ 级别跳到 "+moneyS(x.util,v)+"。");
+  if(v.importer==="personal"&&v.power>160)warns.push("个人自用优惠档已失效：功率 >160hp，已按商业系数 "+f2(x.uc)+" 计算，报废税从 "+moneyS(3400,v)+" 级别跳到 "+moneyS(x.util,v)+"。");
   if(v.importer==="personal"&&v.power<=160&&v.disp<=3000)warns.push("使用个人自用优惠系数 "+f2(x.uc)+"：须同时满足 ≤3 年 / ≤3.0L / ≤160hp / 一年 1 辆 / 12 个月内不得转售，商业批量不适用。");
   if(v.power>160&&v.importer==="company")warns.push("功率 >160hp：公开资料未给出完整的商业功率分档表，当前系数来自排量×车龄查表，请按报关行核定后手动覆盖。");
   if(v.exciseAuto&&v.engine!=="bev"&&v.power>=145&&v.power<=165)warns.push("消费税阶梯边界公开资料写法含糊，本工具按「≤150hp 归 63 ₽/hp、>150 归 610 ₽/hp」处理；当前 "+fmt(v.power)+"hp 适用 "+excisePerHp(v.power)+" ₽/hp。若报关行按另一口径核定，请取消自动并手填总额。");
@@ -546,7 +613,7 @@ function render(x){
   if(v.term==="DDP")warns.push("DDP 需俄方具备进口主体与清关资质，中方通常不能直接作为俄进口商；且需垫付全部俄方税费，资金与合规风险最高。");
   if(v.customsAdj!==0)warns.push("已计入海关估价调整 "+f2(v.customsAdj)+"%：低报货值会被俄海关重新核价并罚款，也会连带影响国内退税单证一致性。");
   warns.push("报废税系数与增值税率存在来源冲突，且 2027-01-01 预计再上调 10–20%；正式报价请让俄方报关行书面确认后重算。");
-  if(CUR!=="RUB")warns.push("当前展示币种为 "+ctag()+"，按 USD/RUB "+f2(v.usdRub)+"、CNY/USD "+f2(v.cnyUsd)+" 换算；内部计算、税率与法规阈值仍以卢布为准。");
+  warns.push("全站计价币种 "+ctag()+"：左侧金额输入、单位、预设与右侧结果、报价单、CSV 均按此币种；车价锚人民币、运费锚美元、俄方费用锚卢布，按 USD/RUB "+f2(v.usdRub)+"、CNY/USD "+f2(v.cnyUsd)+" 折算，切换币种不改变落地成本。");
   $("warns").innerHTML=warns.map(function(w){return "<li>"+esc(w)+"</li>"}).join("");
   // 参数快照 + 报价单
   window.__X=x;
@@ -638,19 +705,40 @@ function downloadCSV(){
   a.download="russia-quotation-"+ctag()+".csv";a.click();URL.revokeObjectURL(a.href);
 }
 function saveParams(){
-  var d={};document.querySelectorAll("[data-k]").forEach(function(e){d[e.id]=e.type==="checkbox"?e.checked:e.value});
-  try{localStorage.setItem("ru_quote_params",JSON.stringify(d));$("saveMsg").textContent="参数已保存到本机浏览器（"+Object.keys(d).length+" 项）"}catch(e){$("saveMsg").textContent="保存失败："+e.message}
+  var d={__ccy:CUR,__base:{}};
+  MK.forEach(function(k){d.__base[k]=BASE[k]});
+  document.querySelectorAll("[data-k]").forEach(function(e){
+    if(MONEY[e.id])return;                       /* 金额存锚定值，不存显示值 */
+    d[e.id]=e.type==="checkbox"?e.checked:e.value;
+  });
+  try{localStorage.setItem("ru_quote_params",JSON.stringify(d));
+    $("saveMsg").textContent="参数已保存到本机浏览器（"+Object.keys(d).length+" 项，金额按锚定币种存储）"}catch(e){$("saveMsg").textContent="保存失败："+e.message}
 }
 function loadParams(){
-  try{var s=localStorage.getItem("ru_quote_params");if(!s)return false;var d=JSON.parse(s);
-    Object.keys(d).forEach(function(k){var e=$(k);if(!e)return;if(e.type==="checkbox")e.checked=!!d[k];else e.value=d[k]});
-    $("saveMsg").textContent="已恢复上次保存的参数";return true}catch(e){return false}
+  try{
+    var s=localStorage.getItem("ru_quote_params");if(!s)return null;
+    var d=JSON.parse(s);
+    Object.keys(d).forEach(function(k){
+      if(k.charAt(0)==="_")return;
+      var e=$(k);if(!e)return;
+      if(e.type==="checkbox")e.checked=!!d[k];else e.value=d[k];
+    });
+    if(d.__base)MK.forEach(function(k){if(typeof d.__base[k]==="number")BASE[k]=d.__base[k]});
+    $("saveMsg").textContent="已恢复上次保存的参数（金额按锚定值存储，随当前计价币种折算）";
+    return d.__ccy||null;
+  }catch(e){return null}
 }
 function applyPreset(name){
   var p=PRESETS[name];if(!p)return;
-  Object.keys(p).forEach(function(k){var e=$(k);if(!e)return;if(e.type==="checkbox")e.checked=!!p[k];else e.value=p[k]});
+  BASE.price=p.price;                              /* 预设车价按人民币锚定 */
+  Object.keys(p).forEach(function(k){
+    if(k==="price")return;
+    var e=$(k);if(!e)return;
+    if(e.type==="checkbox")e.checked=!!p[k];else e.value=p[k];
+  });
+  projectAll();
   syncCoef();render(compute(readV()));
-  try{history.replaceState(null,"","?preset="+name)}catch(e){}
+  try{history.replaceState(null,"","?preset="+name+(CUR!=="RUB"?"&ccy="+CUR:""))}catch(e){}
 }
 function syncCoef(){
   var v=readV(),ua=utilAuto(v.disp,v.age,v.power,v.importer);
@@ -661,23 +749,37 @@ function updateRate(){
   var v=readV(),e=$("curRate");
   if(e)e.textContent="1 USD = "+f2(v.usdRub)+" ₽ ｜ 1 USD = "+f2(v.cnyUsd)+" CNY";
 }
-function setCur(c,save){
+function setCur(c,save,noSync){
   if(!CUR_INFO[c])c="RUB";
+  if(!noSync)MK.forEach(function(k){
+    var e=$(k);
+    if(e&&e.value!==e.getAttribute("data-proj"))syncFromInput(k);
+  });   /* 只固化未同步的手工编辑，避免显示精度被反复回算造成漂移 */
   CUR=c;
   document.querySelectorAll("#curbar button[data-ccy]").forEach(function(b){
     b.classList.toggle("on",b.getAttribute("data-ccy")===c)});
   if(save)try{localStorage.setItem("ru_quote_ccy",c)}catch(e){}
+  projectAll();applyStaticCurrency();
   syncCoef();render(compute(readV()));
 }
 function bind(){
   document.querySelectorAll("[data-preset]").forEach(function(b){b.addEventListener("click",function(){applyPreset(b.dataset.preset)})});
-  $("freightPreset").addEventListener("change",function(){$("freight").value=FREIGHT[this.value]||0;render(compute(readV()))});
+  $("freightPreset").addEventListener("change",function(){BASE.freight=FREIGHT[this.value]||0;projectAll();render(compute(readV()))});
   $("dutyPreset").addEventListener("change",function(){$("dutyRate").value=this.value;render(compute(readV()))});
   $("vatPreset").addEventListener("change",function(){$("vatRate").value=this.value;render(compute(readV()))});
-  $("priceCcy").addEventListener("change",function(){render(compute(readV()))});
+  /* 车价币种已跟随全站计价币种，不再单独绑定 */
   document.querySelectorAll(".form-panel input,.form-panel select").forEach(function(e){
-    e.addEventListener("input",function(){if(["disp","age","power","importer","utilCoefAuto"].indexOf(e.id)>=0)syncCoef();render(compute(readV()))});
-    e.addEventListener("change",function(){if(["disp","age","power","importer","utilCoefAuto"].indexOf(e.id)>=0)syncCoef();render(compute(readV()))});
+    e.addEventListener("input",function(){
+      if(MONEY[e.id])syncFromInput(e.id);
+      if(["disp","age","power","importer","utilCoefAuto"].indexOf(e.id)>=0)syncCoef();
+      render(compute(readV()));
+    });
+    e.addEventListener("change",function(){
+      if(MONEY[e.id])syncFromInput(e.id);
+      if(e.id==="usdRub"||e.id==="cnyUsd")projectAll();  /* 汇率失焦后按新汇率重投影 */
+      if(["disp","age","power","importer","utilCoefAuto"].indexOf(e.id)>=0)syncCoef();
+      render(compute(readV()));
+    });
   });
   document.querySelectorAll("#curbar button[data-ccy]").forEach(function(b){
     b.addEventListener("click",function(){setCur(b.getAttribute("data-ccy"),true)});
@@ -690,10 +792,13 @@ function bind(){
   $("btnCsv").addEventListener("click",downloadCSV);
   $("btnPrint").addEventListener("click",function(){window.print()});
 }
-loadParams();bind();
+initBase();
+var loadedCcy=loadParams();
+bind();
 var cm=/[?&]ccy=(RUB|USD|CNY)/i.exec(location.search),saved=null;
 try{saved=localStorage.getItem("ru_quote_ccy")}catch(e){}
-setCur(cm?cm[1].toUpperCase():(saved&&CUR_INFO[saved]?saved:"RUB"),false);
+var target=cm?cm[1].toUpperCase():((loadedCcy&&CUR_INFO[loadedCcy])?loadedCcy:((saved&&CUR_INFO[saved])?saved:"RUB"));
+setCur(target,false,true);
 var pm=/[?&]preset=(base|power|bev|used)/.exec(location.search);
 if(pm)applyPreset(pm[1]);
 })();
