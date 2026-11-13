@@ -14,7 +14,7 @@
 |---|---|---|
 | 01 总览看板 | `analysis.html` | 四维信号、趋势图、100 家客户可搜索/排序/展开、数据核验 v2、第 10 章分析逻辑复核与 v3 维度优化 |
 | 02 细分市场 | `segments.html` | **6 大赛道**（2026-11-13）：乘用车 / 摩托·ATV·雪地车 / 新能源 / 皮卡越野 / 房车旅居车 / 商用车；加权机会评分、品类 Tab、内部关单价位带、政策矩阵、TOP100 客户联动、18 条来源 A/B/C 分级 |
-| 03 报价计算器 | `quotation.html` | （2026-11-13 新增）30+ 可编辑参数，实时算 CIF / 关税 / 消费税 / 增值税 / 报废税 / 清关费 / 认证 / 落地成本；四种贸易术语报价、成本阶梯与承担方、7 组情景敏感性、中/俄文报价单一键复制、CSV 导出、参数本机保存、4 个车型预设（支持 `?preset=power` 等链接直达） |
+| 03 报价计算器 | `quotation.html` | （2026-11-13 新增）30+ 可编辑参数，实时算 CIF / 关税 / 消费税 / 增值税 / 报废税 / 清关费 / 认证 / 落地成本；四种贸易术语报价、成本阶梯与承担方、7 组情景敏感性、中/俄文报价单一键复制、CSV 导出、参数本机保存、4 个车型预设（支持 `?preset=power` 等链接直达）。**2026-11-13 晚新增显示币种切换**：结果区顶部可切 ₽ / $ / ¥，KPI、成本阶梯、四种口径报价、情景表、中俄文报价单、CSV 与打印全部跟随换算；车价输入也支持 CNY / USD / **RUB** |
 | 04 出口规则说明 | `rules.html` | （2026-11-13 新增）中方 7 步 / 俄方 6 步流程、12 类单证清单、认证（ОТТС/СБКТС/ЭПТС/ЭРА-ГЛОНАСС）、收汇与制裁合规、2024–2027 政策时间线、8 个常见坑、可勾选的报价前十项检查清单 |
 
 ## 下载文件（`downloads/`）
@@ -37,6 +37,13 @@
 
 > 本地 `~/Desktop/俄罗斯/分析输出/俄罗斯平行进口分析看板.html` 仍是自包含单文件版（图片 base64 内嵌），适合离线发送。2026-11-12 之后新增的细分市场、报价计算器、规则说明只在站点与 `downloads/` 中；当时系统权限拒绝写入桌面目录，请直接从线上下载区保存。
 
+## 显示币种切换（只改展示，不改计算）
+
+- 结果区顶部三个按钮：`₽ 卢布 RUB` / `$ 美元 USD` / `¥ 人民币 CNY`，默认 RUB。内部所有计算仍以卢布进行，切换只把展示金额按当前参数换算：`USD = RUB ÷ (USD/RUB)`、`CNY = USD × (CNY/USD)`。RUB 模式与改造前逐位一致（默认示例 DDP 3,262,545 ₽ / CIF 报价 2,213,557 ₽）。
+- USD / CNY 保留 2 位小数，KPI 第二行反向给卢布或美元参考；表头、报价单抬头、CSV 文件名与表头都标注当前币种。法规起征点、消费税阶梯单价等法定 RUB 数值保持原文，不参与换算。
+- 选择会存在浏览器本机（`ru_quote_ccy`），下次打开自动恢复；也可用 `quotation.html?ccy=USD` / `?ccy=CNY` 直达。车价币种下拉新增 `卢布 RUB`，俄方给卢布报价时可直接填。
+- 与 Tab 工作台兼容：在 `#/quotation` 里切换不会改变 hash、不会跳页、不会丢失其它 Tab 的状态。
+
 ## 报价计算器口径（重要）
 
 - **汇率**：USD/RUB 82.98（俄央行 2026-11-13 官方）、CNY/USD 6.70（由俄央行交叉价推算示例，请填实际结汇价）。
@@ -54,10 +61,10 @@
 ## 构建与复算（`tools/`）
 
 ```bash
-python3 tools/build_calculator.py   # 生成 quotation.html
+python3 tools/build_calculator.py   # 生成 quotation.html（共享 CSS 从 analysis.html 取，因 index.html 已是 Tab 容器）
 python3 tools/build_rules.py        # 生成 rules.html + downloads/russia-export-rules.md
 python3 tools/build_xlsx.py         # 生成 downloads/russia-quotation-calculator.xlsx
-python3 tools/patch_site.py         # 统一子页 Tab / 下载区 / 首页入口卡（前两步之后必须跑）
+python3 tools/patch_site.py         # 统一 analysis/segments/quotation/rules 的 nav、下载区与入口卡（前几步之后跑）
 python3 tools/build_tabs.py         # 最后跑：生成 Tab 容器 index.html + analysis.html，给 4 个子页注入 embed 模式（幂等，可反复运行）
 ```
 

@@ -43,7 +43,8 @@ def nav_prefix(active):
         for k, u, t in pages) + '<span class="psep"></span>'
 
 
-for fn, active in [("index.html", "index"), ("segments.html", "segments"),
+# index.html 现已是 Tab 容器（无 nav / 无下载区），共享样式与入口卡改由 analysis.html 承载
+for fn, active in [("analysis.html", "index"), ("segments.html", "segments"),
                    ("quotation.html", "quotation"), ("rules.html", "rules")]:
     p = os.path.join(SITE, fn)
     s = open(p, encoding="utf-8").read()
@@ -68,7 +69,7 @@ for fn, active in [("index.html", "index"), ("segments.html", "segments"),
         s = s[:a] + block + s[b:]
 
     # 首页加新工具入口卡
-    if fn == "index.html" and '新增工具：报价计算器' not in s:
+    if fn == "analysis.html" and '新增工具：报价计算器' not in s:
         j = s.find('</header>')
         assert j > 0
         s = s[:j] + ENTRY_CARD + s[j:]

@@ -8,7 +8,8 @@ from rules_data import (PARAMS, FREIGHT_PRESETS, UTIL_COMMERCIAL, UTIL_PERSONAL_
 SITE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 E = lambda x: html.escape(str(x), quote=True)
 
-base = open(os.path.join(SITE, "index.html"), encoding="utf-8").read()
+# index.html 现已是 Tab 容器，共享样式改从 analysis.html（原总览看板）取
+base = open(os.path.join(SITE, "analysis.html"), encoding="utf-8").read()
 CSS = base.split("<style>", 1)[1].split("</style>", 1)[0]
 
 EXTRA = r"""
@@ -58,6 +59,20 @@ input[type=checkbox]{accent-color:var(--a1);width:15px;height:15px}
 .quote-box{background:#0f1a26;border:1px solid var(--line);border-radius:9px;padding:13px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;white-space:pre-wrap;color:var(--text);max-height:340px;overflow:auto;margin-top:10px;line-height:1.65}
 .cols2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 input.ro{background:#101b27!important;color:var(--muted)!important}
+/* ===== 显示币种切换 ===== */
+.curbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 13px;margin-bottom:14px}
+.curbar .lab{font-size:12.5px;color:var(--muted);font-weight:600;margin-right:2px}
+.curbar button{border:1px solid var(--line);background:var(--panel2);color:var(--muted);border-radius:8px;padding:6px 13px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit}
+.curbar button:hover{border-color:var(--a1);color:var(--a1)}
+.curbar button.on{background:rgba(77,156,255,.18);border-color:var(--a1);color:#9ec8ff}
+.curbar .rate{margin-left:auto;font-size:11.5px;color:var(--muted);line-height:1.5}
+.curbar .cap{width:100%;margin:0;font-size:11.5px;color:var(--muted)}
+nav .wrap{flex-wrap:nowrap;overflow-x:auto;white-space:nowrap;scrollbar-width:thin}
+nav .wrap::-webkit-scrollbar{height:5px}
+nav .wrap::-webkit-scrollbar-thumb{background:var(--line);border-radius:5px}
+nav .wrap a,nav .psep{flex:0 0 auto}
+@media(max-width:760px){.curbar .rate{margin-left:0}}
+@media print{.curbar button,.curbar .lab,.curbar .cap{display:none}}
 @media(max-width:1000px){.calc{grid-template-columns:1fr}.form-panel{position:static;max-height:none}.kpis4{grid-template-columns:repeat(2,1fr)}.cols2{grid-template-columns:1fr}}
 @media(max-width:820px){.kpis4{grid-template-columns:repeat(2,1fr)}}
 @media print{
@@ -187,7 +202,7 @@ FORM = r"""
 """
 
 FORM = FORM.format(
-    sel_priceCcy=sel("priceCcy", "<b>车价币种</b>", [("CNY", "人民币 CNY"), ("USD", "美元 USD")], "CNY"),
+    sel_priceCcy=sel("priceCcy", "<b>车价币种</b>", [("CNY", "人民币 CNY"), ("USD", "美元 USD"), ("RUB", "卢布 RUB")], "CNY"),
     f_price=frow("price", "<b>单台车价（含税）</b>", "128000", "", "二手车以收购发票价为准"),
     f_cnyUsd=frow("cnyUsd", "CNY / USD 汇率", "6.70", "", "由俄央行 2026-11-12 交叉价推算，请按实际结汇价改"),
     f_qty=frow("qty", "数量", "1", "台"),
@@ -272,6 +287,34 @@ var C=function(id){var e=$(id);return e?e.checked:false};
 var S=function(id){var e=$(id);return e?e.value:""};
 var fmt=function(n){return (Math.round(n||0)).toLocaleString("ru-RU")};
 var f2=function(n){return (n||0).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})};
+/* ===== 显示币种层：内部一切金额仍以 RUB 计算，这里只做展示换算 ===== */
+var CUR="RUB",CV=null;
+var CUR_INFO={RUB:{s:"₽",tag:"RUB",name:"卢布",loc:"ru-RU"},
+              USD:{s:"$",tag:"USD",name:"美元",loc:"en-US"},
+              CNY:{s:"¥",tag:"CNY",name:"人民币",loc:"zh-CN"}};
+var sym=function(){return CUR_INFO[CUR].s};
+var ctag=function(){return CUR_INFO[CUR].tag};
+var toCur=function(n,v){
+  var vv=v||CV||{usdRub:82.98,cnyUsd:6.70};
+  var r=vv.usdRub||82.98,c=vv.cnyUsd||6.70;
+  if(CUR==="USD")return (n||0)/r;
+  if(CUR==="CNY")return (n||0)*c/r;
+  return n||0;
+};
+var money=function(n,v){
+  var x=toCur(n,v),d=CUR==="RUB"?0:2;
+  return x.toLocaleString(CUR_INFO[CUR].loc,{minimumFractionDigits:d,maximumFractionDigits:d});
+};
+var moneyS=function(n,v){return CUR==="RUB" ? money(n,v)+" ₽" : sym()+money(n,v)};
+var altStr=function(n,v){
+  var vv=v||CV||{usdRub:82.98,cnyUsd:6.70};
+  if(CUR==="USD")return "≈ "+fmt(n)+" ₽";
+  return "≈ $"+f2((n||0)/(vv.usdRub||82.98));
+};
+var refCur=function(n,v){
+  var vv=v||CV||{usdRub:82.98,cnyUsd:6.70};
+  return CUR==="RUB" ? "$"+f2((n||0)/(vv.usdRub||82.98)) : fmt(n)+" ₽";
+};
 var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})};
 var COLORS={car:"#4d9cff",local:"#7c8fb0",freight:"#34c9a1",adj:"#aa84f7",duty:"#f5aa3c",
             excise:"#e9784f",vat:"#eb6950",util:"#d94f6a",fee:"#8fa3b8",svc:"#5bc0be"};
@@ -311,8 +354,8 @@ function readV(over){
   return v;
 }
 function compute(v){
-  var priceUSD = v.priceCcy==="CNY" ? v.price/v.cnyUsd : v.price;
-  var priceCNY = v.priceCcy==="CNY" ? v.price : v.price*v.cnyUsd;
+  var priceUSD = v.priceCcy==="CNY" ? v.price/v.cnyUsd : (v.priceCcy==="RUB" ? v.price/v.usdRub : v.price);
+  var priceCNY = v.priceCcy==="CNY" ? v.price : (v.priceCcy==="RUB" ? v.price/v.usdRub*v.cnyUsd : v.price*v.cnyUsd);
   var r = v.usdRub;
   var insurance = (priceUSD+v.exportLocal+v.freight)*v.insRate/100;
   var carRUB=priceUSD*r, localRUB=v.exportLocal*r, frtRUB=(v.freight+insurance)*r;
@@ -361,39 +404,38 @@ function rowsTable(head,rows,cls){
     '</tr></thead><tbody>'+rows.join("")+'</tbody></table></div>';
 }
 function render(x){
-  var v=x.v;
+  var v=x.v;CV=v;updateRate();
   // KPI
-  var kp=[["DDP 完税落地成本",fmt(x.landed)+" ₽","≈ $"+f2(x.landed/v.usdRub),"hl"],
-    ["对客报价 · "+v.term,fmt(x.quote)+" ₽","≈ $"+f2(x.quote/v.usdRub),"hl2"],
-    ["我方单台毛利",fmt(x.grossProfit)+" ₽","含退税 "+fmt(x.refund)+" ₽",""],
-    ["税费占落地成本",(x.landed>0?(x.taxTotal/x.landed*100).toFixed(1):"0")+"%","俄方税费共 "+fmt(x.taxTotal)+" ₽","warn"]];
+  var kp=[["DDP 完税落地成本",moneyS(x.landed,v),altStr(x.landed,v),"hl"],
+    ["对客报价 · "+v.term,moneyS(x.quote,v),altStr(x.quote,v),"hl2"],
+    ["我方单台毛利",moneyS(x.grossProfit,v),"含退税 "+moneyS(x.refund,v),""],
+    ["税费占落地成本",(x.landed>0?(x.taxTotal/x.landed*100).toFixed(1):"0")+"%","俄方税费共 "+moneyS(x.taxTotal,v),"warn"]];
   $("kpis").innerHTML=kp.map(function(a){return '<div class="kpi big '+a[3]+'"><div class="kpi-v">'+a[1]+'</div><div class="kpi-l">'+a[0]+'</div><div class="kpi-s">'+a[2]+'</div></div>'}).join("");
   // 堆叠条
   var total=x.landed||1;
   $("stack").innerHTML=x.stages.filter(function(s){return s.v>0}).map(function(s){
-    return '<div style="width:'+(s.v/total*100).toFixed(2)+'%;background:'+s.c+'" title="'+esc(s.n)+' '+fmt(s.v)+' ₽"></div>'}).join("");
+    return '<div style="width:'+(s.v/total*100).toFixed(2)+'%;background:'+s.c+'" title="'+esc(s.n)+' '+moneyS(s.v,v)+'"></div>'}).join("");
   $("legend").innerHTML=x.stages.filter(function(s){return s.v>0}).map(function(s){
     return '<span><i style="background:'+s.c+'"></i>'+esc(s.n)+' <b>'+(s.v/total*100).toFixed(1)+'%</b></span>'}).join("");
   // 成本阶梯
   var acc=0,rows=[];
-  var stageEnd={EXW:0,FOB:1,CIF:2,CUS:9,DDP:9};
   x.stages.forEach(function(s,i){
     acc+=s.v;
     var mine = (v.term==="EXW"&&i===0)||(v.term==="FOB"&&i<=1)||(v.term==="CIF"&&i<=2)||(v.term==="DDP");
-    rows.push('<tr class="'+(mine?"active":"buyer")+'"><td>'+(i+1)+'</td><td>'+esc(s.n)+'</td><td class="num">'+fmt(s.v)+'</td><td class="num">'+(s.v/total*100).toFixed(1)+'%</td><td class="num">'+fmt(acc)+'</td><td>'+(mine?"我方承担":"买方承担")+'</td></tr>');
+    rows.push('<tr class="'+(mine?"active":"buyer")+'"><td>'+(i+1)+'</td><td>'+esc(s.n)+'</td><td class="num">'+money(s.v,v)+'</td><td class="num">'+(s.v/total*100).toFixed(1)+'%</td><td class="num">'+money(acc,v)+'</td><td>'+(mine?"我方承担":"买方承担")+'</td></tr>');
   });
-  rows.push('<tr class="sum"><td></td><td><b>DDP 落地成本合计</b></td><td class="num">'+fmt(x.landed)+'</td><td class="num">100%</td><td class="num">'+fmt(x.landed)+'</td><td>≈ $'+f2(x.landed/v.usdRub)+'</td></tr>');
-  $("stagesTbl").innerHTML=rowsTable(["#","成本项目","金额 ₽","占比","累计 ₽","承担方"],rows,"");
+  rows.push('<tr class="sum"><td></td><td><b>DDP 落地成本合计</b></td><td class="num">'+money(x.landed,v)+'</td><td class="num">100%</td><td class="num">'+money(x.landed,v)+'</td><td>'+altStr(x.landed,v)+'</td></tr>');
+  $("stagesTbl").innerHTML=rowsTable(["#","成本项目","金额 "+ctag(),"占比","累计 "+ctag(),"承担方"],rows,"");
   // 多口径报价
   var tq=[];
   [["EXW","工厂交货"],["FOB","装运港交货"],["CIF","到岸（不含俄方税费）"],["DDP","完税落地全包"]].forEach(function(a){
     var b=x.cum[a[0]],q=b*x.factor;
     var buyer=x.landed-b;
     tq.push('<tr class="'+(a[0]===v.term?"active":"")+'"><td><b>'+a[0]+'</b> <span class="tag">'+a[1]+'</span></td>'+
-      '<td class="num">'+fmt(b)+'</td><td class="num">'+fmt(q)+'</td><td class="num">$'+f2(q/v.usdRub)+'</td>'+
-      '<td class="num">'+(buyer>0?fmt(buyer):"—")+'</td><td>'+(a[0]===v.term?'<span class="tag a">当前口径</span>':"")+'</td></tr>');
+      '<td class="num">'+money(b,v)+'</td><td class="num">'+money(q,v)+'</td><td class="num">'+refCur(q,v)+'</td>'+
+      '<td class="num">'+(buyer>0?money(buyer,v):"—")+'</td><td>'+(a[0]===v.term?'<span class="tag a">当前口径</span>':"")+'</td></tr>');
   });
-  $("termsTbl").innerHTML=rowsTable(["口径","我方成本 ₽","建议报价 ₽","折 USD","买方另需承担 ₽",""],tq,"");
+  $("termsTbl").innerHTML=rowsTable(["口径","我方成本 "+ctag(),"建议报价 "+ctag(),"折 "+(CUR==="RUB"?"USD":"RUB"),"买方另需承担 "+ctag(),""],tq,"");
   // 情景
   var scenes=[
    ["基准（当前参数）",{}],
@@ -408,14 +450,14 @@ function render(x){
   scenes.forEach(function(a,i){
     var y=(i===0)?x:compute(readV(a[1]));
     var d=y.landed-baseLanded;
-    sr.push('<tr'+(i===0?' class="sum"':'')+'><td>'+esc(a[0])+'</td><td class="num">'+f2(y.uc)+'</td><td class="num">'+fmt(y.taxTotal)+'</td>'+
-      '<td class="num">'+fmt(y.landed)+'</td><td class="num">'+(i===0?"—":(d>=0?"+":"")+formatSigned(d))+'</td>'+
+    sr.push('<tr'+(i===0?' class="sum"':'')+'><td>'+esc(a[0])+'</td><td class="num">'+f2(y.uc)+'</td><td class="num">'+money(y.taxTotal,y.v)+'</td>'+
+      '<td class="num">'+money(y.landed,y.v)+'</td><td class="num">'+(i===0?"—":formatSigned(d,y.v))+'</td>'+
       '<td class="num">'+(i===0?"—":(d/baseLanded*100>=0?"+":"")+(d/baseLanded*100).toFixed(1)+"%")+'</td></tr>');
   });
-  $("scenesTbl").innerHTML=rowsTable(["情景","报废税系数","俄方税费 ₽","落地成本 ₽","较基准 ₽","变化 %"],sr,"");
+  $("scenesTbl").innerHTML=rowsTable(["情景","报废税系数","俄方税费 "+ctag(),"落地成本 "+ctag(),"较基准 "+ctag(),"变化 %"],sr,"");
   // 提示
   var warns=[];
-  if(v.importer==="personal"&&v.power>160)warns.push("个人自用优惠档已失效：功率 >160hp，已按商业系数 "+f2(x.uc)+" 计算，报废税从 3,400 ₽ 级别跳到 "+fmt(x.util)+" ₽。");
+  if(v.importer==="personal"&&v.power>160)warns.push("个人自用优惠档已失效：功率 >160hp，已按商业系数 "+f2(x.uc)+" 计算，报废税从 3,400 ₽ 级别跳到 "+moneyS(x.util,v)+"。");
   if(v.importer==="personal"&&v.power<=160&&v.disp<=3000)warns.push("使用个人自用优惠系数 "+f2(x.uc)+"：须同时满足 ≤3 年 / ≤3.0L / ≤160hp / 一年 1 辆 / 12 个月内不得转售，商业批量不适用。");
   if(v.power>160&&v.importer==="company")warns.push("功率 >160hp：公开资料未给出完整的商业功率分档表，当前系数来自排量×车龄查表，请按报关行核定后手动覆盖。");
   if(v.exciseAuto&&v.engine!=="bev"&&v.power>=145&&v.power<=165)warns.push("消费税阶梯边界公开资料写法含糊，本工具按「≤150hp 归 63 ₽/hp、>150 归 610 ₽/hp」处理；当前 "+fmt(v.power)+"hp 适用 "+excisePerHp(v.power)+" ₽/hp。若报关行按另一口径核定，请取消自动并手填总额。");
@@ -423,12 +465,13 @@ function render(x){
   if(v.term==="DDP")warns.push("DDP 需俄方具备进口主体与清关资质，中方通常不能直接作为俄进口商；且需垫付全部俄方税费，资金与合规风险最高。");
   if(v.customsAdj!==0)warns.push("已计入海关估价调整 "+f2(v.customsAdj)+"%：低报货值会被俄海关重新核价并罚款，也会连带影响国内退税单证一致性。");
   warns.push("报废税系数与增值税率存在来源冲突，且 2027-01-01 预计再上调 10–20%；正式报价请让俄方报关行书面确认后重算。");
+  if(CUR!=="RUB")warns.push("当前展示币种为 "+ctag()+"，按 USD/RUB "+f2(v.usdRub)+"、CNY/USD "+f2(v.cnyUsd)+" 换算；内部计算、税率与法规阈值仍以卢布为准。");
   $("warns").innerHTML=warns.map(function(w){return "<li>"+esc(w)+"</li>"}).join("");
   // 参数快照 + 报价单
   window.__X=x;
   buildQuote(x);
 }
-function formatSigned(n){return (n>=0?"+":"−")+fmt(Math.abs(n))}
+function formatSigned(n,v){return (n>=0?"+":"−")+money(Math.abs(n),v)}
 function buildQuote(x){
   var v=x.v, d=new Date(), ds=d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2);
   var lines=[
@@ -437,18 +480,19 @@ function buildQuote(x){
     "车型 / 配置："+(v.model||"—"),
     "数量："+fmt(v.qty)+" 台    动力："+({ice:"汽油/柴油",hybrid:"混动/增程",bev:"纯电"}[v.engine])+"    "+fmt(v.disp)+" cc / "+fmt(v.power)+" hp",
     "贸易术语："+v.term+"（不含项见下）    目的国：俄罗斯",
+    "报价币种："+ctag()+"（"+CUR_INFO[CUR].name+"）    USD/RUB "+f2(v.usdRub)+"    CNY/USD "+f2(v.cnyUsd),
     "",
     "── 单台报价 ──",
-    "建议报价："+fmt(x.quote)+" ₽ / 台  ≈ $"+f2(x.quote/v.usdRub),
-    "批量总价："+fmt(x.quote*v.qty)+" ₽  ≈ $"+f2(x.quote*v.qty/v.usdRub),
-    "DDP 完税落地成本（参考）："+fmt(x.landed)+" ₽ / 台",
-    "该口径下买方另需承担："+(x.buyerCost>0?fmt(x.buyerCost)+" ₽ / 台":"无"),
+    "建议报价："+moneyS(x.quote,v)+" / 台   "+altStr(x.quote,v),
+    "批量总价："+moneyS(x.quote*v.qty,v)+"   "+altStr(x.quote*v.qty,v),
+    "DDP 完税落地成本（参考）："+moneyS(x.landed,v)+" / 台",
+    "该口径下买方另需承担："+(x.buyerCost>0?moneyS(x.buyerCost,v)+" / 台":"无"),
     "",
-    "── 成本构成（单台，₽）──",
-    "车价 "+fmt(x.carRUB)+" ｜ 出口本地费 "+fmt(x.localRUB)+" ｜ 运费保险 "+fmt(x.frtRUB),
-    "关税 "+fmt(x.duty)+" ｜ 消费税 "+fmt(x.excise)+" ｜ 增值税 "+fmt(x.vat),
-    "报废税 "+fmt(x.util)+"（系数 "+f2(x.uc)+"）｜ 清关费 "+fmt(x.cfee),
-    "认证/代理/内陆/整备/质保 "+fmt(x.svc),
+    "── 成本构成（单台，"+ctag()+"）──",
+    "车价 "+money(x.carRUB,v)+" ｜ 出口本地费 "+money(x.localRUB,v)+" ｜ 运费保险 "+money(x.frtRUB,v),
+    "关税 "+money(x.duty,v)+" ｜ 消费税 "+money(x.excise,v)+" ｜ 增值税 "+money(x.vat,v),
+    "报废税 "+money(x.util,v)+"（系数 "+f2(x.uc)+"）｜ 清关费 "+money(x.cfee,v),
+    "认证/代理/内陆/整备/质保 "+money(x.svc,v),
     "",
     "── 商务条款 ──",
     "付款：30% 预付 + 70% 见提单副本 / 清关单复印件；人民币结算优先（CIPS / SPFS）",
@@ -468,17 +512,18 @@ function buildQuote(x){
     "Автомобиль: "+esc(v.model||"—"),
     "Количество: "+fmt(v.qty)+" шт.    Двигатель: "+fmt(v.disp)+" см³ / "+fmt(v.power)+" л.с.",
     "Условия поставки (Инкотермс): "+v.term+"    Страна: Россия",
+    "Валюта цены: "+ctag()+"    Курс USD/RUB "+f2(v.usdRub)+"    CNY/USD "+f2(v.cnyUsd),
     "",
-    "Цена за единицу: "+fmt(x.quote)+" ₽  (≈ $"+f2(x.quote/v.usdRub)+")",
-    "Итого за партию: "+fmt(x.quote*v.qty)+" ₽",
-    "Справочно: полная стоимость с растаможкой (DDP) — "+fmt(x.landed)+" ₽ / шт.",
-    "Дополнительные расходы покупателя: "+(x.buyerCost>0?fmt(x.buyerCost)+" ₽ / шт.":"нет"),
+    "Цена за единицу: "+moneyS(x.quote,v)+"  ("+altStr(x.quote,v)+")",
+    "Итого за партию: "+moneyS(x.quote*v.qty,v),
+    "Справочно: полная стоимость с растаможкой (DDP) — "+moneyS(x.landed,v)+" / шт.",
+    "Дополнительные расходы покупателя: "+(x.buyerCost>0?moneyS(x.buyerCost,v)+" / шт.":"нет"),
     "",
-    "Состав затрат (₽ / шт.):",
-    "Стоимость авто "+fmt(x.carRUB)+" | Экспортные расходы КНР "+fmt(x.localRUB)+" | Фрахт и страховка "+fmt(x.frtRUB),
-    "Пошлина "+fmt(x.duty)+" | Акциз "+fmt(x.excise)+" | НДС "+fmt(x.vat),
-    "Утилизационный сбор "+fmt(x.util)+" (коэф. "+f2(x.uc)+") | Таможенный сбор "+fmt(x.cfee),
-    "Сертификация, брокер, доставка, PDI, гарантия "+fmt(x.svc),
+    "Состав затрат ("+ctag()+" / шт.):",
+    "Стоимость авто "+money(x.carRUB,v)+" | Экспортные расходы КНР "+money(x.localRUB,v)+" | Фрахт и страховка "+money(x.frtRUB,v),
+    "Пошлина "+money(x.duty,v)+" | Акциз "+money(x.excise,v)+" | НДС "+money(x.vat,v),
+    "Утилизационный сбор "+money(x.util,v)+" (коэф. "+f2(x.uc)+") | Таможенный сбор "+money(x.cfee,v),
+    "Сертификация, брокер, доставка, PDI, гарантия "+money(x.svc,v),
     "",
     "Условия оплаты: 30% предоплата + 70% по копии коносамента / таможенной декларации.",
     "Расчёты предпочтительно в CNY (CIPS / SPFS).",
@@ -500,14 +545,16 @@ function fallback(t,done){var a=document.createElement("textarea");a.value=t;a.s
   document.body.appendChild(a);a.select();try{document.execCommand("copy");done()}catch(e){alert("复制失败，请手动选中文本复制")}document.body.removeChild(a)}
 function downloadCSV(){
   var x=window.__X;if(!x)return;
-  var rows=[["#","成本项目","金额 RUB","占比 %","累计 RUB","承担方"]],acc=0;
-  x.stages.forEach(function(s,i){acc+=s.v;rows.push([i+1,s.n,Math.round(s.v),(s.v/x.landed*100).toFixed(2),Math.round(acc),
+  var num=function(n){return toCur(n,x.v).toFixed(2)};
+  var rows=[["#","成本项目","金额 "+ctag(),"占比 %","累计 "+ctag(),"承担方"]],acc=0;
+  x.stages.forEach(function(s,i){acc+=s.v;rows.push([i+1,s.n,num(s.v),(s.v/x.landed*100).toFixed(2),num(acc),
     ((x.v.term==="EXW"&&i===0)||(x.v.term==="FOB"&&i<=1)||(x.v.term==="CIF"&&i<=2)||(x.v.term==="DDP"))?"我方承担":"买方承担"])});
-  rows.push(["","DDP 落地成本合计",Math.round(x.landed),100,Math.round(x.landed),""]);
-  rows.push(["","建议报价 "+x.v.term,Math.round(x.quote),"","",""]);
+  rows.push(["","DDP 落地成本合计",num(x.landed),100,num(x.landed),""]);
+  rows.push(["","建议报价 "+x.v.term,num(x.quote),"","",""]);
+  rows.push(["","显示币种",ctag(),"USD/RUB",x.v.usdRub,"CNY/USD "+x.v.cnyUsd]);
   var csv="\ufeff"+rows.map(function(r){return r.map(function(c){return '"'+String(c).replace(/"/g,'""')+'"'}).join(",")}).join("\n");
   var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));
-  a.download="russia-quotation.csv";a.click();URL.revokeObjectURL(a.href);
+  a.download="russia-quotation-"+ctag()+".csv";a.click();URL.revokeObjectURL(a.href);
 }
 function saveParams(){
   var d={};document.querySelectorAll("[data-k]").forEach(function(e){d[e.id]=e.type==="checkbox"?e.checked:e.value});
@@ -529,6 +576,18 @@ function syncCoef(){
   if(v.utilCoefAuto)$("utilCoefManual").value=ua.c.toFixed(2);
   $("coefHint").textContent=ua.note+"｜当前系数 "+(v.utilCoefAuto?ua.c.toFixed(2):v.utilCoefManual);
 }
+function updateRate(){
+  var v=readV(),e=$("curRate");
+  if(e)e.textContent="1 USD = "+f2(v.usdRub)+" ₽ ｜ 1 USD = "+f2(v.cnyUsd)+" CNY";
+}
+function setCur(c,save){
+  if(!CUR_INFO[c])c="RUB";
+  CUR=c;
+  document.querySelectorAll("#curbar button[data-ccy]").forEach(function(b){
+    b.classList.toggle("on",b.getAttribute("data-ccy")===c)});
+  if(save)try{localStorage.setItem("ru_quote_ccy",c)}catch(e){}
+  syncCoef();render(compute(readV()));
+}
 function bind(){
   document.querySelectorAll("[data-preset]").forEach(function(b){b.addEventListener("click",function(){applyPreset(b.dataset.preset)})});
   $("freightPreset").addEventListener("change",function(){$("freight").value=FREIGHT[this.value]||0;render(compute(readV()))});
@@ -539,6 +598,9 @@ function bind(){
     e.addEventListener("input",function(){if(["disp","age","power","importer","utilCoefAuto"].indexOf(e.id)>=0)syncCoef();render(compute(readV()))});
     e.addEventListener("change",function(){if(["disp","age","power","importer","utilCoefAuto"].indexOf(e.id)>=0)syncCoef();render(compute(readV()))});
   });
+  document.querySelectorAll("#curbar button[data-ccy]").forEach(function(b){
+    b.addEventListener("click",function(){setCur(b.getAttribute("data-ccy"),true)});
+  });
   $("btnCalc").addEventListener("click",function(){syncCoef();render(compute(readV()))});
   $("btnSave").addEventListener("click",saveParams);
   $("btnReset").addEventListener("click",function(){localStorage.removeItem("ru_quote_params");location.reload()});
@@ -548,8 +610,11 @@ function bind(){
   $("btnPrint").addEventListener("click",function(){window.print()});
 }
 loadParams();bind();
+var cm=/[?&]ccy=(RUB|USD|CNY)/i.exec(location.search),saved=null;
+try{saved=localStorage.getItem("ru_quote_ccy")}catch(e){}
+setCur(cm?cm[1].toUpperCase():(saved&&CUR_INFO[saved]?saved:"RUB"),false);
 var pm=/[?&]preset=(base|power|bev|used)/.exec(location.search);
-if(pm)applyPreset(pm[1]);else{syncCoef();render(compute(readV()))}
+if(pm)applyPreset(pm[1]);
 })();
 </script>
 """
@@ -576,6 +641,14 @@ BODY = r"""<!DOCTYPE html>
 <div class="calc">
 @@FORM@@
 <div class="result-panel">
+ <div class="curbar" id="curbar">
+   <span class="lab">结果金额按</span>
+   <button type="button" data-ccy="RUB" class="on">₽ 卢布 RUB</button>
+   <button type="button" data-ccy="USD">$ 美元 USD</button>
+   <button type="button" data-ccy="CNY">¥ 人民币 CNY</button>
+   <span class="rate" id="curRate"></span>
+   <p class="cap">只切换展示币种，不改变任何计算与税率参数；左侧「车价币种」可另选输入单位（含卢布）。报价单、CSV 与打印都按当前展示币种输出；法规里的 RUB 起征点、阶梯单价仍按卢布原文标注。</p>
+ </div>
  <div class="kpis4" id="kpis"></div>
  <div class="card"><h3 style="margin-top:0">成本构成（占 DDP 落地成本）</h3>
    <div class="stack" id="stack"></div><div class="legend" id="legend"></div>
