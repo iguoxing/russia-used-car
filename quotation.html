@@ -171,8 +171,15 @@ nav .wrap{flex-wrap:nowrap;overflow-x:auto;white-space:nowrap;scrollbar-width:th
 nav .wrap::-webkit-scrollbar{height:5px}
 nav .wrap::-webkit-scrollbar-thumb{background:var(--line);border-radius:5px}
 nav .wrap a,nav .psep{flex:0 0 auto}
-</style></head><body>
-<nav><div class="wrap"><a class="ptab" href="index.html">总览看板</a><a class="ptab" href="segments.html">细分市场 · 6 大赛道</a><a class="ptab on" href="quotation.html">报价计算器</a><a class="ptab" href="rules.html">出口规则说明</a><span class="psep"></span><a href="#top">概览</a><a href="#calc">报价计算器</a><a href="#stages">成本阶梯</a><a href="#terms">多口径报价</a><a href="#scenes">情景敏感</a><a href="#params">参数来源</a><a href="#conflicts">口径冲突</a><a href="#how">计算公式</a><a href="#downloads">配套下载</a></div></nav>
+</style>
+<style id="ru-embed-css">
+html.embedded nav{display:none!important}
+html.embedded header{padding-top:26px!important}
+html.embedded .wrap{padding-bottom:46px}
+html.embedded .form-panel{position:static!important;max-height:none!important;overflow:visible!important}
+</style>
+</head><body>
+<nav><div class="wrap"><a class="ptab" href="index.html">⌂ Tab 首页</a><a class="ptab" href="analysis.html">总览看板</a><a class="ptab" href="segments.html">细分市场 · 6 大赛道</a><a class="ptab on" href="quotation.html">报价计算器</a><a class="ptab" href="rules.html">出口规则说明</a><span class="psep"></span><a href="#top">概览</a><a href="#calc">报价计算器</a><a href="#stages">成本阶梯</a><a href="#terms">多口径报价</a><a href="#scenes">情景敏感</a><a href="#params">参数来源</a><a href="#conflicts">口径冲突</a><a href="#how">计算公式</a><a href="#downloads">配套下载</a></div></nav>
 <div class="wrap" id="top">
 <header>
  <div class="eyebrow">RUSSIA · LANDED COST CALCULATOR · 2026-11-13</div>
@@ -620,4 +627,32 @@ if(pm)applyPreset(pm[1]);else{syncCoef();render(compute(readV()))}
 })();
 </script>
 
+
+<script id="ru-embed-js">
+(function(){
+  if(!/[?&]embed=1(?:&|$)/.test(location.search)) return;
+  document.documentElement.classList.add('embedded');
+  function keyOf(href){
+    var m=/(?:^|\/)(index|analysis|segments|quotation|rules)\.html/.exec(href);
+    return m ? (m[1]==='index'?'analysis':m[1]) : null;
+  }
+  document.addEventListener('click',function(e){
+    var t=e.target;
+    while(t && t!==document && t.tagName!=='A') t=t.parentNode;
+    if(!t || t.tagName!=='A') return;
+    var href=t.getAttribute('href')||'';
+    if(href.charAt(0)==='#'){
+      e.preventDefault();
+      parent.postMessage({ruTabAnchor:href.slice(1)},'*');
+      return;
+    }
+    if(/^https?:/i.test(href)||/^mailto:/i.test(href)) return;
+    if(/\.html(?:\?|#|$)/.test(href)){
+      var k=keyOf(href);
+      if(k){e.preventDefault();parent.postMessage({ruTabGo:k},'*');}
+    }
+  },true);
+  window.addEventListener('load',function(){parent.postMessage({ruTabReady:true},'*');});
+})();
+</script>
 </body></html>
