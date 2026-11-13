@@ -252,6 +252,7 @@ footer b{color:var(--text)}
         try{var d=f.contentDocument;title=d.title;h1=d.querySelector('h1')?d.querySelector('h1').textContent.trim().slice(0,40):''}catch(e){}
         if((h>500&&title)||n>40){
           clearInterval(poll);
+          buildChips(k);
           res.push({key:k,height:h,title:title.slice(0,50),h1:h1,
                     chips:document.querySelectorAll('#chips .chip').length,
                     embedded:(function(){try{return f.contentDocument.documentElement.classList.contains('embedded')}catch(e){return false}})()});
@@ -282,7 +283,6 @@ footer b{color:var(--text)}
         setTimeout(function(){
           out2.activeAfterLink=active;
           var chip=document.querySelectorAll('#chips .chip')[3];
-          window.scrollTo(0,500);out2.probeAfter=window.scrollY;window.scrollTo(0,0);
           if(chip){out2.chip=chip.textContent;chip.click()}
           setTimeout(function(){
             out2.scrollY=window.scrollY;
