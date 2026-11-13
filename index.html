@@ -255,7 +255,9 @@ footer b{color:var(--text)}
           buildChips(k);
           res.push({key:k,height:h,title:title.slice(0,50),h1:h1,
                     chips:document.querySelectorAll('#chips .chip').length,
-                    embedded:(function(){try{return f.contentDocument.documentElement.classList.contains('embedded')}catch(e){return false}})()});
+                    embedded:(function(){try{var d=f.contentDocument;
+                      return d.documentElement.classList.contains('embedded')||!!d.getElementById('ru-embed-js')
+                    }catch(e){return false}})()});
           step();
         }
       },250);
