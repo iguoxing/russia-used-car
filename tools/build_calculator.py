@@ -4,7 +4,7 @@ import os, sys, json, html
 sys.path.insert(0, os.path.dirname(__file__))
 from rules_data import (PARAMS, FREIGHT_PRESETS, UTIL_COMMERCIAL, UTIL_PERSONAL_NEW,
                         UTIL_PERSONAL_OLD, EXCISE, CUSTOMS_FEE, SOURCES,
-                        CONFLICTS, RATE_DATE)
+                        CONFLICTS, RATE_DATE, ROUTES, VEHICLES)
 SITE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 E = lambda x: html.escape(str(x), quote=True)
 
@@ -96,6 +96,18 @@ nav .wrap a,nav .psep{flex:0 0 auto}
  section{margin:18px 0}
  html{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
+/* ===== 利润 / 方案 / 口岸 / 车型 模块 ===== */
+.mrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+.mini{border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:6px;padding:4px 9px;font-size:11.5px;cursor:pointer;font-family:inherit;white-space:nowrap}
+.mini:hover{border-color:var(--a1);color:var(--a1)}
+.mini.on{background:rgba(77,156,255,.18);border-color:var(--a1);color:#9ec8ff}
+.tbl-scroll td.mid{text-align:center}
+.planbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+.planbar .grow{flex:1;min-width:170px}
+.hintbox{font-size:12px;color:var(--muted);line-height:1.7;background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:10px 12px;margin:10px 0}
+.hintbox b{color:var(--a3)}
+.rowsel td{background:rgba(52,201,161,.10)}
+@media print{.planbar,.mrow,.mini,#routeMsg,#vehicleMsg{display:none!important}}
 """
 
 
@@ -107,8 +119,10 @@ def nav(active):
     p = "".join('<a class="ptab' + (' on' if k == active else '') + '" href="' + u + '">' + E(t) + '</a>'
                 for k, u, t in pages)
     anchors = [("#top", "概览"), ("#calc", "报价计算器"), ("#stages", "成本阶梯"),
-               ("#terms", "多口径报价"), ("#scenes", "情景敏感"), ("#params", "参数来源"),
-               ("#conflicts", "口径冲突"), ("#how", "计算公式"), ("#downloads", "配套下载")]
+               ("#terms", "多口径报价"), ("#profit", "利润保本"), ("#plans", "方案对比"),
+               ("#scenes", "情景敏感"), ("#params", "参数来源"), ("#routes", "口岸运费"),
+               ("#vehicles", "车型库"), ("#conflicts", "口径冲突"),
+               ("#how", "计算公式"), ("#downloads", "配套下载")]
     return '<nav><div class="wrap">' + p + '<span class="psep"></span>' + \
            "".join('<a href="%s">%s</a>' % (u, t) for u, t in anchors) + '</div></nav>'
 
@@ -146,6 +160,8 @@ FORM = r"""
  </div>
 
  <div class="fgroup"><h4>A · 车辆与进口主体</h4>
+  {sel_vehicle}
+  <div class="frow"><label>参考 HS 子目<br>（带入车型后显示）</label><input type="text" id="vehicleHs" value="—" readonly class="ro" style="width:118px"></div>
   <div class="frow"><label for="model"><b>车型 / 配置描述</b></label><input type="text" id="model" value="中国产 SUV 1.5T / 150hp" data-k="model"></div>
   {sel_priceCcy}
   {f_price}
@@ -197,6 +213,12 @@ FORM = r"""
   {f_refundRate}
   {check_refundOn}
  </div>
+ <div class="fgroup"><h4>E · 成交与利润（内部测算）</h4>
+  {f_targetPrice}
+  {f_commissionRate}
+  {f_sellFee}
+  <div class="hint">这三项只影响内部净利与保本价，<b>不会写进对客报价单</b>。目标成交价填 0 = 按建议报价成交。</div>
+ </div>
  <button class="btn pri" id="btnCalc">重新计算 →</button>
  <div class="btn-row">
   <button class="btn" id="btnSave">保存参数</button>
@@ -207,6 +229,8 @@ FORM = r"""
 """
 
 FORM = FORM.format(
+    sel_vehicle=sel("vehiclePick", "<b>车型库一键带入</b>",
+                   [("", "— 手动填参数 —")] + [(v[0], v[1] + " " + v[2]) for v in VEHICLES], ""),
     sel_priceCcy=('<div class="frow"><label for="priceCcy">车价币种</label>'
                   '<select id="priceCcy" data-k="priceCcy" disabled>'
                   '<option value="RUB">跟随全局 · RUB</option>'
@@ -256,6 +280,10 @@ FORM = FORM.format(
     sel_marginMode=sel("marginMode", "利润算法", [("gross", "毛利率法 成本÷(1−r)"), ("markup", "加成法 成本×(1+r)")], "gross"),
     f_refundRate=frow("refundRate", "中国出口退税", "13", "%", "计入我方收益，不影响对客报价"),
     check_refundOn=check("refundOn", "计入退税收益", True),
+    f_targetPrice=frow("targetPrice", "<b>目标成交价（实收）</b>", "0", "RUB",
+                      "填 0 = 按建议报价成交；填客户还价可反算净利与降价空间", money="RUB"),
+    f_commissionRate=frow("commissionRate", "佣金 / 渠道返利", "3", "%"),
+    f_sellFee=frow("sellFee", "单台销售费用", "0", "RUB", money="RUB"),
 )
 
 # 参数来源表
@@ -294,6 +322,40 @@ util_rows = "".join(
     "<td class=\"num\"><span data-amt=\"%d\" data-from=\"RUB\">%s ₽</span></td></tr>"
     % (E(n), a, b, int(20000*a), f"{int(20000*a):,}", int(20000*b), f"{int(20000*b):,}")
     for _, _, a, b, n in UTIL_COMMERCIAL)
+
+route_rows = "".join(
+    '<tr><td><b>%s</b><div class="cap">%s ｜ %s</div></td>'
+    '<td class="num"><span data-amt="%d" data-from="USD">$%s</span></td>'
+    '<td class="num">%s</td>'
+    '<td class="num"><span data-amt="%d" data-from="RUB" data-zero="—">%s</span></td>'
+    '<td class="mid"><button class="mini" data-route="%s" type="button">应用</button></td>'
+    '<td class="mid"><span class="tag %s">%s</span></td>'
+    '<td>%s<div class="cap">来源 %s</div></td></tr>'
+    % (E(r[1]), E(r[2]), E(r[3]), r[4], f"{r[4]:,}", E(r[5]),
+       r[6], (f"{r[6]:,} ₽" if r[6] else "—"), r[0],
+       "a" if r[9].startswith("B") and "/" not in r[9] else "c", E(r[9]),
+       E(r[8]), E(r[10]))
+    for r in ROUTES)
+vehicle_rows = "".join(
+    '<tr><td><b>%s</b><div class="cap">%s ｜ %s kg</div></td>'
+    '<td class="num">%s</td><td class="num">%s</td><td class="num">%s</td>'
+    '<td class="mid">%s</td><td class="mid">%s</td>'
+    '<td class="num"><span data-amt="%d" data-from="CNY">¥%s</span></td>'
+    '<td class="mid"><button class="mini" data-vehicle="%s" type="button">带入</button></td>'
+    '<td class="mid"><span class="tag %s">%s</span></td></tr>'
+    % (E(v[2]), E(v[1]), f"{v[9]:,}",
+       f"{v[4]:,} cc", f"{v[5]} hp", {"ice": "燃油", "hybrid": "插混", "bev": "纯电"}[v[3]],
+       "≤3 年" if v[6] == "new" else ">3 年", E(v[7]),
+       v[8], f"{v[8]:,}", v[0],
+       "a" if v[11].startswith("B") and "/" not in v[11] else "c", E(v[11]))
+    for v in VEHICLES)
+ROUTES_JS = "var ROUTES=" + json.dumps(
+    {r[0]: {"usd": r[4], "inland": r[6], "preset": r[7], "name": r[1], "days": r[5]}
+     for r in ROUTES}, ensure_ascii=False) + ";"
+VEHICLES_JS = "var VEHICLES=" + json.dumps(
+    {v[0]: {"price": v[8], "disp": v[4], "power": v[5], "engine": v[3],
+            "age": v[6], "hs": v[7], "name": v[1] + " " + v[2]}
+     for v in VEHICLES}, ensure_ascii=False) + ";"
 
 DL = [
     ("russia-quotation-calculator.xlsx", "报价计算器 Excel 模板", "带公式，参数可迭代（新增）"),
@@ -364,7 +426,9 @@ var MONEY={
  broker:{base:"RUB",native:"RUB"},
  inland:{base:"RUB",native:"RUB"},
  pdi:{base:"RUB",native:"RUB"},
- otherFee:{base:"RUB",native:"RUB"}
+ otherFee:{base:"RUB",native:"RUB"},
+ targetPrice:{base:"RUB",native:"RUB"},
+ sellFee:{base:"RUB",native:"RUB"}
 };
 var MK=Object.keys(MONEY),BASE={};
 function ratesOf(over){
@@ -408,8 +472,11 @@ function projectAll(){
 function applyStaticCurrency(){
  var v=ratesOf();
  document.querySelectorAll("[data-amt][data-from]").forEach(function(s){
-  s.textContent=dispAmt(parseFloat(s.getAttribute("data-amt"))||0,s.getAttribute("data-from"),v);
+  var amt=parseFloat(s.getAttribute("data-amt"))||0;
+  if(amt===0&&s.hasAttribute("data-zero")){s.textContent=s.getAttribute("data-zero");return}
+  s.textContent=dispAmt(amt,s.getAttribute("data-from"),v);
  });
+ document.querySelectorAll("[data-thccy]").forEach(function(s){s.textContent=ctag()});
 }
 var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})};
 var COLORS={car:"#4d9cff",local:"#7c8fb0",freight:"#34c9a1",adj:"#aa84f7",duty:"#f5aa3c",
@@ -440,7 +507,7 @@ function utilAuto(disp,age,power,importer){
 function readV(over){
   var v={},rt=ratesOf(over);
   ["cnyUsd","qty","disp","power","utilCoefManual","insRate","usdRub","customsAdj",
-   "dutyRate","vatRate","warrantyRate","margin","refundRate"].forEach(function(k){v[k]=N(k)});
+   "dutyRate","vatRate","warrantyRate","margin","refundRate","commissionRate"].forEach(function(k){v[k]=N(k)});
   v.usdRub=rt.usdRub;v.cnyUsd=rt.cnyUsd;
   MK.forEach(function(k){v[k]=conv(BASE[k]||0,MONEY[k].base,MONEY[k].native,v)});
   ["priceCcy","importer","age","engine","term","marginMode","freightPreset","dutyPreset","vatPreset"].forEach(function(k){v[k]=S(k)});
@@ -489,12 +556,27 @@ function compute(v){
   var refund = v.refundOn ? (priceCNY/1.13*(v.refundRate/100))/v.cnyUsd*r : 0;
   var netCost=quoteBase-refund;
   var grossProfit=quote-netCost;
+  /* ===== 内部利润层：不改动上面任何成本 / 报价结果 ===== */
+  var sellPrice = v.targetPrice>0 ? v.targetPrice : quote;
+  var commission = sellPrice*v.commissionRate/100;
+  var netRevenue = sellPrice-commission-v.sellFee;
+  var netProfit = netRevenue-netCost;
+  var netMargin = sellPrice>0 ? netProfit/sellPrice*100 : 0;
+  var cm = Math.max(0,v.commissionRate)/100;
+  var breakEven = cm<1 ? (netCost+v.sellFee)/(1-cm) : 0;      /* 净利 = 0 的成交价 */
+  var priceRoom = sellPrice-breakEven;
+  var roomPct = sellPrice>0 ? priceRoom/sellPrice*100 : 0;
+  var floorDenom = 1-cm-v.margin/100;
+  var targetFloor = floorDenom>0 ? (netCost+v.sellFee)/floorDenom : 0;  /* 净利率达目标所需最低成交价 */
   return {v:v,priceUSD:priceUSD,priceCNY:priceCNY,insurance:insurance,carRUB:carRUB,localRUB:localRUB,
     frtRUB:frtRUB,cifRUB:cifRUB,adjRUB:adjRUB,declared:declared,duty:duty,excise:excise,vat:vat,
     util:util,uc:uc,ua:ua,cfee:cfee,warranty:warranty,svc:svc,landed:landed,stages:stages,cum:cum,
     factor:factor,quoteBase:quoteBase,quote:quote,buyerCost:buyerCost,refund:refund,netCost:netCost,
     grossProfit:grossProfit,grossMargin:quote>0?grossProfit/quote*100:0,
-    taxTotal:duty+excise+vat+util+cfee};
+    taxTotal:duty+excise+vat+util+cfee,
+    sellPrice:sellPrice,commission:commission,netRevenue:netRevenue,netProfit:netProfit,
+    netMargin:netMargin,breakEven:breakEven,priceRoom:priceRoom,roomPct:roomPct,
+    targetFloor:targetFloor,floorDenom:floorDenom};
 }
 function rowsTable(head,rows,cls){
   return '<div class="tbl-scroll '+cls+'"><table><thead><tr>'+head.map(function(h){return "<th>"+h+"</th>"}).join("")+
@@ -566,7 +648,148 @@ function render(x){
   $("warns").innerHTML=warns.map(function(w){return "<li>"+esc(w)+"</li>"}).join("");
   // 参数快照 + 报价单
   window.__X=x;
+  renderProfit(x);renderPlans();
   buildQuote(x);
+}
+
+@@ROUTESJS@@
+@@VEHICLESJS@@
+/* ===== 利润与保本价 ===== */
+function renderProfit(x){
+  var v=x.v;
+  var pk=[["单台净利（内部）",moneyS(x.netProfit,v),"已扣佣金 / 销售费 · 含退税",x.netProfit>=0?"hl2":"warn"],
+    ["净利率",x.netMargin.toFixed(1)+"%","目标 "+f2(v.margin)+"%",""],
+    ["保本成交价",moneyS(x.breakEven,v),"净利 = 0 的最低价",""],
+    ["可降价空间",moneyS(x.priceRoom,v),"占成交价 "+x.roomPct.toFixed(1)+"%",x.priceRoom>=0?"hl":"warn"]];
+  $("profitKpis").innerHTML=pk.map(function(a){return '<div class="kpi big '+a[3]+'"><div class="kpi-v">'+a[1]+'</div><div class="kpi-l">'+a[0]+'</div><div class="kpi-s">'+a[2]+'</div></div>'}).join("");
+  var rows=[
+    ["建议报价（"+v.term+"）",x.quote,"对外报价，成本不出现在报价单里"],
+    ["目标成交价 / 实收",x.sellPrice,v.targetPrice>0?"客户还价（手填）":"未填，按建议报价成交"],
+    ["我方净成本",x.netCost,"累计成本 − 出口退税 "+moneyS(x.refund,v)],
+    ["佣金 / 渠道返利",-x.commission,f2(v.commissionRate)+"% × 成交价"],
+    ["单台销售费用",-v.sellFee,"市场 / 差旅 / 平台 / 翻译分摊"],
+    ["单台净利",x.netProfit,"净收入 − 净成本（内部口径）"],
+    ["保本成交价",x.breakEven,"(净成本 + 销售费) ÷ (1 − 佣金率)"],
+    ["可降价空间",x.priceRoom,"成交价 − 保本价，还能让多少"],
+    ["达标最低成交价",x.targetFloor,"净利率达到 "+f2(v.margin)+"% 所需；"+(x.floorDenom>0?"可达":"佣金＋目标 ≥100%，不可达")]
+  ];
+  var tr=rows.map(function(r,i){
+    return '<tr'+(i===5?' class="sum"':'')+'><td>'+(i+1)+'</td><td><b>'+r[0]+'</b></td>'+
+      '<td class="num">'+money(r[1],v)+'</td><td>'+r[2]+'</td></tr>';
+  });
+  $("profitTbl").innerHTML=rowsTable(["#","项目","金额 "+ctag(),"口径 / 公式"],tr,"");
+  $("profitWarn").textContent="当前成交价 "+moneyS(x.sellPrice,v)+"，净利 "+moneyS(x.netProfit,v)+
+    "（净利率 "+x.netMargin.toFixed(1)+"%）；低于 "+moneyS(x.breakEven,v)+" 即亏本，最多还能让 "+
+    moneyS(Math.max(0,x.priceRoom),v)+"。以上为内部测算，报价单与 CSV 明细不含净利字段，可直接发客户。";
+}
+/* ===== 多方案报价对比 ===== */
+var PLAN_KEY="ru_quote_plans",PLAN_MAX=6;
+function getPlans(){try{return JSON.parse(localStorage.getItem(PLAN_KEY)||"[]")}catch(e){return []}}
+function putPlans(a){try{localStorage.setItem(PLAN_KEY,JSON.stringify(a))}catch(e){}}
+function planSnapshot(name){
+  var x=window.__X;if(!x)return null;
+  var p={id:"p"+Date.now()+Math.floor(Math.random()*1000),name:name,
+         ts:new Date().toLocaleString("zh-CN"),ccy:CUR,params:{},base:{},res:{}};
+  document.querySelectorAll("[data-k]").forEach(function(e){
+    if(MONEY[e.id])return;
+    p.params[e.id]=e.type==="checkbox"?e.checked:e.value;
+  });
+  MK.forEach(function(k){p.base[k]=BASE[k]});
+  var v=x.v;
+  p.res={quote:x.quote,landed:x.landed,netCost:x.netCost,grossProfit:x.grossProfit,
+    netProfit:x.netProfit,netMargin:x.netMargin,breakEven:x.breakEven,priceRoom:x.priceRoom,
+    taxTotal:x.taxTotal,term:v.term,model:v.model,power:v.power,disp:v.disp,
+    freight:v.freight,uc:x.uc,usdRub:v.usdRub,cnyUsd:v.cnyUsd,qty:v.qty};
+  return p;
+}
+function planMsg(t){var e=$("planMsg");if(e)e.textContent=t}
+function addPlan(){
+  var a=getPlans();
+  if(a.length>=PLAN_MAX){planMsg("最多保存 "+PLAN_MAX+" 个方案，请先删一个");return}
+  var el=$("planName"),name=(el&&el.value.trim())||("方案 "+String.fromCharCode(65+a.length));
+  var p=planSnapshot(name);if(!p){planMsg("尚未完成计算，请稍候重试");return}
+  a.push(p);putPlans(a);if(el)el.value="";
+  planMsg("已存「"+name+"」，共 "+a.length+" 个方案");renderPlans();
+}
+function delPlan(id){
+  var a=getPlans().filter(function(p){return p.id!==id});putPlans(a);
+  renderPlans();planMsg("已删除，剩余 "+a.length+" 个方案");
+}
+function loadPlan(id){
+  var p=getPlans().filter(function(q){return q.id===id})[0];if(!p)return;
+  Object.keys(p.params||{}).forEach(function(k){var e=$(k);if(!e)return;
+    if(e.type==="checkbox")e.checked=!!p.params[k];else e.value=p.params[k]});
+  MK.forEach(function(k){if(typeof p.base[k]==="number")BASE[k]=p.base[k]});
+  setCur(p.ccy||"RUB",false,true);
+  syncCoef();render(compute(readV()));
+  planMsg("已载入「"+p.name+"」：左侧参数、汇率与计价币种一并还原");
+}
+function renderPlans(){
+  var a=getPlans(),v=window.__X?window.__X.v:ratesOf();
+  if(!a.length){
+    $("plansTbl").innerHTML='<div class="hintbox">还没有保存方案。调好左侧参数（车型 / 口岸 / 术语 / 汇率 / 客户还价）后，'
+      +'点「把当前参数存为方案」，最多存 '+PLAN_MAX+' 套并排对比。方案只存在本机浏览器，换电脑不会同步。</div>';
+    return;
+  }
+  var b=a[0].res;
+  var head=["方案","车型 / 功率","术语","报价 "+ctag(),"落地成本 "+ctag(),"净利 "+ctag(),
+            "净利率","较基准净利 "+ctag(),"当时汇率","操作"];
+  var rows=a.map(function(p,i){
+    var r=p.res,d=r.netProfit-b.netProfit;
+    return '<tr'+(i===0?' class="sum"':'')+'><td><b>'+esc(p.name)+'</b><div class="cap">'+esc(p.ts)+' · '+esc(p.ccy)+'</div></td>'+
+      '<td>'+esc(r.model||"—")+'<div class="cap">'+fmt(r.power)+'hp / '+fmt(r.disp)+'cc</div></td>'+
+      '<td class="mid">'+esc(r.term)+'</td>'+
+      '<td class="num">'+money(r.quote,v)+'</td><td class="num">'+money(r.landed,v)+'</td>'+
+      '<td class="num">'+money(r.netProfit,v)+'</td><td class="num">'+r.netMargin.toFixed(1)+'%</td>'+
+      '<td class="num">'+(i===0?"—":formatSigned(d,v))+'</td>'+
+      '<td class="num">'+f2(r.usdRub)+'</td>'+
+      '<td class="mid"><button class="mini" data-load="'+p.id+'" type="button">载入</button> '
+      +'<button class="mini" data-del="'+p.id+'" type="button">删</button></td></tr>';
+  });
+  $("plansTbl").innerHTML=rowsTable(head,rows,"");
+  $("plansTbl").querySelectorAll("[data-load]").forEach(function(btn){
+    btn.addEventListener("click",function(){loadPlan(btn.getAttribute("data-load"))})});
+  $("plansTbl").querySelectorAll("[data-del]").forEach(function(btn){
+    btn.addEventListener("click",function(){delPlan(btn.getAttribute("data-del"))})});
+}
+function exportPlanCSV(){
+  var a=getPlans();if(!a.length){planMsg("还没有方案可导出");return}
+  var v=window.__X?window.__X.v:ratesOf();
+  var num=function(n){return toCur(n,v).toFixed(2)};
+  var rows=[["方案","保存时间","币种","车型","术语","报价 "+ctag(),"落地成本 "+ctag(),
+             "净成本 "+ctag(),"单台净利 "+ctag(),"净利率 %","保本价 "+ctag(),"USD/RUB","CNY/USD"]];
+  a.forEach(function(p){var r=p.res;rows.push([p.name,p.ts,p.ccy,r.model,r.term,
+    num(r.quote),num(r.landed),num(r.netCost),num(r.netProfit),r.netMargin.toFixed(2),
+    num(r.breakEven),r.usdRub,r.cnyUsd])});
+  var csv="\ufeff"+rows.map(function(r){return r.map(function(c){return '"'+String(c).replace(/"/g,'""')+'"'}).join(",")}).join("\n");
+  var a2=document.createElement("a");a2.href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));
+  a2.download="russia-plan-compare-"+ctag()+".csv";a2.click();URL.revokeObjectURL(a2.href);
+  planMsg("已导出 "+a.length+" 个方案（当前币种 "+ctag()+"）");
+}
+/* ===== 口岸 / 车型一键带入 ===== */
+function applyRoute(id){
+  var r=ROUTES[id];if(!r)return;
+  BASE.freight=r.usd;BASE.inland=r.inland;
+  var fp=$("freightPreset");if(fp)fp.value=r.preset;
+  projectAll();syncCoef();render(compute(readV()));
+  $("routeMsg").innerHTML="已应用 <b>"+esc(r.name)+"</b>：单台运费 $"+f2(r.usd)+"、全程 "+esc(r.days)+
+    " 天、俄境内段 "+fmt(r.inland)+" ₽，左侧「国际运费」与「俄境内运输」已同步；可继续手动微调。";
+  document.querySelectorAll("[data-route]").forEach(function(b){
+    b.classList.toggle("on",b.getAttribute("data-route")===id)});
+}
+function applyVehicle(id){
+  var m=VEHICLES[id];if(!m)return;
+  BASE.price=m.price;
+  var vals={disp:m.disp,power:m.power,engine:m.engine,age:m.age,model:m.name};
+  Object.keys(vals).forEach(function(k){var e=$(k);if(e)e.value=vals[k]});
+  var hs=$("vehicleHs");if(hs)hs.value=m.hs;
+  var pick=$("vehiclePick");if(pick)pick.value=id;
+  syncCoef();projectAll();render(compute(readV()));
+  $("vehicleMsg").innerHTML="已带入 <b>"+esc(m.name)+"</b>：车价 "+fmt(m.price)+" CNY、"+fmt(m.disp)+
+    "cc / "+fmt(m.power)+"hp、参考 HS "+esc(m.hs)+"。价格是国内指导价占位，<b>请按实际采购发票价覆盖</b>；"
+    +"混动 / 纯电的功率口径与 HS 子目须由报关行核定。";
+  document.querySelectorAll("[data-vehicle]").forEach(function(b){
+    b.classList.toggle("on",b.getAttribute("data-vehicle")===id)});
 }
 function formatSigned(n,v){return (n>=0?"+":"−")+money(Math.abs(n),v)}
 function buildQuote(x){
@@ -740,6 +963,15 @@ function bind(){
   $("copyRu").addEventListener("click",function(){copyText($("quoteRu").textContent,this)});
   $("btnCsv").addEventListener("click",downloadCSV);
   $("btnPrint").addEventListener("click",function(){window.print()});
+  $("btnPlanAdd").addEventListener("click",addPlan);
+  $("btnPlanCsv").addEventListener("click",exportPlanCSV);
+  $("btnPlanClear").addEventListener("click",function(){putPlans([]);renderPlans();planMsg("已清空全部方案")});
+  document.querySelectorAll("[data-route]").forEach(function(b){
+    b.addEventListener("click",function(){applyRoute(b.getAttribute("data-route"))})});
+  document.querySelectorAll("[data-vehicle]").forEach(function(b){
+    b.addEventListener("click",function(){applyVehicle(b.getAttribute("data-vehicle"))})});
+  var vp=$("vehiclePick");
+  if(vp)vp.addEventListener("change",function(){if(vp.value)applyVehicle(vp.value)});
 }
 initBase();
 var loadedCcy=loadParams();
@@ -818,7 +1050,33 @@ BODY = r"""<!DOCTYPE html>
 </div></div>
 </section>
 
-<section id="params"><h2><span class="n">02</span>默认参数与来源</h2>
+<section id="profit"><h2><span class="n">02</span>利润与保本价（内部测算）</h2>
+<p class="lead">上面算的是「成本 + 建议报价」，这里算的是「这一单真正赚多少、最低能卖到多少」。在左侧 E 组填客户还价、佣金与销售费用，下面实时反算净利、净利率、保本成交价与还能让多少价。</p>
+<div class="kpis4" id="profitKpis"></div>
+<div class="card"><h3 style="margin-top:0">单台利润拆解（金额随全站计价币种）</h3>
+ <div id="profitTbl"></div>
+ <p class="cap">净成本 = 该贸易术语下我方承担成本 − 出口退税；净利 = 成交价 − 佣金 − 销售费用 − 净成本。保本价按「净利 = 0」倒推，达标最低成交价按「净利率 = 目标毛利率」倒推。原「我方单台毛利」是未扣佣金 / 销售费的账面毛利，两者口径不同。</p>
+</div>
+<div class="card warn" style="margin-top:14px"><b>内部口径，别发给客户</b><p id="profitWarn" style="margin:8px 0 0;line-height:1.8"></p>
+<p class="cap" style="margin-top:8px">中文 / 俄文报价单与「导出成本明细 CSV」都不含净利、净成本、保本价，可直接发客户；方案对比 CSV 是内部对账用，转发前请自行确认。</p></div>
+</section>
+
+<section id="plans"><h2><span class="n">03</span>多方案报价对比</h2>
+<p class="lead">同一台车，换口岸、换术语、改汇率、客户压价，到底哪个方案更赚？把当前参数存成方案，最多 6 套并排对比，点「载入」可一键还原全部参数与币种。</p>
+<div class="card">
+ <div class="planbar">
+   <input type="text" id="planName" class="grow" placeholder="方案名，如：客户还价 / 海运方案 / 2027 税率">
+   <button class="btn ok" id="btnPlanAdd">把当前参数存为方案</button>
+   <button class="btn" id="btnPlanCsv">导出对比 CSV</button>
+   <button class="btn" id="btnPlanClear">清空</button>
+ </div>
+ <div id="planMsg" class="cap"></div>
+ <div id="plansTbl"></div>
+ <p class="cap">方案存的是「锚定基准金额 + 全部参数 + 当时的汇率」，不是显示值；对比表统一按当前计价币种与汇率折算，所以切币种不会改变方案之间的差异。第一套方案是基准，「较基准净利」以它为 0 点。</p>
+</div>
+</section>
+
+<section id="params"><h2><span class="n">04</span>默认参数与来源</h2>
 <p class="lead">A = 官方法规 / 海关 / 俄央行；B = 权威机构经媒体转述或行业实操指南；C = 行业调研、二手转述或口径存疑。所有值都能在左侧直接改；表中金额型默认值随上方计价币种换算，两行汇率是无量纲比率、不参与换算。</p>
 <div class="card"><div class="tbl-scroll"><table><thead><tr><th>参数</th><th>默认值</th><th>单位</th><th>等级</th><th>来源</th><th>说明</th></tr></thead><tbody>@@PARAMROWS@@</tbody></table></div></div>
 <div class="card" style="margin-top:14px"><h3 style="margin-top:0">运输方式预设（单台运费参考）</h3>
@@ -828,13 +1086,33 @@ BODY = r"""<!DOCTYPE html>
 <p class="cap">个人自用另有优惠档：≤3 年 0.17（3,400 ₽）、&gt;3 年 0.26（5,200 ₽），但必须同时满足 ≤3.0L / ≤160hp / 一年 1 辆 / 12 个月内不转售。功率一过 160hp 即转商业系数 [S04][S05][S17]。</p></div>
 </section>
 
-<section id="conflicts"><h2><span class="n">03</span>四处口径冲突：报价前必须核</h2>
+<section id="conflicts"><h2><span class="n">05</span>四处口径冲突：报价前必须核</h2>
 <p class="lead">这些不是算错，是公开来源本身打架。计算器给出了默认值，但<b>不替你拍板</b>。</p>
 <div class="card"><div class="tbl-scroll"><table><thead><tr><th>冲突点</th><th>两种记载</th><th>本页处理</th></tr></thead><tbody>@@CONFROWS@@</tbody></table></div></div>
 <div class="card warn" style="margin-top:14px"><b>还有一条时间炸弹</b><br/>报废税系数每年 1 月指数化，2026 年初已上调一轮 10–20%，按俄工贸部口径 <b>2027-01-01 再上调 10–20%</b>，规划延续到 2030 年。经销商可能提前把预期涨价算进在售车成本。所以：长周期合同必须写「费率变动与汇率分担条款」，别用今天的系数锁半年后的价 [S17]。</div>
 </section>
 
-<section id="how"><h2><span class="n">04</span>计算公式（可复核）</h2>
+<section id="routes"><h2><span class="n">06</span>口岸与运费表（点「应用」带入计算器）</h2>
+<p class="lead">把「运输方式预设」拆到具体线路：不同出境口岸的运费、全程天数、俄境内段差异很大。点任一行的「应用」，会把单台运费、运输方式与俄境内运输一次性写进左侧表单并立即重算。</p>
+<div class="card warn"><b>运价是参考中值，不是货代报价</b><br/>运费锚定美元，取 2026 年公开物流资料的单台参考区间中值；俄境内段锚定卢布，按远东 / 圣彼得堡到莫斯科的常见区间取值。<b>表内金额随上方全站计价币种换算，RUB 模式下看到的是折算后的卢布，切到 USD 才会显示原始美元参考价。</b>旺季订舱、燃油附加费、冬季破冰费、滞港费、超限车型附加费都会让实际报价大幅偏离；签约前必须让货代按实际车型尺寸与发运日期报实价。</div>
+<div class="card" style="margin-top:14px"><div class="tbl-scroll"><table><thead><tr>
+ <th>线路 / 出境口岸</th><th>单台运费 <span data-thccy></span></th><th>全程天数</th><th>俄境内段 <span data-thccy></span></th><th>操作</th><th>等级</th><th>要点与来源</th>
+</tr></thead><tbody>@@ROUTEROWS@@</tbody></table></div>
+<p class="cap">「俄境内段」在 DDP 口径下才计入落地成本；FOB / CIF 由买方承担，应用后左侧仍会写入该值，切换术语时按承担方自动区分。「—」表示该线路不含额外俄境内段。</p></div>
+<div id="routeMsg" class="hintbox">尚未应用线路，当前用的是表单里的运输方式预设。金额随上方全站计价币种换算。</div>
+</section>
+
+<section id="vehicles"><h2><span class="n">07</span>车型参数库（点「带入」一键填 30+ 参数）</h2>
+<p class="lead">每次报价手填车价、排量、功率、动力类型、车龄最容易出错，而功率直接决定消费税档位与 160 马力资格线。选一个车型，左侧 A 组参数、参考 HS 子目与车型描述会一次性带入，报废税系数自动重查。</p>
+<div class="card warn"><b>参数与价格都是参考值，务必按实车覆盖</b><br/>车价列是国内指导价 / 公开配置页的<b>占位参考</b>，不是出口采购价，报价前必须换成实际采购发票价；混动 / 纯电的功率按驱动电机峰值折算，俄方是否按额定功率核定消费税与报废税须逐车确认；HS 子目只是常见归类，最终以报关行按 VIN 与动力类型核定为准。证据等级 B/C，改动会同步影响落地成本。</div>
+<div class="card" style="margin-top:14px"><div class="tbl-scroll"><table><thead><tr>
+ <th>车型 / 品牌</th><th>排量</th><th>功率</th><th>动力</th><th>车龄</th><th>参考 HS</th><th>参考价 <span data-thccy></span></th><th>操作</th><th>等级</th>
+</tr></thead><tbody>@@VEHICLEROWS@@</tbody></table></div>
+<p class="cap">参考价是国内指导价（人民币），表内金额随上方全站计价币种换算；带入后车价锚定人民币，切币种只换显示。160hp 是个人自用优惠档的资格线，不是加价线 —— 用 156hp 的瑞虎 7 与 184hp 的 Jetour T2 对比最直观。</p></div>
+<div id="vehicleMsg" class="hintbox">尚未带入车型，当前为默认示例（1.5L / 150hp 中国产 SUV）。</div>
+</section>
+
+<section id="how"><h2><span class="n">08</span>计算公式（可复核）</h2>
 <div class="card"><div class="tbl-scroll"><table><thead><tr><th>步骤</th><th>公式</th><th>说明</th></tr></thead><tbody>
 <tr><td><b>1 CIF</b></td><td>FOB（车价 ÷ CNY/USD ＋ 出口本地费）＋ 运费 ＋ (FOB ＋ 运费) × 保险费率</td><td>严格等于成本阶梯前三项累加，可逐行对账</td></tr>
 <tr><td><b>2 完税价格</b></td><td>CIF × USD/RUB × (1 ＋ 海关估价调整%)</td><td>俄海关有权按市场价重新核价</td></tr>
@@ -846,10 +1124,13 @@ BODY = r"""<!DOCTYPE html>
 <tr><td><b>8 落地成本</b></td><td>上述全部 ＋ 认证 / 代理 / 内陆 / PDI / 质保 / 杂费</td><td>DDP 全包成本</td></tr>
 <tr><td><b>9 报价</b></td><td>该术语对应累计成本 ÷ (1 − 毛利率)　或　× (1 ＋ 加成率)</td><td>买卖双方承担项按术语边界切分</td></tr>
 <tr><td><b>10 我方毛利</b></td><td>报价 − (我方承担成本 − 出口退税)</td><td>退税 = 含税采购价 ÷ 1.13 × 13% ÷ CNY/USD × USD/RUB</td></tr>
+<tr><td><b>11 净利</b></td><td>成交价 − 成交价 × 佣金率 − 销售费用 − 净成本</td><td>目标成交价留空时按建议报价成交；佣金 / 销售费只进内部测算</td></tr>
+<tr><td><b>12 保本价</b></td><td>(净成本 + 销售费用) ÷ (1 − 佣金率)</td><td>净利恰为 0 的最低价；低于此价即亏本</td></tr>
+<tr><td><b>13 达标最低价</b></td><td>(净成本 + 销售费用) ÷ (1 − 佣金率 − 目标净利率)</td><td>分母 ≤ 0 时目标不可达，页面显示 0</td></tr>
 </tbody></table></div>
 <p class="cap">所有中间结果在右侧成本阶梯表里逐行列出，可导出 CSV 与 Excel 模板逐项对账。<b>公式透明是本工具的原则</b>：任何一项你觉得不对，直接改左侧输入框，不要改公式。</p></div></section>
 
-<section id="sources"><h2><span class="n">05</span>数据来源</h2>
+<section id="sources"><h2><span class="n">09</span>数据来源</h2>
 <div class="card"><div class="tbl-scroll"><table><thead><tr><th>编号</th><th>来源</th><th>关键内容</th><th>等级</th><th>链接</th></tr></thead><tbody>@@SRCROWS@@</tbody></table></div></div></section>
 
 <section id="downloads"><h2><span class="n">↓</span>配套文件下载</h2><p class="lead">Excel 模板带公式、可离线迭代参数；规则说明 PDF 覆盖中俄两侧全流程与单证清单。</p><div class="card">@@DLS@@</div></section>
@@ -865,12 +1146,16 @@ out = (BODY.replace("@@CSS@@", CSS + EXTRA)
        .replace("@@PARAMROWS@@", param_rows)
        .replace("@@FREIGHTROWS@@", freight_rows)
        .replace("@@UTILROWS@@", util_rows)
+       .replace("@@ROUTEROWS@@", route_rows)
+       .replace("@@VEHICLEROWS@@", vehicle_rows)
        .replace("@@CONFROWS@@", conf_rows)
        .replace("@@SRCROWS@@", src_rows)
        .replace("@@DLS@@", dls)
-       .replace("@@JS@@", JS))
+       .replace("@@JS@@", JS)
+       .replace("@@ROUTESJS@@", ROUTES_JS)
+       .replace("@@VEHICLESJS@@", VEHICLES_JS))
 path = os.path.join(SITE, "quotation.html")
 open(path, "w", encoding="utf-8").write(out)
 print("[OK] quotation.html", len(out) // 1024, "KB")
-for k in ["@@", "id=\"calc\"", "id=\"stages\"", "id=\"scenes\"", "compute(", "quotation.html"]:
+for k in ["@@", "id=\"calc\"", "id=\"profit\"", "id=\"plans\"", "id=\"routes\"", "id=\"vehicles\"", "id=\"scenes\"", "compute(", "applyRoute(", "applyVehicle("]:
     print("   %-22s → %d" % (k, out.count(k)))
