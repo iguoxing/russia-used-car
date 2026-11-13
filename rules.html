@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>俄罗斯汽车出口基本规则说明｜中国出口侧 · 俄罗斯进口侧 · 单证与收汇</title>
+<style>
+:root{--bg:#0d141d;--panel:#151f2b;--panel2:#1b2836;--line:#2b3a4b;--text:#e6eef7;--muted:#8fa3b8;
+--a1:#4d9cff;--a2:#34c9a1;--a3:#f5aa3c;--a4:#eb6950;--a5:#aa84f7}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Arial Unicode MS",sans-serif;line-height:1.75;font-size:15px}
+a{color:var(--a1);text-decoration:none}a:hover{text-decoration:underline}
+.wrap{max-width:1220px;margin:0 auto;padding:0 28px 90px}
+header{padding:54px 0 30px;border-bottom:1px solid var(--line);margin-bottom:28px}
+.eyebrow{color:var(--a3);font-size:13px;letter-spacing:.15em;font-weight:600}
+h1{font-size:38px;margin:12px 0 8px;letter-spacing:-.5px;line-height:1.3}
+.sub{font-size:18px;color:var(--muted);margin:0 0 18px}
+.badges{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.badge{background:var(--panel2);border:1px solid var(--line);border-radius:20px;padding:5px 14px;font-size:12px;color:var(--muted)}
+nav{position:sticky;top:0;z-index:20;background:rgba(13,20,29,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);margin-bottom:30px}
+nav .wrap{padding-top:12px;padding-bottom:12px;display:flex;gap:22px;flex-wrap:wrap;font-size:13px}
+nav a{color:var(--muted)}nav a:hover{color:var(--a1)}
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin:26px 0 34px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 14px}
+.kpi-v{font-size:26px;font-weight:700;color:var(--a1);line-height:1.2}
+.kpi-l{font-size:12px;margin-top:6px}.kpi-s{font-size:11px;color:var(--muted);margin-top:4px}
+section{margin:46px 0}h2{font-size:25px;margin:0 0 8px;display:flex;align-items:center;gap:12px}
+h2 .n{color:var(--a3);font-size:14px;border:1px solid var(--a3);border-radius:6px;padding:2px 9px;font-weight:600}
+.lead{color:var(--muted);margin:0 0 22px;font-size:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin:16px 0}
+.warn{background:linear-gradient(90deg,rgba(245,170,60,.12),rgba(245,170,60,.03));border:1px solid rgba(245,170,60,.4);border-left:4px solid var(--a3)}
+.warn b{color:var(--a3)}
+.concl{display:flex;gap:16px;padding:16px 0;border-bottom:1px solid var(--line)}
+.concl:last-child{border-bottom:0}.concl-n{flex:0 0 30px;height:30px;border-radius:50%;background:var(--panel2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--a3);font-weight:700;font-size:13px}
+.concl h4{margin:0 0 6px;font-size:16px}.concl p{margin:0;color:var(--muted);font-size:14px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:var(--panel2);color:var(--text);text-align:left;padding:11px 12px;border-bottom:1px solid var(--line);font-weight:600;white-space:nowrap}
+td{padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--muted)}
+tr:hover td{background:rgba(77,156,255,.05)}td:first-child{color:var(--text)}
+.tbl-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+.dim{border:1px solid var(--line);border-left:4px solid var(--dc);border-radius:12px;background:var(--panel);padding:20px 22px;margin:16px 0}
+.dim-head{display:flex;align-items:center;gap:12px}.dim-head h3{margin:0;font-size:19px;flex:1}
+.dim-no{color:var(--dc);font-size:22px;font-weight:700}
+.dim-score{font-size:12px;color:var(--dc);background:var(--panel2);padding:4px 12px;border-radius:14px}
+.bar{height:7px;background:var(--panel2);border-radius:5px;margin:12px 0 18px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--dc);border-radius:5px}
+.dim-body{display:grid;grid-template-columns:1.15fr 1fr;gap:26px}
+.dim-body h5{font-size:12px;color:var(--dc);letter-spacing:.08em;margin:0 0 8px}
+.dim-body ul{margin:0;padding-left:18px}.dim-body li{font-size:13px;color:var(--muted);margin-bottom:9px}
+.dim-body p{font-size:13.5px;color:var(--muted);margin:0 0 14px}.dim-body p.act{color:var(--text)}
+.chart{margin:22px 0;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
+.chart img{width:100%;display:block;border-radius:8px}
+.chart figcaption{font-size:12.5px;color:var(--muted);padding:12px 6px 2px}.chart figcaption b{color:var(--a1)}
+.step{display:flex;gap:16px;padding:15px 0;border-bottom:1px solid var(--line)}.step:last-child{border:0}
+.step-n{flex:0 0 74px;color:var(--a2);font-weight:700;font-size:13px}
+.step h4{margin:0 0 5px;font-size:15px}.step p{margin:0;color:var(--muted);font-size:13.5px}
+.controls{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:18px 0}
+input[type=search],select{background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:9px 13px;font-size:13px;outline:none}
+input[type=search]{min-width:300px}input[type=search]:focus,select:focus{border-color:var(--a1)}
+.hint{color:var(--muted);font-size:12px;margin-left:auto}
+#tbl th{cursor:pointer;user-select:none}#tbl th:hover{color:var(--a1)}
+#tbl td{white-space:nowrap}#tbl .nm{max-width:280px;white-space:normal;color:var(--text);font-weight:600}
+#tbl tr.row{cursor:pointer}
+.tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:10px;font-weight:700}
+.tag.S{background:rgba(235,105,80,.18);color:#ff9a80}.tag.A{background:rgba(77,156,255,.18);color:#8dc0ff}
+.tag.B{background:rgba(52,201,161,.18);color:#71e3c1}
+.detail td{background:var(--panel2)!important;white-space:normal;color:var(--muted);font-size:13px}
+.detail .dl{display:grid;grid-template-columns:96px 1fr;gap:8px 14px;padding:6px 0}
+.detail .dl b{color:var(--a3);font-weight:600}.detail .sig{border-left:2px solid var(--a2);padding-left:12px;margin:6px 0}
+.pager{display:flex;gap:10px;align-items:center;justify-content:center;margin:22px 0}
+button{background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:8px 16px;cursor:pointer;font-size:13px}
+button:hover:not(:disabled){border-color:var(--a1);color:var(--a1)}button:disabled{opacity:.4;cursor:not-allowed}
+.vrow{padding:11px 0;border-bottom:1px solid var(--line)}.vrow:last-child{border-bottom:0}.vrow b{font-size:13.5px}.vrow p{margin:4px 0 0;color:var(--muted);font-size:13px}
+.mono{font-family:ui-monospace,Menlo,monospace;font-size:12px}
+footer{border-top:1px solid var(--line);margin-top:56px;padding-top:22px;color:var(--muted);font-size:12px}
+@media(max-width:980px){.kpis{grid-template-columns:repeat(3,1fr)}.dim-body{grid-template-columns:1fr}h1{font-size:29px}}
+@media(max-width:620px){.kpis{grid-template-columns:repeat(2,1fr)}.wrap{padding:0 16px 60px}nav .wrap{gap:12px}}
+@media print{body{background:#fff;color:#111}.card,.kpi,.chart,.dim{background:#fff;border-color:#ccc;color:#111}
+:root{--text:#111;--muted:#444;--panel:#fff;--panel2:#f5f5f5;--line:#ddd}nav,.controls,.pager{display:none}}
+
+nav .ptab{border:1px solid var(--line);background:var(--panel2);border-radius:16px;padding:4px 14px;color:var(--muted);font-weight:600;font-size:12.5px}
+nav .ptab:hover{text-decoration:none;border-color:var(--a1);color:var(--a1)}
+nav .ptab.on{background:rgba(77,156,255,.16);border-color:var(--a1);color:#9ec8ff}
+nav .psep{width:1px;height:18px;background:var(--line);margin:0 2px}
+.ptabs{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 20px;align-items:center}
+.ptabs button{border:1px solid var(--line);background:var(--panel2);color:var(--muted);border-radius:9px;padding:8px 15px;font-size:13px}
+.ptabs button.on{background:rgba(77,156,255,.16);border-color:var(--a1);color:#9ec8ff;font-weight:700}
+.ptabs .all{margin-left:auto;color:var(--a2);border-color:rgba(52,201,161,.5)}
+.panel{display:none}.panel.on{display:block}
+.seg-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.seg-box{background:var(--panel2);border:1px solid var(--line);border-radius:11px;padding:16px 18px}
+.seg-box h5{margin:0 0 8px;font-size:12px;letter-spacing:.08em;color:var(--a1)}
+.seg-box p{margin:0;font-size:13.5px;color:var(--muted);line-height:1.8}
+.seg-box.hl{background:linear-gradient(135deg,rgba(77,156,255,.10),rgba(77,156,255,.02));border-color:rgba(77,156,255,.35)}
+.seg-box.hl p{color:var(--text)}
+.seg-h{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+.seg-h .ic{font-size:26px;font-weight:700}
+.seg-h h3{margin:0;font-size:21px;flex:1}
+.pill{font-size:12px;padding:4px 12px;border-radius:14px;border:1px solid var(--line);background:var(--panel2);color:var(--muted)}
+.pill.p1{background:rgba(235,105,80,.16);color:#ff9a80;border-color:rgba(235,105,80,.4)}
+.pill.p2{background:rgba(52,201,161,.14);color:#71e3c1;border-color:rgba(52,201,161,.4)}
+.pill.p3{background:rgba(245,170,60,.14);color:#f7c274;border-color:rgba(245,170,60,.4)}
+
+@media(max-width:820px){.kpis{grid-template-columns:repeat(2,1fr)}}
+
+.flow2{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.flowcol{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:18px}
+.flowcol.cn{border-top:3px solid var(--a1)}
+.flowcol.ru{border-top:3px solid var(--a2)}
+.flowcol h3{margin:0 0 4px;font-size:17px}
+.flowcol .sub{font-size:12.5px;color:var(--muted);margin:0 0 14px}
+.step{display:flex;gap:11px;padding:10px 0;border-bottom:1px dashed var(--line)}
+.step:last-child{border-bottom:0}
+.step .n{flex:0 0 30px;height:30px;border-radius:8px;background:var(--panel2);border:1px solid var(--line);
+ display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--a1)}
+.step b{font-size:13.5px;color:var(--text)}
+.step p{margin:3px 0 0;font-size:12.5px;color:var(--muted);line-height:1.7}
+.step .meta{font-size:11px;margin-top:4px}
+.step .meta span{margin-right:9px}
+.tag.b{background:rgba(77,156,255,.13);color:#9ec8ff;border-color:rgba(77,156,255,.4)}
+.tag.warn{background:rgba(235,105,80,.14);color:#ff9a80;border-color:rgba(235,105,80,.4)}
+.tl{position:relative;padding-left:22px;margin-top:8px}
+.tl:before{content:"";position:absolute;left:6px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tli{position:relative;padding:9px 0 9px 4px;border-bottom:1px dashed var(--line)}
+.tli:last-child{border-bottom:0}
+.tli:before{content:"";position:absolute;left:-20px;top:16px;width:9px;height:9px;border-radius:50%;background:var(--a1);border:2px solid var(--bg)}
+.tli.c:before{background:var(--a3)}
+.tli .d{font-size:12px;font-weight:700;color:var(--a1);letter-spacing:.03em}
+.tli.c .d{color:var(--a3)}
+.tli .t{font-size:13.5px;color:var(--text);margin:2px 0}
+.tli .s{font-size:12px;color:var(--muted)}
+.chk{display:flex;gap:10px;align-items:flex-start;padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:var(--panel2);margin:7px 0;cursor:pointer;font-size:13px;line-height:1.6}
+.chk input{margin-top:4px;flex:0 0 auto}
+.chk.done{background:rgba(52,201,161,.10);border-color:rgba(52,201,161,.4)}
+.chk.done span{text-decoration:line-through;color:var(--muted)}
+.pit{border-left:3px solid var(--a4);background:var(--panel2);border-radius:0 10px 10px 0;padding:12px 15px;margin:9px 0}
+.pit b{color:#ff9a80;font-size:13.5px}
+.pit p{margin:5px 0 0;font-size:12.8px;color:var(--muted);line-height:1.75}
+.mini{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.mini .card{margin:0}
+.mini h4{margin:0 0 8px;font-size:14px;color:var(--a1)}
+.mini p{margin:0;font-size:12.8px;color:var(--muted);line-height:1.75}
+.biglink{display:inline-block;margin-top:10px;padding:9px 15px;border-radius:9px;background:rgba(77,156,255,.16);border:1px solid var(--a1);color:#9ec8ff;font-weight:700;font-size:13px}
+.biglink:hover{text-decoration:none;background:rgba(77,156,255,.26)}
+@media(max-width:900px){.flow2,.mini{grid-template-columns:1fr}}
+@media print{
+ body{background:#fff!important;color:#16202c!important}
+ :root{--text:#16202c;--muted:#475569;--panel:#fff;--panel2:#f7fafc;--line:#cbd5e1;--bg:#fff}
+ nav,.btn,.biglink{display:none!important}
+ .card,.flowcol,.pit,.chk,.kpi,.mini .card{background:#fff!important;border-color:#cbd5e1!important;color:#16202c!important}
+ h1,h2,h3,h4,.eyebrow,.sub,.kpi-v,.kpi-l,.kpi-s,.step b,.step p,.tli .t,.tli .s,.pit p,.pit b,.mini p,.lead,.cap,td,th,p,li,footer{color:#16202c!important}
+ .step .d,.tli .d{color:#1d4ed8!important}
+ th{background:#e8eef5!important;color:#16202c!important}
+ .tbl-scroll{overflow:visible!important}
+ table{table-layout:auto!important}
+ th,td{padding:5px 7px!important;font-size:10.5px!important;white-space:normal!important}
+ .card,.flowcol,.pit,.tli{page-break-inside:avoid}
+ section{margin:20px 0}
+ html{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+
+nav .wrap{flex-wrap:nowrap;overflow-x:auto;white-space:nowrap;scrollbar-width:thin}
+nav .wrap::-webkit-scrollbar{height:5px}
+nav .wrap::-webkit-scrollbar-thumb{background:var(--line);border-radius:5px}
+nav .wrap a,nav .psep{flex:0 0 auto}
+</style></head><body>
+<nav><div class="wrap"><a class="ptab" href="index.html">总览看板</a><a class="ptab" href="segments.html">细分市场 · 6 大赛道</a><a class="ptab" href="quotation.html">报价计算器</a><a class="ptab on" href="rules.html">出口规则说明</a><span class="psep"></span><a href="#top">概览</a><a href="#flow">全流程</a><a href="#cn">中国出口侧</a><a href="#ru">俄罗斯进口侧</a><a href="#docs">单证清单</a><a href="#timeline">政策时间线</a><a href="#pay">收汇与合规</a><a href="#pits">常见坑</a><a href="#check">报价前检查</a><a href="#conflicts">口径冲突</a><a href="#sources">来源</a><a href="#downloads">配套下载</a></div></nav>
+<div class="wrap" id="top">
+<header>
+ <div class="eyebrow">RUSSIA · EXPORT COMPLIANCE BASICS · 2026-11-13</div>
+ <h1>俄罗斯汽车出口基本规则说明</h1>
+ <p class="sub">从「谁有资格出口」到「车怎么在俄上牌」：中俄两侧流程、单证、税费、收汇与常见坑</p>
+ <div class="badges"><span class="badge">新增 Tab 页 · 2026-11-13</span><span class="badge">7 步中方 + 6 步俄方</span><span class="badge">12 类单证</span><span class="badge">17 条来源 · 4 处口径冲突</span></div>
+ <p class="lead" style="margin-top:20px">这份说明按「做一单生意实际要走的路」写，不按法规章节写。每条规则标了来源与证据等级：A = 官方法规/海关/政府公告，B = 权威机构经媒体转述或行业实操指南，C = 行业调研、二手转述或口径存疑。<b>落地前请让俄方持牌报关行与你的开户行复核当期要求。</b></p>
+ <a class="biglink" href="quotation.html">→ 去报价计算器，按这些规则算一单落地成本</a>
+</header>
+
+<div class="kpis">
+ <div class="kpi"><div class="kpi-v">7 + 6</div><div class="kpi-l">中方 / 俄方流程步骤</div><div class="kpi-s">从备案到上牌</div></div>
+ <div class="kpi"><div class="kpi-v">13%</div><div class="kpi-l">整车 / 二手车出口退税</div><div class="kpi-s">单证一致才可退</div></div>
+ <div class="kpi"><div class="kpi-v">一批一证</div><div class="kpi-l">出口许可证</div><div class="kpi-s">单证最多 20 台 / 6 个月</div></div>
+ <div class="kpi"><div class="kpi-v">30 / 70</div><div class="kpi-l">建议付款结构</div><div class="kpi-s">预付 + 见单付尾款</div></div>
+ <div class="kpi"><div class="kpi-v">160 hp</div><div class="kpi-l">报废税资格线</div><div class="kpi-s">过线直接转商业系数</div></div>
+ <div class="kpi"><div class="kpi-v">欧 5</div><div class="kpi-l">俄方排放门槛</div><div class="kpi-s">国六不可等效替代</div></div>
+</div>
+
+<div class="card warn"><b>⚠ 先分清三件事，否则规则会用错</b><br/>
+① <b>新车还是二手车</b>：二手车多出企业备案、WM/T 8-2022 检测、「转让待出口」签注、180 天售后确认书与通关后注销登记；<br/>
+② <b>法人商业进口还是个人自用</b>：个人优惠档需同时满足 ≤3 年 / ≤3.0L / ≤160hp / 一年 1 辆 / 12 个月不转售，且功率过 160hp 即失效，商业批量根本不适用；<br/>
+③ <b>官方授权还是平行进口</b>：平行进口只解决特定真品的知识产权例外，<b>不豁免</b> EAC 认证、俄文标签、ЭПТС、报废税，且不得宣称官方授权或提供原厂质保 [S14]。</div>
+
+<section id="flow"><h2><span class="n">01</span>一页看懂：中俄两侧全流程</h2>
+<p class="lead">左边是中国出口侧（你把车发出去），右边是俄罗斯进口侧（客户把车清出来上牌）。贸易术语决定中间哪一段由谁负责，详见报价计算器的「成本阶梯」。</p>
+<div class="flow2">
+ <div class="flowcol cn"><h3>中国出口侧</h3><p class="sub">主体资质 → 单证 → 报关 → 收汇 → 退税</p><div class="step"><div class="n">01</div><div><b>确认主体资质</b><p>营业执照含汽车销售/二手车经销；海关进出口货物收发货人备案；二手车出口企业须在「商务部业务系统统一平台」向省级商务主管部门备案（审核通过后一年内可经营，年度需报送）</p><div class="meta"><span>来源 S13</span><span>A 级</span></div></div></div><div class="step"><div class="n">02</div><div><b>备货与车况检测</b><p>二手车按 WM/T 8-2022 由第三方机构「一车一检」：VIN/发动机号一致、事故/泡水/火烧、底盘制动灯光 OBD，新能源加测 SOH 与高压绝缘，出《质量检测合格报告》</p><div class="meta"><span>来源 S12/S13</span><span>A/B 级</span></div></div></div><div class="step"><div class="n">03</div><div><b>目的国准入前置</b><p>装船前完成俄方认证规划：TR CU 018/2011、СБКТС 或 ОТТС、ЭРА-ГЛОНАСС、排放欧 5（中国国六不可等效替代）。到港补办会产生巨额滞港费甚至退运</p><div class="meta"><span>来源 S08/S16</span><span>B/C 级</span></div></div></div><div class="step"><div class="n">04</div><div><b>申领出口许可证</b><p>谁出口谁申领，不可代办；一批一证、单证最多 20 台、有效期 6 个月且截止当年 12-31；省级商务主管部门 3 个工作日签发；许可证 HS 编码须与车辆动力类型一致</p><div class="meta"><span>来源 S12/S13</span><span>A 级</span></div></div></div><div class="step"><div class="n">05</div><div><b>订舱 / 装箱 / 报关</b><p>单一窗口无纸化申报；商品名称「旧+品牌+排量+车型」，完整录入 17 位 VIN；新能源按 9 类危险品订舱，需 MSDS、UN38.3；燃油车油量 &lt;1/4、新能源电量 30–50%</p><div class="meta"><span>来源 S09/S12</span><span>A/B 级</span></div></div></div><div class="step"><div class="n">06</div><div><b>收汇与注销登记</b><p>30% 预付 + 70% 见提单/清关单；人民币结算走 CIPS / SPFS / VTB；船发前确认款项实际到账再放行提单；海关通关后 2 个月内办机动车注销登记</p><div class="meta"><span>来源 S13/S15</span><span>A/B 级</span></div></div></div><div class="step"><div class="n">07</div><div><b>退税与单证留存</b><p>整车/二手车出口退税率 13%；购进发票、过户凭证、报关单、合同金额必须一致并完整留存，否则退税被卡；资料齐全最快 3 个工作日</p><div class="meta"><span>来源 S11</span><span>A 级</span></div></div></div></div>
+ <div class="flowcol ru"><h3>俄罗斯进口侧</h3><p class="sub">合同 → 运输 → 完税 → 认证 → 上牌</p><div class="step"><div class="n">01</div><div><b>合同与贸易术语</b><p>明确 EXW/FOB/CIF/DDP 界限：DDP 由中方承担俄方全部税费与认证，风险最高；建议首单用 FOB/CIF + 俄方指定清关代理</p><div class="meta"><span>来源 S15</span><span>B 级</span></div></div></div><div class="step"><div class="n">02</div><div><b>国际运输与口岸</b><p>海运滚装 / 铁路班列 / TIR 公路 / 整箱；铁路需边境换装 1–3 天，旺季提前 1–2 个月订舱；ЕАЭУ 公路入境自 2026-06-01 须提前 2 个工作日完成 СПОТ 电子申报</p><div class="meta"><span>来源 S09/S16</span><span>B/C 级</span></div></div></div><div class="step"><div class="n">03</div><div><b>进口报关与完税</b><p>按完税价格缴关税、消费税、增值税 22%、报废税、海关手续费；俄海关可按市场价重新估价，低报有罚款风险；税费缴清前 EPTS 保持 Draft 状态</p><div class="meta"><span>来源 S02–S07/S10</span><span>A/B 级</span></div></div></div><div class="step"><div class="n">04</div><div><b>认证与 EPTS</b><p>СБКТС（约 40K 卢布 / 5–10 天）或 ОТТС 整车型式认证；2025-07 起整车认证须俄境内实验室；获证后申请电子车辆护照 ЭПТС，2–5 个工作日</p><div class="meta"><span>来源 S08/S14</span><span>B 级</span></div></div></div><div class="step"><div class="n">05</div><div><b>俄境内运输与上牌</b><p>海参崴→莫斯科 150K–250K 卢布 / 7–14 天；凭 ЭПТС + СБКТС + 报关单 + ОСАГО 保险 + 身份证件到 ГИБДД 当日上牌</p><div class="meta"><span>来源 S08</span><span>B 级</span></div></div></div><div class="step"><div class="n">06</div><div><b>销售与售后</b><p>平行进口无原厂质保，由进口商/销售方自行承担；不得宣称官方授权、不得擅自换标；俄文标签、说明书、车机俄语化、备件供应需在售前落实</p><div class="meta"><span>来源 S14</span><span>A/B 级</span></div></div></div></div>
+</div></section>
+
+<section id="cn"><h2><span class="n">02</span>中国出口侧：资质、许可证与退税</h2>
+<div class="mini">
+ <div class="card"><h4>① 谁能出口</h4><p>营业执照经营范围含汽车销售 / 二手车经销；海关进出口货物收发货人备案；<b>二手车出口企业还须在「商务部业务系统统一平台」向省级商务主管部门备案</b>，审核通过后一年内可经营、年度需报送。谁出口谁申领许可证，不可代办 [S13]。</p></div>
+ <div class="card"><h4>② 许可证怎么领</h4><p>一批一证、同一商品编码最多 20 台、有效期 6 个月且截止当年 12-31；省级商务主管部门 3 个工作日签发；许可证 HS 编码必须与车辆动力类型一致（插混 8703602300 / 纯电 8703603300 不同），填错会被海关按申报不实处罚 [S12][S13]。</p></div>
+ <div class="card"><h4>③ 退税与单证</h4><p>整车 / 二手车出口退税率 <b>13%</b>，一台 10 万元的车可退一万多；但购进发票、过户凭证、合同与报关单金额必须一致并完整留档，否则退税被卡。资料齐全最快 3 个工作日；部分基地还有退税周转资金池 [S11]。</p></div>
+ <div class="card"><h4>④ 二手车额外动作</h4><p>收购后办理「转让待出口」签注（临牌最长 60 日，此后不得再境内交易）；按 WM/T 8-2022 一车一检；<b>注册登记未满 180 天的新车须生产企业出具《售后维修服务确认书》</b>（2026-01-01 起强制）；海关通关后 2 个月内办注销登记 [S12][S13]。</p></div>
+ <div class="card"><h4>⑤ 新能源特殊要求</h4><p>属 9 类危险品：海运需提前订危险品舱、准备英文 MSDS 与 UN38.3 报告、完成海事申报；燃油车油量控制在 1/4 以下、新能源电量 30–50%；申报要素含电池容量 [S09][S12]。</p></div>
+ <div class="card"><h4>⑥ 申报规范</h4><p>单一窗口无纸化；商品名称统一填「旧+品牌+排量+车型」，完整录入 17 位 VIN；如实申报品牌型号、发动机类型、座位数、是否中规车、新旧程度、电池容量。低报货值会同时触发俄方重新核价与国内退税单证不一致 [S10][S12]。</p></div>
+</div></section>
+
+<section id="ru"><h2><span class="n">03</span>俄罗斯进口侧：主体、税费、认证与上牌</h2>
+<div class="card"><h3 style="margin-top:0">3.1 进口主体决定税额量级</h3>
+<p>法人商业进口按完税价格缴关税、消费税、增值税、报废税与清关手续费；个人自用仅在同一年内 1 辆、≤3 年、≤3.0L、≤160hp、12 个月不转售时适用报废税优惠系数 0.17 / 0.26（3,400 / 5,200 卢布）。<b>功率一旦超过 160hp，优惠档直接失效转商业系数</b>：同款途观 1.4T 150hp 报废税 3,400 卢布，2.0T 180hp 为 114,600 卢布，差 30 马力多 11 万卢布 [S04][S17]。</p>
+<p>商业系数按排量 × 车龄查表（1–2L 新车 12.95、旧车 33.84；2–3L 新车 27.51、旧车 84.01；3L+ 137+），乘用车基准 20,000 卢布，卡车/客车/挂车 150,000 卢布。<b>报废税通常是单车最大税费项</b>，不是关税 [S04][S05]。</p></div>
+<div class="card" style="margin-top:14px"><h3 style="margin-top:0">3.2 认证与车辆护照</h3>
+<p>整车须符合 EAEU 技术法规 <b>TR CU 018/2011</b>（制动、灯光、安全带、VIN、排放、整体安全）。两条路径：<b>ОТТС</b> 整车型式认证（2025-07 起须俄境内实验室，周期 3–6 个月）；<b>СБКТС</b> 单车安全结构证书（约 4 万卢布 / 5–10 天，无 ОТТС 时逐车 10–25 万卢布 + 30–60 天）。拿到认证 + 缴清报废税后申请 <b>ЭПТС 电子车辆护照</b>，未缴清差额前 EPTS 一直是 Draft，车不能上牌、不能合法销售、不能过户 [S08][S16]。</p>
+<p>另需 <b>ЭРА-ГЛОНАСС</b> 紧急呼叫（缺装需俄认证机构加装 3.5–6.5 万卢布）；排放强制欧 5，<b>中国国六标准不能等效替代</b>，需单独合规认证；二手车车龄限制与 SBKTS 要求按当期清单核验 [S08][S16]。</p></div>
+<div class="card" style="margin-top:14px"><h3 style="margin-top:0">3.3 平行进口不是「免检通道」</h3>
+<p>第 463-FZ 号联邦法把平行进口清单授权延续适用至 2026 年，工贸部 2025 年第 4769 号令部分调整自 2026-05-27 生效。需按进口发生时有效的清单逐项核验：是否真品、是否境外合法投放市场、HS 编码与品牌是否在清单内、有无品牌排除或型号限制。<b>被移出清单不等于禁止进口</b>，只是不能再凭平行进口特别措施免除知识产权责任。即使符合条件，仍须遵守海关申报、EAC 认证、俄文标签、数字标识、产品安全与消费者权益规定；不得卖假货、擅自换标、误导性改装或虚假宣称官方授权。「零公里二手车」是商业叫法，不是法定分类 [S14]。</p></div>
+<div class="card" style="margin-top:14px"><h3 style="margin-top:0">3.4 上牌与售后</h3>
+<p>海参崴→莫斯科内陆运输 15–25 万卢布 / 7–14 天。到 ГИБДД 上牌需五件：ЭПТС、СБКТС、报关单（ПТД/ТПО）、ОСАГО 交强险、车主身份证件，齐备当日发牌。平行进口<b>无原厂质保</b>，由进口商/销售方自行承担售后，需提前落实延保方案、易损件库存、俄语车机与说明书、冬季适配 [S08][S14]。</p></div></section>
+
+<section id="docs"><h2><span class="n">04</span>单证清单（按环节）</h2>
+<p class="lead">缺一张就可能卡在港口。所有涉及 VIN、品牌、排量、功率、动力类型的字段，在许可证、登记证、检测报告、报关单、发票之间必须完全一致。</p>
+<div class="card"><div class="tbl-scroll "><table><thead><tr><th>环节</th><th>单证 / 材料</th><th>办理时点</th><th>来源</th><th>等级</th></tr></thead><tbody><tr><td>中方出口</td><td>营业执照（含汽车销售/二手车经销）+ 海关收发货人备案 + 二手车出口企业备案</td><td>出发前</td><td>S13</td><td><span class="tag a">A</span></td></tr><tr><td>中方出口</td><td>《出口许可证》（一批一证，电子联网核查，HS 与动力类型一致）</td><td>报关前</td><td>S12</td><td><span class="tag a">A</span></td></tr><tr><td>中方出口</td><td>《机动车登记证书》（签注「转让待出口」）、二手车收购发票、注销登记（通关后 2 个月内）</td><td>申领许可证前 / 通关后</td><td>S13</td><td><span class="tag a">A</span></td></tr><tr><td>中方出口</td><td>第三方《二手车出口质量检测合格报告》（WM/T 8-2022）+ 机构合规声明</td><td>申领许可证前</td><td>S12</td><td><span class="tag b">B</span></td></tr><tr><td>中方出口</td><td>出口合同（含售后服务条款；外文须附中文译本）、商业发票、装箱单、提单/运单、代理报关委托书</td><td>订舱报关</td><td>S12</td><td><span class="tag a">A</span></td></tr><tr><td>中方出口</td><td>注册登记未满 180 天车辆：生产企业《售后维修服务确认书》（2026-01-01 起强制）</td><td>申领许可证前</td><td>S12</td><td><span class="tag a">A</span></td></tr><tr><td>中方出口</td><td>新能源：MSDS、UN38.3 测试报告、电池 SOH/绝缘检测；按 9 类危险品订舱与海事申报</td><td>订舱前</td><td>S09/S12</td><td><span class="tag a">A/B</span></td></tr><tr><td>双方</td><td>17 位 VIN、品牌型号、发动机类型、排量、功率、座位数、新旧程度、电池容量（申报要素必须一致）</td><td>全程</td><td>S12</td><td><span class="tag a">A</span></td></tr><tr><td>俄方进口</td><td>СБКТС 或 ОТТС（TR CU 018/2011）、EAC 符合性文件、排放欧 5 证明</td><td>到港前/清关时</td><td>S08/S16</td><td><span class="tag b">B/C</span></td></tr><tr><td>俄方进口</td><td>ЭПТС 电子车辆护照（报废税差额缴清后才生效）；ЭРА-ГЛОНАСС 加装证明</td><td>清关后</td><td>S08</td><td><span class="tag b">B</span></td></tr><tr><td>俄方进口</td><td>商业发票、装箱单、提单、原产地证（一般 CO）、购车合同、出口报关单、INN/税务识别号</td><td>报关时</td><td>S08/S10</td><td><span class="tag b">B</span></td></tr><tr><td>俄方进口</td><td>ОСАГО 交强险、ГИБДД 上牌材料；俄文标签/说明书/保修文件</td><td>上牌销售前</td><td>S08/S14</td><td><span class="tag b">B</span></td></tr></tbody></table></div></div></section>
+
+<section id="timeline"><h2><span class="n">05</span>政策时间线（2024 → 2027）</h2>
+<p class="lead">黄色圆点 = 来源存在冲突或证据等级 C，落地前必须核原文。长周期合同一定要写费率与汇率调价条款。</p>
+<div class="card"><div class="tl"><div class="tli"><div class="d">2024-10-01</div><div class="t">报废税上调 70–85%，并设 2024–2030 逐年再涨 10–20% 机制</div><div class="s">依据 第 1255 号令 · B 级　｜　年份另有 2025-10 记载，已列为存疑，不用于报价结论</div></div><div class="tli"><div class="d">2025-01-01</div><div class="t">进口汽车关税系数上调至 20–38%，清关费同步上浮</div><div class="s">依据 公开报道 · B 级　｜　与「法人 15–25% 从价」口径并存，须按 HS 子目核定</div></div><div class="tli"><div class="d">2025-07</div><div class="t">整车 ОТТС 认证须俄境内实验室测试</div><div class="s">依据 行业报道 · B 级　｜　认证周期拉长至 3–6 个月</div></div><div class="tli"><div class="d">2025-12-01</div><div class="t">报废税计算新增 &gt;160 马力维度，取消大功率个人进口优惠</div><div class="s">依据 第 1291 号令相关 · A 级　｜　150hp 3,400 卢布 → 180hp 114,600 卢布，是资格线不是加价线</div></div><div class="tli"><div class="d">2026-01-01</div><div class="t">增值税 20%→22%（425-ФЗ）；清关手续费按第 1638 号决议改 8 档；注册未满 180 天车辆须《售后维修服务确认书》</div><div class="s">依据 联邦法 / 政府决议 / 海关 · A 级　｜　部分行业资料仍写 VAT 20%，报价前须核</div></div><div class="tli"><div class="d">2026-03-01</div><div class="t">出租车本地化法案：≥3,200 分才可进区域出租车登记册</div><div class="s">依据 公开报道 · B 级　｜　纯进口整车几乎无法达标，B 端车队市场受限</div></div><div class="tli c"><div class="d">2026-04-01</div><div class="t">EAEU 转口「按均价库补差」：一说正式落地，一说推迟且截至 2026-10 无生效日</div><div class="s">依据 来源冲突 · C 级　｜　本计算器不采用任一前提；涉转口链路必须核俄政府令原文</div></div><div class="tli"><div class="d">2026-05-27</div><div class="t">工贸部 2025 年第 4769 号令部分平行进口清单调整生效</div><div class="s">依据 第 463-FZ 授权延续 · A/B 级　｜　需按进口发生时有效的清单逐项核验</div></div><div class="tli"><div class="d">2026-06-01</div><div class="t">СПОТ 系统：EAEU 公路入境货物须跨境前 ≥2 工作日电子申报取核验二维码</div><div class="s">依据 行业报告 · B/C 级　｜　直接冲击吉尔吉斯斯坦等中转渠道</div></div><div class="tli"><div class="d">2026-09-01</div><div class="t">技术规费（电子产品）开征，与整车无直接关系但影响车机/电子配件</div><div class="s">依据 425-ФЗ · B 级　｜　车机、记录仪等随车电子件需关注</div></div><div class="tli"><div class="d">2027-01-01</div><div class="t">报废税系数预计再上调 10–20%（规划延续至 2030）</div><div class="s">依据 俄工贸部口径 · B 级　｜　长周期报价必须预留调价条款；经销商可能提前把预期涨价算进在售成本</div></div></div></div></section>
+
+<section id="pay"><h2><span class="n">06</span>收汇、结算与合规筛查</h2>
+<div class="mini">
+ <div class="card"><h4>付款结构</h4><p>建议 <b>30% 预付 + 70% 见清关单/提单副本</b>，避免全款预付；船发前确认款项实际到账再放行提单；警惕第三方代付带来的洗钱与合规风险。合同加入制裁条款：任一方或其银行被列入制裁名单导致通道中断时，可终止合同并按已履约比例结算、30 日内无息退还预付款 [S15]。</p></div>
+ <div class="card"><h4>结算通道</h4><p>优先人民币或卢布本币结算，绕开美元清算：<b>CIPS / SPFS / VTB 上海分行</b>、边境口岸银行。中俄贸易本币结算比例已很高，但仍需确认开户行对汽车品类的受理政策，避开受制裁俄金融机构与涉美通道；高价值交易可能需更复杂的合规结构 [S15][S17 相关]。</p></div>
+ <div class="card"><h4>汇率与调价</h4><p>卢布年波动多次超 30%（2026 年 52 周区间 70.79–87.00 RUB/USD）。合同可约定「结算日较签约日波动超 5% 的部分按比例分担」或直接用人民币计价；大额订单可做远期结汇 / 锁汇。报废税每年 1 月调整，2027-01-01 预计再涨 10–20% [S01][S17]。</p></div>
+ <div class="card"><h4>制裁与主体筛查</h4><p>签约前核查俄方公司、股东、最终受益人是否在制裁名单；核对汇款账户与合同主体一致；关注最终用户 / 最终用途声明、车辆与车机电子件的出口管制归类；俄罗斯个人数据本地化存储要求也适用于客户信息管理 [S15]。</p></div>
+ <div class="card"><h4>清关节点管控</h4><p>协议写明因经销商单证瑕疵导致滞港的违约金（如每日货值 0.1%、上限合同额 15%）；建立绿 / 黄 / 红灯机制：5 个工作日正常、超 5 日高层介入、超 10 日启动法律保全与替代物流 [S15]。</p></div>
+ <div class="card"><h4>退税前置条件</h4><p>13% 退税是重要现金流，但要求单证与报关单金额匹配、业务资料逻辑一致。中小出口商最容易忽略单证留存，导致退税款卡住。建议把「单证一致性检查」写进发货 SOP [S11]。</p></div>
+</div></section>
+
+<section id="pits"><h2><span class="n">07</span>八个最常见的坑</h2>
+<div class="pit"><b>160 马力不是「多交一点」</b> <span class="tag c">S17 · B</span><p>个人自用优惠需同时满足 ≤3 年、≤3.0L、≤160hp；功率一过线直接转商业系数，同款车 150hp 报废税 3,400 卢布、180hp 114,600 卢布，差 30 马力多 11 万卢布。选品阶段就要卡功率</p></div><div class="pit"><b>把「转口渠道」当「已买中国车」</b> <span class="tag a">主报告第 09/10 章 · A</span><p>385 家经中亚名单无原产国字段，明确原产中国仅 22 家 / $951 万（0.85%），其余只能证明有第三国转口能力；叠加 EAEU 补差新规，低价转口套利路径已高度不确定</p></div><div class="pit"><b>灰色清关 / 双清包税</b> <span class="tag c">S09 · B</span><p>低价货代常跳过 ОТТС/СБКТС，被查后扣车 + 货值 30–50% 罚款 + 滞港仓储，总成本反而数倍于正规清关</p></div><div class="pit"><b>低报货值</b> <span class="tag a">S10/S11 · A/B</span><p>俄海关有权按市场价重新估价并处罚；且单证与报关单金额不一致会连带卡住国内 13% 出口退税</p></div><div class="pit"><b>只看关税与增值税</b> <span class="tag c">S03 · B</span><p>一台 271 万卢布的进口车税费合计 118 万（占 44%），其中报废税 80.08 万、增值税 22.97 万、关税 13.5 万 —— 报废税才是最大项</p></div><div class="pit"><b>忽略认证周期与售后</b> <span class="tag c">S08/S14 · B</span><p>СБКТС 30–60 天、ОТТС 3–6 个月；平行进口无原厂质保，延保、备件、俄语车机、冬季适配都是必须计进报价的成本</p></div><div class="pit"><b>全款预付 / 美元结算</b> <span class="tag c">S15 · B</span><p>建议 30% 预付 + 70% 见单，合同含制裁条款与汇率分担；优先人民币 CIPS / SPFS / VTB 通道，避开涉美清算；警惕第三方代付</p></div><div class="pit"><b>报价不留调价条款</b> <span class="tag c">S15/S17 · B</span><p>报废税每年 1 月调整、2027-01 再涨 10–20%，卢布年波动可超 30%；长周期合同须写费率变动与汇率分担机制</p></div></section>
+
+<section id="check"><h2><span class="n">08</span>报价前十项检查清单</h2>
+<p class="lead">可勾选，状态存在本机浏览器，下次打开自动恢复；也可一键复制清单发给同事。<b id="chkStat">0 / 10 项已完成</b></p>
+<div class="card"><label class="chk" data-i="0"><input type="checkbox" id="ck0"><span>确认进口主体：法人商业进口还是个人自用（优惠档条件：≤3 年 / ≤3.0L / ≤160hp / 一年 1 辆）</span></label><label class="chk" data-i="1"><input type="checkbox" id="ck1"><span>按报关行核定 HS 子目与实际关税率（20–38% 与 15–25% 两种口径并存）</span></label><label class="chk" data-i="2"><input type="checkbox" id="ck2"><span>核实增值税适用税率（20% / 22% 两种记载），并确认计税基数是否含消费税</span></label><label class="chk" data-i="3"><input type="checkbox" id="ck3"><span>按排量档 + 车龄 + 功率查报废税系数，别只按车价估</span></label><label class="chk" data-i="4"><input type="checkbox" id="ck4"><span>确认 СБКТС / ОТТС 认证路径与周期，ЭРА-ГЛОНАСС 是否已装</span></label><label class="chk" data-i="5"><input type="checkbox" id="ck5"><span>核实 EAEU 转口补差新规当前生效状态（两种记载冲突）</span></label><label class="chk" data-i="6"><input type="checkbox" id="ck6"><span>报价单把车价 / 运费 / 关税 / 报废税 / 增值税 / 认证 / 售后分行列出</span></label><label class="chk" data-i="7"><input type="checkbox" id="ck7"><span>写明贸易术语边界、付款结构（30/70）、制裁条款、汇率与费率调价条款</span></label><label class="chk" data-i="8"><input type="checkbox" id="ck8"><span>确认收汇通道（人民币 CIPS/SPFS/VTB）与银行对汽车品类的受理政策</span></label><label class="chk" data-i="9"><input type="checkbox" id="ck9"><span>国内单证（许可证/检测报告/登记证/发票）与报关单金额一致，保住 13% 退税</span></label>
+<div class="btn-row" style="grid-template-columns:repeat(2,1fr);max-width:320px;margin-top:12px">
+ <button class="btn" id="chkCopy">复制清单</button><button class="btn" id="chkReset">清空勾选</button>
+</div></div></section>
+
+<section id="conflicts"><h2><span class="n">09</span>四处口径冲突（报价前必须核）</h2>
+<p class="lead">这些不是算错，是公开来源本身打架。计算器给了默认值，但<b>不替你拍板</b>。</p>
+<div class="card"><div class="tbl-scroll "><table><thead><tr><th>冲突点</th><th>两种记载</th><th>本页处理</th></tr></thead><tbody><tr><td>增值税 20% 还是 22%</td><td>联邦法 425-ФЗ 与多家财经媒体：2026-01-01 起 20%→22%；但 2026 年多份进口指南与物流商资料仍写 20%</td><td>计算器默认 22%，可一键改 20%；正式报价前让俄方报关行出具书面税率确认</td></tr><tr><td>EAEU 补差新规是否已生效</td><td>一说 2026-04-01 正式落地、公私进口统一按商业税率；另一说原定 4 月但已推迟，截至 2026-10 无生效日</td><td>计算器不采用任一前提；走白俄/吉/哈/亚转口链路时，落地成本必须核俄政府令原文后重算</td></tr><tr><td>进口关税 15–25% 还是 20–38%</td><td>按 HS 8703 法人从价 15–25% 的通用口径，与 2025-01 起「系数上调至 20–38%」的报道并存；两者可能对应不同子目/车龄/主体</td><td>计算器默认 20%，提供 15/20/25/30/38 预设；实际以报关行按 HS 子目核定为准</td></tr><tr><td>报废税上调年份 2024-10 还是 2025-10</td><td>主报告第 09 章已列为年份存疑；不同二手来源记载不一致</td><td>不影响本页系数表（系数取 2026 现值），但写政策说明时只写「已上调」不写具体年份</td></tr></tbody></table></div></div></section>
+
+<section id="sources"><h2><span class="n">10</span>数据来源与证据等级</h2>
+<div class="card"><div class="tbl-scroll "><table><thead><tr><th>编号</th><th>来源</th><th>关键内容</th><th>等级</th><th>链接</th></tr></thead><tbody><tr><td>S01</td><td>俄罗斯央行官方汇率 / 中新社</td><td>2026-11-13 官方 1 USD = 82.9803 RUB；11-12 官方 1 CNY = 12.3907 RUB；52 周区间 70.79–87.00</td><td><span class="tag a">A</span></td><td><a href="https://www.cbr.ru/eng/currency_base/daily" target="_blank" rel="noopener">链接</a></td></tr><tr><td>S02</td><td>俄政府关税调整 / 大数跨境、三个皮匠报告</td><td>2025-01-01 起进口汽车关税系数上调至 20–38%，清关费每车约 +2,000 元；另有法人 HS 8703 按 15–25% 从价的口径</td><td><span class="tag b">B</span></td><td><a href="https://www.10100.com/article/157595040" target="_blank" rel="noopener">链接</a></td></tr><tr><td>S03</td><td>联邦法 425-ФЗ（经媒体转述）</td><td>2026-01-01 起增值税标准税率 20%→22%；仍有多份行业指南写 20%，须以报关行/俄海关核定为准</td><td><span class="tag a">A/B</span></td><td><a href="https://www.10100.com/article/157595040" target="_blank" rel="noopener">链接</a></td></tr><tr><td>S04</td><td>Izvestia / 俄联邦政府第 1291 号令相关报道</td><td>报废税 = 基础费率 × 系数；乘用车基础 20,000 卢布，卡车/客车/挂车 150,000 卢布；2025-12 起新增 &gt;160 马力维度</td><td><span class="tag a">A</span></td><td><a href="https://en.iz.ru/en/node/2149237/translations/add" target="_blank" rel="noopener">链接</a></td></tr><tr><td>S05</td><td>SH GLOBAL 2026 进口指南 / UniTools 报废税计算器</td><td>商业系数：1–2L 新车 12.95 / 旧车 33.84；2–3L 新车 27.51 / 旧车 84.01；3L+ 137+。个人自用：≤3年 0.17、&gt;3年 0.26</td><td><span class="tag b">B</span></td><td><a href="https://theunitools.com/en/auto/recycling-fee-calculator" target="_blank" rel="noopener">链接</a></td></tr><tr><td>S06</td><td>SH GLOBAL 2026 进口指南</td><td>消费税按马力：≤90hp 免；90–150 63；150–200 610；200–300 1,000；300–400 1,036；400+ 1,128+ RUB/hp</td><td><span class="tag b">B</span></td><td><a href="https://shglobalauto.com/blog/korean-used-cars-russia-import-guide" target="_blank" rel="noopener">链接</a></td></tr><tr><td>S07</td><td>iCustoms（俄政府 2025-10-23 第 1638 号决议）</td><td>2026-01-01 起海关手续费 8 档：1,231 / 2,462 / 4,924 / 13,541 / 18,465 / 21,344 / 49,240 / 73,860 卢布</td><td><span class="tag a">A</span></td><td><a href="https://icustoms.ru/cn/blog/kakie_byivayut_vidyi_tamojennyih_poshlin_i_nalogov_stavki_sboryi_i_raschet_v_2026_godu-cn" target="_blank" rel="noopener">链接</a></td></tr><tr><td>S08</td><td>Carawon 俄罗斯进口指南 / SH GLOBAL</td><td>СБКТС 约 40K 卢布（5–10 天）；无 ОТТС 逐车 100K–250K + 30–60 天；ЭРА-ГЛОНАСС 加装 35K–65K；海参崴→莫斯科 150K–250K；PRR 25K–35K</td><td><span class="tag b">B</span></td><td><a href="https://carawon.com/en/import-to-russia" target="_blank" rel="noopener">链接</a></td></tr><tr><td>S09</td><td>新浪汽车 / 航逸、奇迹购物流 2026 运价</td><td>海运滚装单台 $2,000–4,000（35–45 天）；铁路 40 尺箱 $3,500–5,500（18–25 天）；TIR 单台 8,500–12,000 元；EAC/ОТТС $1,500–5,000；出口本地杂费数千元</td><td><span class="tag b">B</span></td><td><a href="https://auto.sina.cn/2026-07-08/detail-inifzfsp1519838.d.html" target="_blank" rel="noopener">链接</a></td></tr><tr><td>S10</td><td>航逸国际物流 / 顺为汽车</td><td>俄海关按市场价重新估价，低报会被重新核价并罚款；正规申报、单证一致是清关前提</td><td><span class="tag b">B</span></td><td><a href="https://www.52jpg.com/global-lanes/zgftydelszmy2026wlfyqgbkzn.html" target="_blank" rel="noopener">链接</a></td></tr><tr><td>S11</td><td>国家税务总局四川省税务局 / 武城县政府</td><td>二手车出口享增值税出口退税，退税率 13%；单证与报关单金额不一致会直接影响退税；资料齐全最快 3 个工作日</td><td><span class="tag a">A</span></td><td><a href="https://sichuan.chinatax.gov.cn/art/2026/10/9/art_985_1364883.html" target="_blank" rel="noopener">链接</a></td></tr><tr><td>S12</td><td>黄埔海关《中国国门时报》2026-09-10</td><td>二手车出口须申领出口许可证（一批一证、有效期 6 个月、当年 12-31 截止）；申报要素含 VIN、发动机类型、座位数、新旧、电池容量；HS 按动力类型区分</td><td><span class="tag a">A</span></td><td><a href="http://huangpu.customs.gov.cn/huangpu_customs/2026-09/10/article_2026091010110226549.html" target="_blank" rel="noopener">链接</a></td></tr><tr><td>S13</td><td>商务部等 5 部门《二手车出口有关事项公告》</td><td>企业备案 + 谁出口谁申领；省级商务主管部门 3 个工作日签发；一批一证最多 20 台；通关后 2 个月内办注销登记；转让待出口后不得再境内交易</td><td><span class="tag a">A</span></td><td><a href="https://www.xjqt.gov.cn/p232/zcfgwjswj/20261009/597978.html" target="_blank" rel="noopener">链接</a></td></tr><tr><td>S14</td><td>贸促会 / 泰安市贸促会 2026-09-20</td><td>第 463-FZ 将平行进口清单授权延续至 2026；工贸部 2025 年第 4769 号令部分规定 2026-05-27 生效；平行进口不豁免 EAC 认证、俄文标签、EPTS、报废税</td><td><span class="tag a">A/B</span></td><td><a href="https://ccpit.taian.cn/art/2026/9/20/art_98273_10313102.html" target="_blank" rel="noopener">链接</a></td></tr><tr><td>S15</td><td>广州市贸促会 / 瀛和律所</td><td>建议 30% 预付 + 70% 见清关单；合同加制裁条款、汇率分担条款、清关延误违约金；可用 CIPS / SPFS / VTB 上海分行人民币结算，避免美元通道</td><td><span class="tag b">B</span></td><td><a href="http://www.gzccpit.org.cn/ccpitinfo.do?id=16477" target="_blank" rel="noopener">链接</a></td></tr><tr><td>S16</td><td>汽车供应商网 2026 俄进口市场报告 / Carawon</td><td>СПОТ 系统 2026-06-01 起对 EAEU 公路入境要求提前 2 个工作日电子申报；排放须欧 5（国六不可等效替代）；二手车车龄 ≤5 年；个人年度 1 辆</td><td><span class="tag b">B/C</span></td><td><a href="https://www.qcgys.com/company_detail.php?id=90817&amp;mid=18633&amp;t=a" target="_blank" rel="noopener">链接</a></td></tr><tr><td>S17</td><td>腾讯新闻 / 大数跨境</td><td>160 马力是资格线：150hp 报废税 3,400 卢布，180hp 跳至 114,600 卢布；2027-01-01 系数再上调 10–20%，规划延续至 2030</td><td><span class="tag b">B</span></td><td><a href="https://so.html5.qq.com/page/real/search_news?docid=70000021_9946adc134383252" target="_blank" rel="noopener">链接</a></td></tr></tbody></table></div></div></section>
+
+<section id="downloads"><h2><span class="n">↓</span>配套文件下载</h2><p class="lead">Excel 模板带公式可离线迭代；PDF / Markdown 为本页完整文字版。</p><div class="card"><a href="downloads/russia-quotation-calculator.xlsx" style="display:block;padding:11px 14px;margin:8px 0;border:1px solid var(--line);border-radius:10px;background:var(--panel2);color:var(--text);text-decoration:none"><b>报价计算器 Excel 模板</b> <span style="color:var(--muted);font-size:12px">— 带公式，参数可迭代</span></a><a href="downloads/russia-export-rules.pdf" style="display:block;padding:11px 14px;margin:8px 0;border:1px solid var(--line);border-radius:10px;background:var(--panel2);color:var(--text);text-decoration:none"><b>本页 PDF 版</b> <span style="color:var(--muted);font-size:12px">— 打印友好 / 可归档</span></a><a href="downloads/russia-export-rules.md" style="display:block;padding:11px 14px;margin:8px 0;border:1px solid var(--line);border-radius:10px;background:var(--panel2);color:var(--text);text-decoration:none"><b>本页 Markdown 版</b> <span style="color:var(--muted);font-size:12px">— 便于二次编辑</span></a><a href="downloads/russia-parallel-import-report.pdf" style="display:block;padding:11px 14px;margin:8px 0;border:1px solid var(--line);border-radius:10px;background:var(--panel2);color:var(--text);text-decoration:none"><b>主报告 PDF（17 页）</b> <span style="color:var(--muted);font-size:12px">— 四维 + 核验 + 维度优化</span></a><a href="downloads/russia-top100-clients.xlsx" style="display:block;padding:11px 14px;margin:8px 0;border:1px solid var(--line);border-radius:10px;background:var(--panel2);color:var(--text);text-decoration:none"><b>TOP100 客户 Excel</b> <span style="color:var(--muted);font-size:12px">— 8 个工作表</span></a><a href="downloads/russia-segment-analysis.pdf" style="display:block;padding:11px 14px;margin:8px 0;border:1px solid var(--line);border-radius:10px;background:var(--panel2);color:var(--text);text-decoration:none"><b>细分市场分析 PDF</b> <span style="color:var(--muted);font-size:12px">— 6 大赛道机会图谱</span></a></div></section>
+<footer>本页为业务操作指引，规则与税率随政策调整，所有条目均标注来源与证据等级，不构成法律或税务意见。正式交易前请由俄方持牌报关行、中方开户行与法务复核当期要求，尤其涉及 EAEU 转口、认证状态与制裁名单的部分。配套落地成本测算见「报价计算器」Tab。</footer>
+</div>
+
+<script>
+(function(){
+ var box=document.querySelectorAll(".chk");
+ function load(){try{var s=localStorage.getItem("ru_rules_checks");if(!s)return;
+   var d=JSON.parse(s);box.forEach(function(b,i){var c=b.querySelector("input");
+   if(d[i]){c.checked=true;b.classList.add("done")}});update()}catch(e){}}
+ function update(){var n=document.querySelectorAll(".chk.done").length;
+   document.getElementById("chkStat").textContent=n+" / "+box.length+" 项已完成"}
+ function save(){var d=[];box.forEach(function(b){d.push(b.querySelector("input").checked)});
+   try{localStorage.setItem("ru_rules_checks",JSON.stringify(d))}catch(e){}}
+ box.forEach(function(b){b.querySelector("input").addEventListener("change",function(){
+   b.classList.toggle("done",this.checked);save();update()})});
+ document.getElementById("chkReset").addEventListener("click",function(){
+   box.forEach(function(b){b.querySelector("input").checked=false;b.classList.remove("done")});save();update()});
+ document.getElementById("chkCopy").addEventListener("click",function(){
+   var t="【俄罗斯汽车出口 · 报价前检查清单】\n"+Array.prototype.map.call(box,function(b,i){
+     return (b.querySelector("input").checked?"[x] ":"[ ] ")+b.querySelector("span").textContent}).join("\n");
+   var a=document.createElement("textarea");a.value=t;a.style.position="fixed";a.style.opacity=0;
+   document.body.appendChild(a);a.select();try{document.execCommand("copy");
+     this.textContent="已复制 ✓";var self=this;setTimeout(function(){self.textContent="复制清单"},1600)}catch(e){}
+   document.body.removeChild(a)});
+ load();update();
+})();
+</script>
+
+</body></html>
