@@ -2,13 +2,13 @@
 
 静态站点，部署于 GitHub Pages，自定义域名：`https://russia.used-car.cn`
 
-一句话分工：**总览看板讲「找谁」→ 细分市场讲「卖什么」→ 报价计算器讲「怎么报价」→ 出口规则说明讲「怎么合规走完一单」**。
+一句话分工：**总览看板讲「找谁」→ 细分市场讲「卖什么」→ 报价计算器讲「怎么报价」→ 出口规则说明讲「怎么合规走完一单」→ 决策人方法论讲「怎么把名单挖到决策人」**。
 
-## 页面（单页 Tab 菜单工作台，4 个模块）
+## 页面（单页 Tab 菜单工作台，5 个模块）
 
-打开 `https://russia.used-car.cn/` 就是 **Tab 菜单页**：顶部 4 个菜单原地切换，不跳页、不丢计算器参数；第二行是当前模块的章节快捷导航，右侧可刷新 / 打印 / 独立打开本模块。URL 支持 `#/quotation`、`#/rules`、`#/segments` 直达并可分享；旧链接如 `index.html#clients` 会自动落到总览对应章节。
+打开 `https://russia.used-car.cn/` 就是 **Tab 菜单页**：顶部 5 个菜单原地切换，不跳页、不丢计算器参数；第二行是当前模块的章节快捷导航，右侧可刷新 / 打印 / 独立打开本模块。URL 支持 `#/quotation`、`#/rules`、`#/segments`、`#/methodology` 直达并可分享；旧链接如 `index.html#clients` 会自动落到总览对应章节。
 
-`index.html` 是 Tab 容器（懒加载 iframe + 高度自适应 + hash 路由），4 个子页带 `?embed=1` 时自动隐藏自身导航并把模块互链 / 锚点交给容器接管；不带参数时仍是可独立访问、打印、分享的完整页面。
+`index.html` 是 Tab 容器（懒加载 iframe + 高度自适应 + hash 路由），前 4 个子页带 `?embed=1` 时自动隐藏自身导航并把模块互链 / 锚点交给容器接管；第 5 页 `methodology.html` 自带同款 embed 协议（章节锚点 / 高度通知），不参与 `patch_child` 以免生成器覆盖手册排版。不带参数时每页仍是可独立访问、打印、分享的完整页面。
 
 | Tab | 独立页面 | 内容 |
 |---|---|---|
@@ -16,11 +16,13 @@
 | 02 细分市场 | `segments.html` | **6 大赛道**（2026-11-13）：乘用车 / 摩托·ATV·雪地车 / 新能源 / 皮卡越野 / 房车旅居车 / 商用车；加权机会评分、品类 Tab、内部关单价位带、政策矩阵、TOP100 客户联动、18 条来源 A/B/C 分级 |
 | 03 报价计算器 | `quotation.html` | （2026-11-13 新增）30+ 可编辑参数，实时算 CIF / 关税 / 消费税 / 增值税 / 报废税 / 清关费 / 认证 / 落地成本；四种贸易术语报价、成本阶梯与承担方、7 组情景敏感性、中/俄文报价单一键复制、CSV 导出、参数本机保存、4 个车型预设（支持 `?preset=power` 等链接直达）。**2026-11-13 晚升级为全站计价币种**：在计算器顶部选 ₽ / $ / ¥ 后，左侧全部金额输入框的数值与单位、车型 / 运输预设、下方参考表金额，连同右侧 KPI、成本阶梯、四种口径报价、情景表、中俄文报价单、CSV 与打印一起切换；内部仍按卢布计算，切换前后结果零漂移。**2026-11-13 晚二再新增 4 个模块**：利润与保本价（内部净利 / 净利率 / 保本价 / 可降价空间）、多方案报价对比（最多 6 套并排 + 载入还原 + 导出）、口岸与运费表（7 条线路，点「应用」带入运费与俄境内段）、车型参数库（10 款车，点「带入」自动填车价 / 排量 / 功率 / 动力 / 车龄 / HS）。页面扩为 10 个章节、13 个导航锚点 |
 | 04 出口规则说明 | `rules.html` | （2026-11-13 新增）中方 7 步 / 俄方 6 步流程、12 类单证清单、认证（ОТТС/СБКТС/ЭПТС/ЭРА-ГЛОНАСС）、收汇与制裁合规、2024–2027 政策时间线、8 个常见坑、可勾选的报价前十项检查清单 |
+| 05 决策人方法论 | `methodology.html` | （2026-11-14 新增）TOP100 俄客户名单六轮实查复盘：五层漏斗、v1–v6 演进、12 类通道武器库（官方 МСП POST 接口 / СБИС 按 ИНН / ОГРН 组合技 / 品牌总部 dnd@ / Yandex 国际版地图 / 中国侧提单反查 / 打码还原）、检索式速查表、L1–L4 分级与零编造铁律、死路清单、38-FZ / 152-FZ 合规与首触话术、10 步可复用 SOP。直达 `https://russia.used-car.cn/#/methodology`，独立页 `https://russia.used-car.cn/methodology.html`，另有 PDF 版 |
 
 ## 下载文件（`downloads/`）
 
 | 文件 | 内容 |
 |---|---|
+| `russia-top100-methodology.pdf` | **决策人线索查找方法论 PDF，17 页**（2026-11-14 新增）：与第 05 个 Tab 内容一致，A4 打印友好，含 29 个书签与可点链接 |
 | `russia-quotation-calculator.xlsx` | **报价计算器 Excel 模板，6 个工作表**（2026-11-13 新增）：黄色输入 / 绿色公式，改参数自动重算；含参数与来源、税率查表、单证清单、中俄流程、时间线与风险 |
 | `russia-export-rules.pdf` | **基本出口规则说明 PDF，15 页**（新增，打印友好白底版） |
 | `russia-export-rules.md` | **基本出口规则说明 Markdown**（新增） |
@@ -82,14 +84,14 @@ python3 tools/build_calculator.py   # 生成 quotation.html（共享 CSS 从 ana
 python3 tools/build_rules.py        # 生成 rules.html + downloads/russia-export-rules.md
 python3 tools/build_xlsx.py         # 生成 downloads/russia-quotation-calculator.xlsx
 python3 tools/patch_site.py         # 统一 analysis/segments/quotation/rules 的 nav、下载区与入口卡（前几步之后跑）
-python3 tools/build_tabs.py         # 最后跑：生成 Tab 容器 index.html + analysis.html，给 4 个子页注入 embed 模式（幂等，可反复运行）
+python3 tools/build_tabs.py         # 最后跑：生成含 5 个 Tab 的 index.html + analysis.html，给前 4 个子页注入 embed 模式（幂等，可反复运行；methodology.html 自带 embed 协议，不会被改写）
 ```
 
 `build_tabs.py` 必须放在 `patch_site.py` 之后：后者会重写各页 `<nav>`，会覆盖嵌入模式下的导航改写。
 
 `tools/rules_data.py` 是所有参数、来源、流程、单证、时间线、风险提示、`ROUTES`（口岸线路）与 `VEHICLES`（车型参数）的唯一数据源，改这里即可全局重算；`build_calculator.py` 会把两者序列化成页面里的 JS 常量供「应用 / 带入」按钮使用。规则 PDF 由 Chrome headless 打印 `rules.html` 生成（页面已内置 `@media print` 白底样式）。
 
-本地自检（需先起 `python3 -m http.server`）：`index.html?selftest=1` 依次加载 4 个 Tab 并输出高度 / 标题 / 章节数；`index.html?selftest=2` 验证互链接管、章节跳转与计算器在 Tab 内可算。
+本地自检（需先起 `python3 -m http.server`）：`index.html?selftest=1` 依次加载 5 个 Tab 并输出高度 / 标题 / 章节数；`index.html?selftest=2` 验证互链接管、章节跳转与计算器在 Tab 内可算。2026-11-14 实测 5 个 Tab 全部 `embedded:true`，方法论页高度 13592px、12 个章节快捷导航。
 
 ## 部署
 

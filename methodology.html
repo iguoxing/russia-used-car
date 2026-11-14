@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>俄罗斯 TOP100 客户 · 决策人线索查找方法论</title>
+<style>
+  :root{
+    --ink:#1b2430; --ink2:#3d4b5c; --muted:#6b7889;
+    --navy:#123a6b; --navy2:#1d5596; --gold:#b98326;
+    --red:#b23b32; --green:#1d7048; --line:#d9e0e8;
+    --bg:#ffffff; --soft:#f5f8fb; --code:#eef2f6;
+  }
+  @page{
+    size:A4; margin:17mm 15mm 18mm 15mm;
+    @top-left{ content:"俄罗斯 TOP100 客户 · 决策人线索查找方法论"; font-size:8pt; color:#8a96a5; font-family:"PingFang SC","Hiragino Sans GB",sans-serif; }
+    @top-right{ content:"2026-11-14"; font-size:8pt; color:#8a96a5; font-family:"PingFang SC","Hiragino Sans GB",sans-serif; }
+    @bottom-left{ content:"Eastar Motors / 国星聊成长 · 内部作业手册"; font-size:7.5pt; color:#9aa5b1; font-family:"PingFang SC","Hiragino Sans GB",sans-serif; }
+    @bottom-right{ content:"第 " counter(page) " / " counter(pages) " 页"; font-size:8pt; color:#6b7889; font-family:"PingFang SC","Hiragino Sans GB",sans-serif; }
+  }
+  @page:first{ @top-left{content:""} @top-right{content:""} }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:"PingFang SC","Hiragino Sans GB","Heiti SC","STHeiti","Arial Unicode MS",sans-serif;
+    color:var(--ink); font-size:10.2pt; line-height:1.68; background:#eef1f5;
+  }
+  .page{ background:var(--bg); max-width:960px; margin:0 auto; padding:0 26px 50px; }
+  a{color:var(--navy2);text-decoration:none;border-bottom:.5px solid #a9c2e0;word-break:break-all}
+  h1,h2,h3,h4{color:var(--navy);line-height:1.35;margin:0}
+  h2{font-size:17pt;border-bottom:2px solid var(--navy);padding:0 0 7px;margin:0 0 14px;break-after:avoid}
+  h3{font-size:12.6pt;margin:20px 0 8px;break-after:avoid}
+  h4{font-size:10.8pt;margin:14px 0 6px;color:var(--navy2);break-after:avoid}
+  p{margin:6px 0 10px;text-align:justify}
+  ul,ol{margin:6px 0 10px;padding-left:20px}
+  li{margin:3px 0}
+  strong{color:var(--navy)}
+  .small{font-size:8.7pt;color:var(--muted)}
+  .mono,code,pre{font-family:"SF Mono","Menlo","Courier New",monospace}
+  code{background:var(--code);padding:1px 4px;border-radius:3px;font-size:8.6pt;color:#22456e;word-break:break-all}
+  pre{background:var(--code);border-left:3px solid var(--navy2);padding:8px 11px;font-size:8.5pt;line-height:1.55;margin:7px 0 11px;white-space:pre-wrap;word-break:break-all;break-inside:avoid}
+  table{width:100%;border-collapse:collapse;margin:9px 0 14px;font-size:8.8pt;break-inside:auto}
+  thead{display:table-header-group}
+  tr{break-inside:avoid}
+  th{background:var(--navy);color:#fff;text-align:left;padding:6px 7px;font-weight:600;border:1px solid #0f3159;font-size:8.6pt}
+  td{padding:5px 7px;border:1px solid var(--line);vertical-align:top;line-height:1.52}
+  tbody tr:nth-child(even) td{background:#f7fafd}
+  .num{text-align:center;font-weight:700;color:var(--navy);font-size:13pt;line-height:1.1}
+  .cap{font-size:8pt;color:var(--muted);margin:-8px 0 14px}
+  .box{border:1px solid var(--line);background:var(--soft);border-radius:5px;padding:9px 13px;margin:10px 0 14px;break-inside:avoid}
+  .box.key{border-left:4px solid var(--navy2);background:#eef5fd}
+  .box.warn{border-left:4px solid var(--gold);background:#fdf7e9}
+  .box.danger{border-left:4px solid var(--red);background:#fdf0ee}
+  .box.ok{border-left:4px solid var(--green);background:#eef8f2}
+  .box p:last-child,.box ul:last-child{margin-bottom:0}
+  .tag{display:inline-block;font-size:7.6pt;padding:1px 6px;border-radius:9px;color:#fff;background:var(--navy2);vertical-align:middle;margin-right:4px}
+  .tag.g{background:var(--green)} .tag.r{background:var(--red)} .tag.y{background:var(--gold)} .tag.gray{background:#7a8797}
+  /* cover */
+  .cover{padding:34px 0 12px;break-after:page}
+  .kicker{font-size:9pt;letter-spacing:2px;color:var(--gold);font-weight:700;text-transform:uppercase;margin-bottom:12px}
+  .cover h1{font-size:29pt;line-height:1.25;letter-spacing:.5px;margin-bottom:8px}
+  .cover .sub{font-size:12.5pt;color:var(--ink2);line-height:1.6;margin-bottom:22px}
+  .cover .rule{height:4px;width:74px;background:var(--gold);margin:0 0 22px}
+  .meta{font-size:9pt;color:var(--muted);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:9px 0;margin-bottom:20px}
+  .meta span{margin-right:22px}
+  .stats{display:flex;flex-wrap:wrap;gap:9px;margin:0 0 22px}
+  .stat{flex:1 1 29%;min-width:145px;border:1px solid var(--line);border-top:3px solid var(--navy2);border-radius:4px;padding:10px 11px;background:#fbfdff}
+  .stat .n{font-size:20pt;font-weight:800;color:var(--navy);line-height:1.1}
+  .stat .n em{font-size:10pt;font-style:normal;font-weight:600;color:var(--ink2)}
+  .stat .l{font-size:8.4pt;color:var(--muted);margin-top:3px}
+  .toc{columns:2;column-gap:26px;font-size:9.3pt;margin-top:6px}
+  .toc a{display:block;padding:3px 0;border-bottom:1px dotted var(--line);color:var(--ink2)}
+  .toc b{color:var(--navy);margin-right:6px}
+  section{margin:0 0 8px}
+  .sec{margin-top:30px}
+  .sec:first-of-type{margin-top:16px}
+  .lead{font-size:10.8pt;color:var(--ink2);background:#f7fafd;border-left:3px solid var(--navy2);padding:9px 13px;margin-bottom:14px}
+  /* funnel */
+  .funnel{margin:12px 0 16px;break-inside:avoid}
+  .fl{display:flex;align-items:stretch;margin-bottom:5px;font-size:9pt;break-inside:avoid}
+  .fl .step{width:32px;flex:none;background:var(--navy);color:#fff;text-align:center;font-weight:700;border-radius:3px 0 0 3px;padding:7px 0}
+  .fl .body{flex:1;border:1px solid var(--line);border-left:0;border-radius:0 3px 3px 0;padding:6px 11px;background:#fbfdff}
+  .fl .body b{color:var(--navy);font-size:9.6pt}
+  .fl .body .d{color:var(--ink2);font-size:8.6pt}
+  .fl .out{width:158px;flex:none;text-align:center;background:#eaf1f9;border:1px solid #cddcec;color:var(--navy);font-size:8.5pt;padding:8px 6px;border-radius:0 3px 3px 0;margin-left:-1px}
+  .weapon{border:1px solid var(--line);border-radius:5px;margin:11px 0;break-inside:avoid;overflow:hidden}
+  .weapon .hd{background:#eef4fb;border-bottom:1px solid var(--line);padding:7px 11px}
+  .weapon .hd b{font-size:11pt;color:var(--navy)}
+  .weapon .hd .id{display:inline-block;background:var(--navy);color:#fff;font-size:8pt;padding:1px 7px;border-radius:3px;margin-right:7px}
+  .weapon .bd{padding:8px 12px}
+  .weapon .bd p{margin:4px 0 7px;font-size:9.4pt}
+  .kv{display:flex;gap:8px;font-size:9pt;margin:3px 0}
+  .kv .k{flex:none;width:70px;color:var(--navy);font-weight:600}
+  .kv .v{flex:1;color:var(--ink2)}
+  .foot{margin-top:34px;border-top:1px solid var(--line);padding-top:10px;font-size:8pt;color:var(--muted)}
+  .pagebreak{break-before:page}
+  .bad{color:var(--red);font-weight:600}
+  .good{color:var(--green);font-weight:600}
+  /* ---- 工作台 Tab 内嵌态（?embed=1）---- */
+  .ru-banner{display:none;margin:0 0 18px;padding:9px 13px;background:#eef4fb;
+    border:1px solid #cddcec;border-radius:5px;font-size:9pt;color:#3d4b5c}
+  .ru-banner a{font-weight:600}
+  html.embedded body{background:#fff}
+  html.embedded .page{max-width:none;padding:0 18px 30px}
+  html.embedded .cover{padding-top:22px}
+  html.embedded .cover h1{font-size:24pt}
+  html.embedded .sec{margin-top:26px}
+  html.embedded .foot{margin-top:24px}
+  html.embedded .ru-banner{display:block}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="ru-banner">当前是「俄罗斯汽车出口情报工作台」的第 05 个 Tab 内嵌视图 ·
+  <a href="methodology.html" target="_blank" rel="noopener">↗ 独立打开完整页</a> ·
+  <a href="downloads/russia-top100-methodology.pdf" target="_blank" rel="noopener">⬇ 下载 PDF（17 页）</a>
+  <span class="small" style="margin-left:8px">直达链接：https://russia.used-car.cn/#/methodology</span>
+</div>
+
+<!-- ============ COVER ============ -->
+<div class="cover">
+  <div class="kicker">METHOD PLAYBOOK · 实查复盘</div>
+  <h1>俄罗斯 TOP100 客户<br>决策人线索查找方法论</h1>
+  <div class="sub">从一份「没有任何联系人字段」的海关名单出发，六轮实查、12 类通道、逐条验证，<br>把 100 家俄方进口主体拆到具名负责人与可触达路径的完整作业手册。</div>
+  <div class="rule"></div>
+  <div class="meta">
+    <span>编制日期：2026-11-14</span>
+    <span>数据基准：2026-11-13 ～ 11-14 实抓</span>
+    <span>原始表：russia-top100-clients (1).xlsx</span><br>
+    <span>适用：整车 / 配件出口、B2B 海外线索清洗与决策人挖掘</span>
+    <span>成果表：俄罗斯TOP100客户_决策人核验v6.xlsx（38 sheets）</span>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="n">100 <em>→ 92</em></div><div class="l">原表无任何联系人 → 具名决策人 92 家</div></div>
+    <div class="stat"><div class="n">29 <em>家</em></div><div class="l">L1 已验证完整联系方式，可直接打 / 发</div></div>
+    <div class="stat"><div class="n">258 <em>条</em></div><div class="l">最终表内来源 URL，逐条可回溯</div></div>
+    <div class="stat"><div class="n">12 <em>类</em></div><div class="l">实测有效的查找通道 / 组合技</div></div>
+    <div class="stat"><div class="n">+19 <em>家</em></div><div class="l">中国品牌经销门店新潜客池（17 家带电话）</div></div>
+    <div class="stat"><div class="n">6 <em>轮</em></div><div class="l">v1 → v6 迭代，每轮保留旧版不覆盖</div></div>
+  </div>
+
+  <h3 style="margin-top:24px">目录</h3>
+  <nav class="ru-toc"><div class="wrap toc">
+    <a href="#s0"><b>00</b> 一页结论：这套方法到底在做什么</a>
+    <a href="#s1"><b>01</b> 起点：原表里有什么、缺什么</a>
+    <a href="#s2"><b>02</b> 总体框架：五层漏斗 + 三条主轴</a>
+    <a href="#s3"><b>03</b> 六轮演进：每一轮换掉的错误假设</a>
+    <a href="#s4"><b>04</b> 武器库：12 类通道逐条拆解</a>
+    <a href="#s5"><b>05</b> 检索式速查表（可直接复制）</a>
+    <a href="#s6"><b>06</b> 验证、分级与零编造铁律</a>
+    <a href="#s7"><b>07</b> 已被证伪的渠道：别再试了</a>
+    <a href="#s8"><b>08</b> 合规红线与首触话术口径</a>
+    <a href="#s9"><b>09</b> 工程流水线：脚本、代理、表结构</a>
+    <a href="#s10"><b>10</b> 可复用 SOP 与战略判断</a>
+    <a href="#s11"><b>11</b> 附录：关键入口 / 俄语职位词表</a>
+  </div></nav>
+
+  <p class="small" style="margin-top:16px">本材料含 AI 辅助生成内容；数据均来自公开来源并标注采集日期，未登录 / 付费 / 绕过验证码。</p>
+</div>
+
+<!-- ============ 00 ============ -->
+<section class="sec" id="s0">
+<h2>00 · 一页结论：这套方法到底在做什么</h2>
+<div class="lead">本质不是「找通讯录」，而是把一份<strong>海关提单统计名单</strong>反向还原成<strong>可核验的法人主体 + 决策人 + 合规触达路径</strong>。查找动作只占三成，剩下七成是主体确权、同名消歧与剔除假买家。</div>
+
+<div class="box key">
+<p><strong>一句话方法：</strong>不要在海量的「找人网站」里逐个撞运气，先用<strong>免费官方登记册</strong>把公司主体钉死（ИНН / ОГРН / 全称 / 状态），再用<strong>主键拼 URL</strong> 批量取法定代表人，然后用<strong>官网深页、品牌总部职能邮箱、集团层穿透、中国侧供应链反查</strong>四条线补触达路径，最后用<strong>证据等级 + 来源 URL</strong> 把每条线索标成已验证 / 候选 / 剔除。</p>
+</div>
+
+<table>
+<thead><tr><th style="width:22%">常见做法（低效）</th><th style="width:39%">本次做法</th><th>为什么</th></tr></thead>
+<tbody>
+<tr><td>拿公司俄文名去搜索引擎搜「联系人」</td><td>先补齐 <strong>ИНН / ОГРН</strong>，用主键拼 URL 进工商档案</td><td>俄企同名极多；«ВОСТОК АВТО»、«АТЛАНТ»、«ВОЛГА» 都踩过同名陷阱，纯名称检索必然串号</td></tr>
+<tr><td>用 Rusprofile / EGRUL 等「知名库」</td><td>实测逐个站点，换成 <strong>СБИС 按 ИНН 直连</strong> + <strong>官方 МСП POST 接口</strong></td><td>前者验证码 / 403 / 按国家封锁；后两者免费免登录、可批量、稳定 200</td></tr>
+<tr><td>盯着 1–2 人的小微进口主体找电话</td><td>集团 / 品牌总部穿透，找 <strong>dnd@ 经销商网络发展部</strong>、<strong>采购平台</strong></td><td>2022–2025 新设小微主体公开足迹趋近于零；一条总部入口覆盖的交易量远大于逐个找电话</td></tr>
+<tr><td>在俄罗斯找俄罗斯人</td><td><strong>在中国找他们的中国供应商 / 中国品牌方国际业务部</strong></td><td>提单伙伴、企查查、中文电话与微信可绕开俄语冷启动，还能拿到同行引荐</td></tr>
+<tr><td>把打码值「猜」成完整号码</td><td>只在<strong>位数与首尾字符完全吻合</strong>时才还原，否则留白</td><td>本批 15 个打码值逐条核对，v6 还原 0 条 —— 不脑补才不会打错人</td></tr>
+<tr><td>查到什么就写进表</td><td><strong>L1–L4 分级 + 每条附来源 URL + 候选打标</strong></td><td>销售拿到「已验证」与「未验证·候选」混在一起的表，比没有表更危险</td></tr>
+</tbody>
+</table>
+
+<div class="box ok">
+<p><strong>最终客观上限（很重要）：</strong>100 家里约 <strong>26–38 家本就不该找</strong>（报关行 <em>ПО ПОРУЧЕНИЮ</em> 代理申报、物流终端、轮胎配件、名单串行错误、已注销、非俄主体）。有效客户里 <strong>65 家「具名 + 有路径」</strong>（v4 严口径，约 88%）；剩余 9 家是 2022–2025 新设 1–2 人主体、同名无法确认或自然人隐私，公开网络确实不存在联系方式 —— 继续加渠道的边际收益接近 0，需要用户自己的付费库 / 人工 EGRUL 摘录 / 客户补 ИНН。</p>
+</div>
+<p class="small">口径提醒：「具名决策人 92 家」与「可直接触达 29 家」不矛盾：前者是工商法代姓名（可具名但未必有联系方式），后者是已验证完整电话或邮箱。中间层是「有总机 / 职能邮箱 / 集团层路径 / 引荐路径」。</p>
+</section>
+
+<!-- ============ 01 ============ -->
+<section class="sec pagebreak" id="s1">
+<h2>01 · 起点：原表里有什么、缺什么</h2>
+<p>源表 <code>~/Downloads/russia-top100-clients (1).xlsx</code> 共 8 个 sheet，主表「TOP100 重点客户」100 家俄整车 / 平行进口商，字段为俄文全称、ИНН、注册地址、进口额、评分、风险等，<strong class="bad">没有任何联系人字段</strong>。表内「外部来源与行动清单」自己就写明：需先做一轮存续与联系方式核验。关单数据最新到 2025-03，客户最近活跃月多为 2024-06 / 07。</p>
+
+<h3>先洗名单，再找人</h3>
+<p>v1 只读表结构就发现四个会让销售白干的结构性问题，这几条后来贯穿全部六轮：</p>
+<table>
+<thead><tr><th style="width:22%">问题</th><th style="width:13%">规模</th><th>处理动作</th></tr></thead>
+<tbody>
+<tr><td>ИНН 缺失</td><td>36 家</td><td>无法确认主体，必须先用俄文全称反查 ИНН；否则任何「负责人」都可能挂到同名公司上</td></tr>
+<tr><td><code>ПО ПОРУЧЕНИЮ</code> 代理申报</td><td>4 家起</td><td>如 #3 ИНТЕРХИМ КОМ、#6 ПРОФКОНД，真实主体是报关行 / 运输码头（#3 实为 ООО «НТТ»，ОКВЭД 52.24.1），要穿透到括号里的实际货主</td></tr>
+<tr><td>数据噪声</td><td>多家</td><td>#16 ХАНКУК ТАЙР РУС 是韩泰轮胎；#5 ЖЕФКО = GEFCO 物流；#8 ЭКСПРЕСС СИБ、#10 СИГИР ТЕРМИНАЛС 是货运终端</td></tr>
+<tr><td>名单串行 / 主体错误</td><td>若干</td><td>#51 补全后是<strong>莫斯科地铁</strong>；#79 实为中国黑龙江尚库国际贸易的对俄用名（非俄法人）；#98 «КИТ» 官方全称是机床批发公司</td></tr>
+</tbody>
+</table>
+
+<div class="box warn">
+<p><strong>贯穿全程的三个「不轻信」：</strong>① <strong>ОКВЭД 不能单独定性</strong> —— #19 СЯ Холдинг 登记 46.14（机器设备代理），但提单证明 2024 年 148 笔、2025 年 77 笔整车进口，直接删就丢大客户；② <strong>官方册 <code>is_active=0</code> 不等于注销</strong> —— 多为规模超标退出中小企业名录，АВТОДОМ / РОЛЬФ / Major / МБ РУС 等 14 家 <code>rowCount=0</code> 属大企业不在册；③ <strong>集团层 ≠ 法人层</strong> —— АВТОДОМ 集团 1342 亿卢布 vs 该法人 54.4 亿卢布，口径混用会写错抬头。</p>
+</div>
+</section>
+
+<!-- ============ 02 ============ -->
+<section class="sec" id="s2">
+<h2>02 · 总体框架：五层漏斗 + 三条主轴</h2>
+<p>每一轮查找都按同一条漏斗推进；卡在哪一层，就换哪一层的武器，而不是盲目加网站。</p>
+
+<div class="funnel">
+  <div class="fl"><div class="step">1</div><div class="body"><b>主体确权</b><div class="d">补 ИНН / ОГРН → 官方册核对全称、在营状态、ОКВЭД、城市 → 消除同名</div></div><div class="out">官方 МСП POST<br>名称反查镜像库</div></div>
+  <div class="fl"><div class="step">2</div><div class="body"><b>名单清洗</b><div class="d">剔除报关行 / 物流 / 配件 / 已注销 / 串行错误 → 只留真买家，先省 30% 工时</div></div><div class="out">СБИС 工商档案<br>提单证据复核</div></div>
+  <div class="fl"><div class="step">3</div><div class="body"><b>找人</b><div class="d">法定代表人全名 + 任职起始日；集团层补 CEO / 采购总监 / 企业销售经理</div></div><div class="out">ОГРН → org-info<br>官网 /about/team</div></div>
+  <div class="fl"><div class="step">4</div><div class="body"><b>找路径</b><div class="d">打码还原 → 官网 contacts → 职能邮箱 → 集团总部 / 品牌 dnd@ → 中国侧引荐</div></div><div class="out">官网深页 / 展会目录<br>Yandex 地图 / 提单</div></div>
+  <div class="fl"><div class="step">5</div><div class="body"><b>验证分级</b><div class="d">三源交叉、附 URL 与日期、打 L1–L4、候选单独成表，绝不把推测写成事实</div></div><div class="out">证据等级表<br>零编造铁律</div></div>
+</div>
+
+<h3>三条主轴（决定优先级）</h3>
+<table>
+<thead><tr><th style="width:16%">主轴</th><th style="width:40%">做法</th><th>典型产出</th></tr></thead>
+<tbody>
+<tr><td><strong>主键穿透</strong></td><td>把「公司名」换成 <strong>ИНН / ОГРН</strong> 作为检索主键，拼 URL 批量直取</td><td>64/64 家 СБИС 抓到、61 家具名；官方册 85 家按 ИНН 命中、零错误；ОГРН 组合技一次拿 22 家法代姓名</td></tr>
+<tr><td><strong>向上穿透</strong></td><td>小主体无足迹时，往上找集团 / 品牌总部 / 分销商 / 采购平台</td><td>4 个 <code>dnd@</code>、<code>zakupki.rolf.ru</code>、Evolute 体系共用热线、GAZ 集团采购总监、grandtech 19 家门店</td></tr>
+<tr><td><strong>向中国穿透</strong></td><td>提单伙伴 → 中国供应商 → 企查查 → 同行引荐；或中国品牌方国际业务部</td><td>6 家中国公司联系方式齐全；吉利 <code>geely.globalsales@geely.com</code>；8 家中国车企公开对接通道</td></tr>
+</tbody>
+</table>
+
+<div class="box key">
+<p><strong>成本顺序（用户最初指定的原则，事后证明是对的）：</strong>免费官方源 → 补公开联系方式 → 拿到具名 → 最后才考虑批量付费。全程 <strong>零付费账号、零登录、零绕验证码</strong>；真正需要付费的只剩两处：外贸邦 / 腾道完整伙伴榜、EGRUL 人工摘录。</p>
+</div>
+</section>
+
+<!-- ============ 03 ============ -->
+<section class="sec pagebreak" id="s3">
+<h2>03 · 六轮演进：每一轮换掉的错误假设</h2>
+<p>六轮不是简单「多找几遍」，而是每次遇到天花板就<strong>换掉一个错误假设</strong>，因此每一轮的净产出都不一样。成果表 v1–v6 全部保留，不覆盖旧版。</p>
+<table>
+<thead><tr><th style="width:8%">轮次</th><th style="width:24%">被推翻的假设 / 新武器</th><th style="width:34%">关键动作</th><th>净产出（该轮口径）</th></tr></thead>
+<tbody>
+<tr><td><strong>v1</strong></td><td>「用官方 EGRUL + 常见企业库就能查」<br><span class="small">实际：验证码 / 403 / 按国家封锁</span></td><td>读表结构、识别 36 家缺 ИНН 与 4 家报关代理；生成 492 个直达查询链接的作业表</td><td>4 sheets；<strong class="bad">0 个可直接触达</strong>；确认边界：中小平行进口商公开痕迹极少</td></tr>
+<tr><td><strong>v2</strong></td><td>★ 换数据源：<code>sbis.ru/contragents/&lt;ИНН&gt;</code><br>换查找对象：找中国供应商而非俄方</td><td>64 家合法 ИНН 全量直连；按 ОКВЭД / 提单清洗；纠正 РОЛЬФ 旧 CEO 等上一轮误判</td><td>7 sheets；<strong>61 家具名负责人</strong>、32 家真买家、3 家注销剔除、40 家邮箱域名</td></tr>
+<tr><td><strong>v3</strong></td><td>「四线并行」：缺 ИНН 反查 / 中国侧 / 打码补全 / 招投标</td><td>按俄文全称 + 英文镜像库补 18 个 ИНН；6 家中国供应商企查查；官网团队页与展会目录补全</td><td>13 sheets；具名 <strong>80 家</strong>、ИНН 82 家、31 个公开电话/邮箱、146 链接</td></tr>
+<tr><td><strong>v4</strong></td><td>「加渠道能一直出货」→ 改成<strong>严口径分级</strong></td><td>六批并行：org-info 叠加检索、官网 /about/team、集团穿透、hh.ru、展会、WHOIS、中国品牌方</td><td>20 sheets；具名 <strong>92 家</strong>（达成 80 目标）、具名+路径 65 家、L1 20 家；明确指出客观上限</td></tr>
+<tr><td><strong>v5</strong></td><td>★ 发现<strong>官方 МСП 登记册 POST 接口</strong> + ОГРН 组合技</td><td>85 家官方一手核验；ОГРН 拼 org-info URL；反推打码校验规则；17 家主体终审</td><td>29 sheets；L1 <strong>20→26</strong>；22 家法代 + 6 家打码还原；口径纠错 3 条</td></tr>
+<tr><td><strong>v6</strong></td><td>★ 战略转向：<strong>不再逐个找小主体，改打品牌总部 / 采购平台</strong></td><td>品牌俄官网 «Стать дилером» 页、Yandex Maps 国际版、grandtech 门店页、8 条主体纠错</td><td><strong>38 sheets / 100×39 / 258 链接</strong>；L1 <strong>29</strong>；4 个 dnd@ + 1 采购平台；19 家新潜客池</td></tr>
+</tbody>
+</table>
+
+<div class="box danger">
+<p><strong>最容易被忽略的一条经验：</strong>v4 之后继续「多试几个网站」几乎零产出 —— v5 实测 12 个新站净新增可触达 <strong>0</strong>，v6 实测 15 个打码值还原 <strong>0</strong>。真正带来增量的是<strong>换了检索主键（ИНН → ОГРН）</strong>和<strong>换了目标层级（法人 → 集团/品牌总部）</strong>，不是网站数量。</p>
+</div>
+</section>
+
+<!-- ============ 04 ============ -->
+<section class="sec pagebreak" id="s4">
+<h2>04 · 武器库：12 类通道逐条拆解</h2>
+<div class="lead">每条给出「入口 / 检索式 / 拿到什么 / 实证 / 坑」。标 <span class="tag g">核心</span> 的是下次拿到新名单应第一批跑的；标 <span class="tag y">辅助</span> 的用于补齐与交叉验证。</div>
+
+<div class="weapon">
+<div class="hd"><span class="id">A1</span><b>СБИС / SabyProfile 按 ИНН 直连工商档案</b> <span class="tag g">核心</span></div>
+<div class="bd">
+<div class="kv"><div class="k">入口</div><div class="v"><code>https://sbis.ru/contragents/&lt;ИНН&gt;</code>（自动跳 <code>saby.ru/profile/&lt;ИНН&gt;-&lt;КПП&gt;</code>）</div></div>
+<div class="kv"><div class="k">拿到什么</div><div class="v">法定代表人全名 + 任职起始日、在营/注销、ОКВЭД、股东与实控人、打码电话/邮箱、官网、营收、风险信号</div></div>
+<div class="kv"><div class="k">实证</div><div class="v">64 家合法 ИНН <strong>64/64 抓到</strong>，61 家具名负责人，3 家查出已注销；40 家拿到邮箱域名、28 家打码电话</div></div>
+<div class="kv"><div class="k">坑</div><div class="v"><strong>必须直连</strong>：显式挂本地 Clash <code>127.0.0.1:7897</code> 全部 000 超时，直连 200；按名称搜索 / 按电话邮箱反查属付费功能，免费页只返回营销落地页</div></div>
+</div></div>
+
+<div class="weapon">
+<div class="hd"><span class="id">A2</span><b>俄官方 Единый реестр МСП 的 POST 接口</b> <span class="tag g">核心</span></div>
+<div class="bd">
+<pre>POST https://rmsp.nalog.ru/search-proc.json
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+X-Requested-With: XMLHttpRequest
+mode=quick&amp;query=&lt;ИНН 或 俄文全称&gt;&amp;page=1&amp;sortField=NAME_EX&amp;sort=ASC</pre>
+<div class="kv"><div class="k">拿到什么</div><div class="v"><code>inn / ogrn / name_ex / is_active / okved1 / okved1name / regioncode / cityname / dtregistry</code> —— 官方一手、免登录免付费、稳定 200</div></div>
+<div class="kv"><div class="k">实证</div><div class="v"><strong>85 家按 ИНН 命中、零错误</strong>；15 家按名称精筛；补齐全称截断的 #60 «ЭКОМТЕХ»、确认 #11 候选 ИНН</div></div>
+<div class="kv"><div class="k">坑</div><div class="v">按名称查询固定只返前 10 条（page / pageSize 无效），同名数千时无法穷举；<code>is_active=0</code> 多为退出中小企业名录，<strong>不等于工商注销</strong>；大企业 <code>rowCount=0</code> 属正常</div></div>
+</div></div>
+
+<div class="weapon">
+<div class="hd"><span class="id">A3</span><b>★ 组合技：官方册拿 ОГРН → 拼 org-info URL</b> <span class="tag g">核心·最高产</span></div>
+<div class="bd">
+<div class="kv"><div class="k">做法</div><div class="v">A2 拿到 <code>ogrn</code> → <code>https://www.org-info.com/company/&lt;ОГРН&gt;</code>，或搜索引擎用 <code>site:org-info.com/company "&lt;公司名&gt;" "&lt;ИНН&gt;"</code> 叠加检索</div></div>
+<div class="kv"><div class="k">实证</div><div class="v">一次拿到 <strong>22 家法定代表人姓名 + 4 个与打码完全吻合的完整固话</strong>；v4 用叠加检索还原 #18 / #41 / #74 等 4 个打码值</div></div>
+<div class="kv"><div class="k">坑</div><div class="v">纯 ИНН 单独搜会被搜索引擎当普通数字，必须叠加公司名；用 ОГРН 拼 URL 最稳。邮箱/电话是工商登记留存值，时效需复核（#73 УЛЕЙ 的 СБИС 与 readyratios 负责人不一致）</div></div>
+</div></div>
+
+<div class="weapon">
+<div class="hd"><span class="id">A4</span><b>官网深页：/about/team、/partneram、/contacts、/dealerships</b> <span class="tag g">核心</span></div>
+<div class="bd">
+<div class="kv"><div class="k">检索式</div><div class="v"><code>"&lt;公司名&gt;" отдел закупок OR корпоративным клиентам OR ВЭД</code>；<code>site:&lt;域名&gt; @&lt;域名&gt;</code>；逐个抓 <code>mailto:</code> / <code>tel:</code> / JSON-LD <code>ContactPoint</code></div></div>
+<div class="kv"><div class="k">实证</div><div class="v"><strong>单点密度最高</strong>：<code>bmw-atlas.ru/about/team</code> 一页约 40 个「具名 + 职位 + 完整邮箱」（企业销售经理、配件部负责人等）；#58 <code>automotivetech.ru/partneram</code> 有「供应商准入要求与流程」＋指定对接人 Denis Oseev <code>do@cars-tech.pro</code>；#20 <code>kr.avtomir.ru/contacts</code> 是部门电话/邮箱矩阵</div></div>
+<div class="kv"><div class="k">坑</div><div class="v">团队页比 contacts 页颗粒度更细；<code>atom.team</code> 的邮箱藏在 404 模板页的 JSON-LD 里；官网域名可能是停放页 / 被博彩镜像占用 / 被建站工作室接盘（<code>www.road.ru</code> 已不是 РОАД 协会，真实域名 <code>www.asroad.org</code>）</div></div>
+</div></div>
+
+<div class="weapon">
+<div class="hd"><span class="id">A5</span><b>★ 品牌俄官网 «Стать дилером» → dnd@ 职能邮箱 + 采购平台</b> <span class="tag g">核心·v6 最高价值</span></div>
+<div class="bd">
+<div class="kv"><div class="k">检索式</div><div class="v"><code>&lt;品牌俄官网&gt;/explore/dealer-join</code>、<code>/dealers/become-dealer</code>、<code>/dealerships/stat-dilerom</code>；<code>"&lt;品牌&gt;" стать дилером почта</code>；关键词 <code>отдел / Департамент развития дилерской сети</code></div></div>
+<div class="kv"><div class="k">实证</div><div class="v">4 个 <code>dnd@</code> 全中：<code>dnd@jetour-motor.ru</code>、<code>dnd@df-trading.ru</code>、<code>dnd@omoda-russia.ru</code>、<code>DND@exeed.ru</code>；另 <code>geely.globalsales@geely.com</code>（唯一明文接受其他合作方式）；<strong class="good">最对口：<code>https://zakupki.rolf.ru/</code></strong> 明文面向 «ввозите автомобили из-за рубежа»（从境外进口汽车），累计成交 12 189 台</div></div>
+<div class="kv"><div class="k">坑</div><div class="v"><strong class="bad">名义用途错配</strong>：dnd@ 招的是俄境内零售经销商（要求本地展厅/物业），中国出口方不符合资格，价值在于<strong>求转介到采购 / 进口与分销部门</strong>；BELGEE 明文「不受理合作提案」；<code>partner@kr.avtomir.ru</code> 只收经销商中心建筑租赁提案</div></div>
+</div></div>
+
+<div class="weapon">
+<div class="hd"><span class="id">A6</span><b>Yandex Maps 国际版（绕开 yandex.ru 验证码与 2gis 403）</b> <span class="tag g">核心</span></div>
+<div class="bd">
+<div class="kv"><div class="k">入口</div><div class="v"><code>https://yandex.com/maps/213/moscow/search/&lt;URL编码俄文公司名&gt;/</code>；卡片 <code>https://online.yandex.com/maps/org/&lt;slug&gt;/&lt;id&gt;/</code></div></div>
+<div class="kv"><div class="k">技巧</div><div class="v">搜索页内嵌 <code>&lt;script type=application/json class=state-view&gt;</code>，直接带 <code>title / address / phones / urls</code>，<strong>不必点进卡片</strong></div></div>
+<div class="kv"><div class="k">实证</div><div class="v">23/23 HTTP 200（300–960KB），17 家有组织卡片，3 家已验证（#13 <code>lotus-motors.ru</code>、#14 <code>trailercom.ru</code>、#63 <code>autoelectro.ru</code>）+ 4 家候选</div></div>
+<div class="kv"><div class="k">坑</div><div class="v"><strong>卡片正文无 ИНН / ОГРН（本批 0 命中）</strong>，必须叠加官方册全称 + 地址 + 域名三重校验；「已验证」属地址/域名级，不是 ИНН 级</div></div>
+</div></div>
+
+<div class="weapon">
+<div class="hd"><span class="id">A7</span><b>集团 / 品牌层穿透 + 经销商门店页</b> <span class="tag g">核心</span></div>
+<div class="bd">
+<div class="kv"><div class="k">做法</div><div class="v">小法人查不到时，找它所属集团或品牌：官网经销商矩阵、requisites 页、hh.ru 雇主页、TAdviser、Cbonds、whoiswho.dp.ru、投资的项目库、官方财报库 <code>bo.nalog.gov.ru</code></div></div>
+<div class="kv"><div class="k">实证</div><div class="v">#39 / #64 / #76 共用 Evolute 体系（同址 + 9724153xxx 号段 + 同一热线与 <code>dnd@df-trading.ru</code>）；#90 是 GAZ 集团工程中心（采购总监 Yuriy Ushakov）；#42 БорисХоф 30+ 中国品牌；<strong><code>431263.ru/kontakty</code> → <code>grandtech.ru/kontakty</code></strong> 219KB HTML 内嵌 17 个地图 Point，逐店给法人全称 + 品牌 + 电话 → <strong>19 家新潜客（17 家带电话）</strong></div></div>
+<div class="kv"><div class="k">坑</div><div class="v">集团层联系方式不能冒充本法人专属，须标「集团层·疑似」；grandtech 19 家全在弗拉基米尔一地、同属一个集团，属<strong>单集团深挖</strong>而非全国样本；品牌主体会变更（CHERY 俄主体已改为 ООО «ТЕНЕТ РУС»）</div></div>
+</div></div>
+
+<div class="weapon">
+<div class="hd"><span class="id">A8</span><b>中国侧反查：提单 → 中国供应商 → 企查查 → 同行引荐</b> <span class="tag g">核心·最短决策链</span></div>
+<div class="bd">
+<div class="kv"><div class="k">入口</div><div class="v"><code>site:52wmb.com/buyer "&lt;俄文名&gt;"</code> → <code>en.52wmb.com/buyer/&lt;id&gt;</code> 的 Partners → 中国供应商英文名 → 企查查 / 爱企查 → 法人、手机、邮箱、官网</div></div>
+<div class="kv"><div class="k">实证</div><div class="v">СЯ Холдинг 3 家（江苏盛通 129 笔、新疆安拓 100 笔、重庆森凯 96 笔）+ Слава Моторс Рус 3 家 = <strong>6 家中国公司联系方式齐全</strong>；#86 唯一伙伴黑龙江凯华（40 笔）拿到董事长商务电话邮箱</div></div>
+<div class="kv"><div class="k">升级版</div><div class="v">更短的是<strong>中国品牌方国际业务部</strong>：吉利 <code>geely.globalsales@geely.com</code>、长城供应商加盟 0312-2196893、东风国际业务部、赛力斯↔Автодом（TASS 闭合）、国机汽车 010-88825988；一个部门同时对接多家俄经销商</div></div>
+<div class="kv"><div class="k">坑</div><div class="v">公开伙伴榜<strong>只露前 5 名</strong>，「一个中国供应商覆盖多家俄企」在提单层面未证实；<strong class="bad">中方供应商对口人不是俄方决策人</strong>，只能作引荐路径，不得写进决策人字段；#44 中资背景可中文直谈</div></div>
+</div></div>
+
+<div class="weapon">
+<div class="hd"><span class="id">A9</span><b>打码还原规则（可批量校验）</b> <span class="tag y">辅助</span></div>
+<div class="bd">
+<div class="kv"><div class="k">规则</div><div class="v"><code>区号 + 号码首 2 位（4 位区号取 1 位）+ **（3 位）+ 末 2 位</code>；邮箱同理看首尾字符与位数</div></div>
+<div class="kv"><div class="k">实证</div><div class="v">6 家还原成功：(812) <code>31 ** 44</code> → 318-30-44；(4922) <code>4 ** 30</code> → 43-02-30；(342) <code>29 ** 97</code> → 298-90-97；<code>s**e@</code> → <code>sale@dv-extreme.ru</code>；另有 #28 / #38</div></div>
+<div class="kv"><div class="k">铁律</div><div class="v"><strong>只有完全吻合才采信</strong>：与打码不吻合的官网值一律单列「需人工」，不计入还原；v6 本批 15 个打码值还原 <strong>0</strong> 条，无吻合值即留白；免费个人邮箱域（mail.ru / yandex.ru / gmail.com / bk.ru）无企业命名规则，<strong>不生成候选</strong></div></div>
+</div></div>
+
+<div class="weapon">
+<div class="hd"><span class="id">A10</span><b>展会目录 / hh.ru / 招投标 / WHOIS / 行业媒体</b> <span class="tag y">辅助</span></div>
+<div class="bd">
+<div class="kv"><div class="k">展会目录</div><div class="v"><code>site:expocentr.ru OR site:nashel.ru OR site:icatalog.expocentr.ru "&lt;公司名&gt;" E-mail Phone</code>；NEFTEGAZ 2024 / CTT EXPO 2025 名录主动公开、颗粒度到业务线，补到 <code>hotline@mbrus.ru</code>；<strong>必须逐条核 ИНН</strong>（#59 的 <code>sales@m-kar.ru</code> 属莫斯科另一法人，已剔除）</div></div>
+<div class="kv"><div class="k">hh.ru</div><div class="v"><code>"&lt;公司名&gt;" site:hh.ru/employer</code>：主体沿革、同址关联、同名鉴别最有效；曾给出 <code>hr@sigirgroup.com</code> 并注明合作咨询也用此箱</div></div>
+<div class="kv"><div class="k">WHOIS</div><div class="v">最后一轮唯一出货：<code>whois autoars.ru</code> + 索引快照确认域名属 АО «Альянс-Авто»，把 #29 的 <code>vitalk@autoars.ru</code> 复核转正</div></div>
+<div class="kv"><div class="k">招投标</div><div class="v">思路成立但本批<strong>未命中</strong>：<code>zakupki.gov.ru</code> fetch failed、聚合站登录墙；СБИС 的「参与 119 次招标」只是活跃度统计，不等于联系方式可得</div></div>
+</div></div>
+
+<div class="weapon">
+<div class="hd"><span class="id">A11</span><b>按俄文全称反查 ИНН（补 36 家缺口）</b> <span class="tag y">辅助</span></div>
+<div class="bd">
+<div class="kv"><div class="k">检索式</div><div class="v"><code>"&lt;俄文全称&gt;" ИНН ОГРН генеральный директор</code>；<code>site:readyratios.com "&lt;公司名&gt;"</code></div></div>
+<div class="kv"><div class="k">有效源</div><div class="v"><code>readyratios.com/profile/&lt;ОГРН&gt;</code>、<code>org-info.com/company/&lt;id&gt;</code>、<code>en.movizor-info.ru/id/&lt;id&gt;</code>、<code>autodata.gasgoo.com</code>（盖世中文企业库）、emis.com、cbonds</div></div>
+<div class="kv"><div class="k">实证</div><div class="v">36 家中 <strong>18 家查实</strong>（高可信 10 家）：#39 МОТОРИНВЕСТ、#44 СЛАВА МОТОРС РУС（总经理陈文豪）、#53 АО ИАТ、#65 МБ РУС（原奔驰俄罗斯，现 FOTON 分销 + AITO 独家）、#76 ЭВИА 等；同时暴露 #51 莫斯科地铁、#79 中国公司等串行错误</div></div>
+<div class="kv"><div class="k">坑</div><div class="v">同名必须按<strong>行业 + 地址 + ОГРН</strong> 消歧，绝不硬配同名公司的负责人和电话；这些站给的是 ЕГРЮЛ 公开字段，不是破解数据</div></div>
+</div></div>
+
+<div class="weapon">
+<div class="hd"><span class="id">A12</span><b>主体纠错与时效复核（贯穿全程）</b> <span class="tag y">辅助</span></div>
+<div class="bd">
+<div class="kv"><div class="k">动作</div><div class="v">每轮用官方册重扫状态 / 主营 / 全称 / 负责人任职日期；把「集团层」「法人层」「品牌层」严格分开</div></div>
+<div class="kv"><div class="k">实证</div><div class="v">v2 纠正 РОЛЬФ CEO（Роман Антонов 已过时 → Виноградова С.В. 2025-03-07 上任）；v5 纠正 3 条口径；v6 再做 <strong>8 条主体纠错</strong>（#13 负责人换届、#60 全称补齐、#11 ИНН 确认、#30 建议剔除、#31 迁址后主营变 68.20、#63/#69 买家画像存疑等）</div></div>
+<div class="kv"><div class="k">业务修正</div><div class="v">#39 / #76 / #64 从东风进口的是<strong>生产用零配件、本地组装</strong>（TAdviser 原文 no plans to export），不是整车买家，话术必须改成零部件 / 配套供应；@daimler.com 邮箱属奔驰退出前已失效</div></div>
+</div></div>
+
+</section>
+
+<!-- ============ 05 ============ -->
+<section class="sec pagebreak" id="s5">
+<h2>05 · 检索式速查表（可直接复制）</h2>
+<table>
+<thead><tr><th style="width:20%">目的</th><th>模板 / 命令</th><th style="width:22%">注意</th></tr></thead>
+<tbody>
+<tr><td>按 ИНН 取工商档案</td><td><code>curl -sS --compressed -A "Mozilla/5.0" https://sbis.ru/contragents/&lt;ИНН&gt;</code></td><td>直连，勿挂本地 Clash 代理</td></tr>
+<tr><td>官方册核验主体</td><td><code>curl -sS --compressed -X POST -H "X-Requested-With: XMLHttpRequest" --data-urlencode "mode=quick" --data-urlencode "query=&lt;ИНН&gt;" --data-urlencode "page=1" --data-urlencode "sortField=NAME_EX" --data-urlencode "sort=ASC" https://rmsp.nalog.ru/search-proc.json</code></td><td>拿 <code>ogrn</code> 进入组合技</td></tr>
+<tr><td>按 ОГРН 取法代</td><td><code>https://www.org-info.com/company/&lt;ОГРН&gt;</code></td><td>比纯 ИНН 搜索稳定</td></tr>
+<tr><td>名称 + ИНН 叠加</td><td><code>site:org-info.com/company "&lt;俄文公司名&gt;" "&lt;ИНН&gt;"</code></td><td>防同名串号</td></tr>
+<tr><td>补 ИНН / ОГРН</td><td><code>"&lt;俄文全称&gt;" ИНН ОГРН генеральный директор</code>；<code>site:readyratios.com "&lt;公司名&gt;"</code></td><td>须按行业+地址消歧</td></tr>
+<tr><td>官网找采购口</td><td><code>"&lt;公司名&gt;" отдел закупок OR ВЭД OR поставщикам</code>；<code>site:&lt;域名&gt; @&lt;域名&gt;</code></td><td>优先 /about/team、/partneram</td></tr>
+<tr><td>品牌经销商部门</td><td><code>"&lt;品牌&gt;" стать дилером почта</code>；<code>"&lt;品牌&gt;" "развития дилерской сети" @</code></td><td>找 dnd@ / отдел 字样</td></tr>
+<tr><td>中国侧提单</td><td><code>site:52wmb.com/buyer "&lt;俄文名&gt;"</code>；<code>site:52wmb.com/supplier "&lt;中国公司英文名&gt;"</code></td><td>详情页可被索引，搜索页有登录墙</td></tr>
+<tr><td>展会 / 雇主页</td><td><code>site:expocentr.ru OR site:nashel.ru "&lt;公司名&gt;" E-mail Phone</code>；<code>"&lt;公司名&gt;" site:hh.ru/employer</code></td><td>展会条目必核 ИНН</td></tr>
+<tr><td>地图取电话</td><td><code>https://yandex.com/maps/213/moscow/search/&lt;URL编码俄文名&gt;/</code></td><td>解析 <code>state-view</code> JSON</td></tr>
+<tr><td>域名归属</td><td><code>whois &lt;域名&gt;</code>；<code>site:liveinternet.ru/stat/&lt;域名&gt;</code></td><td>用于第二源印证</td></tr>
+</tbody>
+</table>
+
+<h3>常用俄语关键词（写检索式用）</h3>
+<p><code>генеральный директор</code> 总经理 · <code>отдел закупок</code> 采购部 · <code>отдел ВЭД</code> 外贸部 · <code>поставщикам / партнерам</code> 供应商 / 合作伙伴 · <code>контактное лицо</code> 联系人 · <code>реквизиты</code> 企业注册信息 · <code>стать дилером</code> 成为经销商 · <code>развитие дилерской сети</code> 经销商网络发展 · <code>корпоративным клиентам</code> 企业客户 · <code>ПО ПОРУЧЕНИЮ</code> 代理申报（报关行，非买家）</p>
+</section>
+
+<!-- ============ 06 ============ -->
+<section class="sec" id="s6">
+<h2>06 · 验证、分级与零编造铁律</h2>
+<h3>L1–L4 触达等级（v6 口径）</h3>
+<table>
+<thead><tr><th style="width:10%">等级</th><th style="width:12%">家数</th><th style="width:38%">定义</th><th>销售动作</th></tr></thead>
+<tbody>
+<tr><td><strong>L1</strong></td><td><strong>29</strong></td><td>已验证完整电话或邮箱，本法人或明确集团层口径</td><td>可直接按具名话术首触（合规版）</td></tr>
+<tr><td><strong>L2</strong></td><td>21</td><td>有总机 / 职能邮箱 / 明确引荐路径，需一步转接或补全</td><td>电话求转采购部；或 Hunter/Snov 按域名补具名邮箱</td></tr>
+<tr><td><strong>L3</strong></td><td>12</td><td>候选未验证：地图卡片、登记邮箱、同名待定、格式推测</td><td>必须标【未验证·候选】，小额试投，不得计入成果</td></tr>
+<tr><td><strong>L4</strong></td><td>38</td><td>剔除：报关行 / 物流 / 配件 / 注销 / 串行错误 / 零公开足迹</td><td>不分派销售，避免浪费与错发</td></tr>
+</tbody>
+</table>
+<p class="cap">演进：v4 L1 20 → v5 26 → v6 29；具名决策人 v2 61 → v3 80 → v4 92 后不再增长（增量全部来自主体纠错与路径升级）。</p>
+
+<h3>证据等级与字段规范</h3>
+<ul>
+<li><strong>已验证（本法人）</strong>：官方册 ИНН/ОГРН 与来源页一致 + 地址或域名吻合 + 至少 1 条独立第二源；例 #18 <code>kikutina@matologistics.ru</code>（org-info 打码还原 + ИНН 精确命中）。</li>
+<li><strong>已验证（集团 / 品牌层）</strong>：必须显式标注层级，不得写成该法人专属；例 #10 СИГИР ГРУПП 官网团队页、#90 GAZ 集团采购总监。</li>
+<li><strong>已验证（打码还原）</strong>：位数 + 首尾字符完全吻合；不吻合的官网公开值单列「需人工」。</li>
+<li><strong>未验证·候选</strong>：单独成表，v4 10 家、v6 新增 4 家（#50 / #60 / #69 / #95），不计净新增。</li>
+<li><strong>查不到</strong>：写「未查到」「同名无法确认」，绝不填空、绝不生成私人手机号候选。</li>
+</ul>
+
+<div class="box danger">
+<p><strong>零编造铁律（六轮一致）：</strong>所有 ИНН / 人名 / 电话 / 邮箱 / URL 附来源与采集日期；只采集<strong>企业公开联系方式</strong>（工商登记、年报、官网、展会目录、官方商家渠道）；不挖个人私人手机号；不登录、不付费、不绕验证码；不做「按姓名格式猜邮箱」并当作事实；<code>saby</code> / <code>52wmb</code> 的付费反查功能一律不用。</p>
+</div>
+
+<h3>最终表的字段结构（100 行 × 39 列，节选）</h3>
+<p>排名 / 分级 / 表内公司名 / ИНН / 工商档案公司名 / 主体状态 / 总经理 / 任职起始 / ОКВЭД / 性质判定 / 建议动作 / 打码邮箱 / 邮箱域名 / 打码电话 / 官网 / 股东 / 营收 / 风险信号 / 档案 URL / <strong>触达等级</strong> / 官方 МСП 核验 / 官方 ОКВЭД / 打码还原值 / v5 新增路径 / v5 主体结论 / v6 新增电话 / v6 邮箱渠道 / v6 主体纠错 / v6 结论 / v6 来源 URL 与状态。另有 37 个专题 sheet（各轮 SOP、清洗结论、话术、死路清单、新潜客池等）。</p>
+</section>
+
+<!-- ============ 07 ============ -->
+<section class="sec pagebreak" id="s7">
+<h2>07 · 已被证伪的渠道：别再试了</h2>
+<p>这部分和「有效通道」同样值钱 —— 它省掉的是下一轮 60% 的无效工时。以下均为本次实测结论，非推测。</p>
+<table>
+<thead><tr><th style="width:30%">渠道</th><th style="width:20%">失败形态</th><th>结论</th></tr></thead>
+<tbody>
+<tr><td>egrul.nalog.ru（官方 ЕГРЮЛ）</td><td>验证码 + JS，查询返回空</td><td>改用 СБИС / 官方 МСП POST</td></tr>
+<tr><td>rusprofile.ru、list-org.com、checko.ru</td><td>403 / 按国家封锁</td><td>放弃；checko 明示 «Доступ … закрыт»</td></tr>
+<tr><td>zachestnyibiznes.ru</td><td>DDoS-Guard 拦截</td><td>放弃</td></tr>
+<tr><td>yandex.ru 搜索 / 2gis.ru 直连 / Avito / Pulscen</td><td>SmartCaptcha / 403 / 429</td><td>改走 <strong>yandex.com 国际版地图</strong>；2GIS 用网页抓取通道可通但无目标条目</td></tr>
+<tr><td>saby 按名称搜、52wmb 按名称搜</td><td>营销落地页 / JS + 登录墙</td><td>仅详情页可被搜索引擎索引：<code>site:52wmb.com/buyer "…"</code></td></tr>
+<tr><td>负责人 / 股东名下关联企业穿透</td><td>11 组「全名 + ИНН」全命中无关同名</td><td>结构性死路，不再投入</td></tr>
+<tr><td>税务 / 破产 / 法院库、kad.arbitr.ru、fedresurs</td><td>验证码 / 404 / 只返回教程</td><td>本批不产出联系方式</td></tr>
+<tr><td>РОАД 协会 / Автостат 名录</td><td>付费墙、无小微企业卡片</td><td><code>www.road.ru</code> 已易主，真实协会 <code>www.asroad.org</code></td></tr>
+<tr><td>俄 B2B 平台（flagma / tiu / spr / b2b-center）、ETP 电子招标</td><td>反爬 / 空框架 / 403 / 需电子签名</td><td>页上电话是平台自己的</td></tr>
+<tr><td>tenchat.ru、Ozon / WB / Avito 商家公示、俄中商会 / CCPIT 名录、tgstat</td><td>需 App / 无增量 / 零命中 / 403</td><td>v5 实测 12 个新站<strong>净新增可触达 0</strong></td></tr>
+<tr><td>品牌官网经销商目录（chery.ru / omoda.ru / jetour find-dealer）</td><td>全是 SPA 壳</td><td>595KB 里 149 个 <code>@</code> 全是 ld+json 的 @context；<code>dealers_cities</code> 只是 widget 配置键名，别把页面体积当数据</td></tr>
+<tr><td>ФИПС 商标簿 / ОТТС-СБКТС 认证登记</td><td>需会话登录、502 / 000</td><td>需人工浏览器登录，按要求未绕验证码</td></tr>
+<tr><td>免费个人邮箱域（mail.ru / yandex.ru / gmail.com / bk.ru）</td><td>9 家全部无法还原</td><td>无企业命名规则，生成候选等于猜私人地址 → 不生成</td></tr>
+<tr><td>r.jina.ai / translate.goog / Wayback / zakupki.gov.ru</td><td>fetch failed / 登录墙</td><td>已确认边界</td></tr>
+<tr><td>本地 Clash 代理 127.0.0.1:7897</td><td>curl 全部 000 超时</td><td>抓 СБИС 时<strong>不要挂</strong>；环境自带系统代理可用</td></tr>
+</tbody>
+</table>
+
+<div class="box warn">
+<p><strong>「页面大 ≠ 有数据」</strong> 是本次最反直觉的一条：多个 200–600KB 的品牌经销商页面，实际数据全靠动态 API，HTML 里只有配置键名。判断方法是先搜 <code>mailto:</code> / <code>tel:</code> / <code>ИНН</code> / <code>ОГРН</code> 是否真实出现，再决定要不要解析。</p>
+</div>
+</section>
+
+<!-- ============ 08 ============ -->
+<section class="sec" id="s8">
+<h2>08 · 合规红线与首触话术口径</h2>
+<table>
+<thead><tr><th style="width:22%">规则 / 现状</th><th style="width:38%">内容</th><th>执行动作</th></tr></thead>
+<tbody>
+<tr><td><strong>38-FZ 广告法第 18 条</strong></td><td>未经事先同意的推广邮件 / 消息即违法，B2B 同样适用；<strong>官网公开邮箱 ≠ 同意</strong></td><td>首封只做一对一、具名、说明身份的询问；<strong>不附报价单 / 产品目录</strong>；留明确退订方式</td></tr>
+<tr><td><strong>152-FZ 个人数据法</strong></td><td>俄公民个人数据 2025-07 起不得存境外库；2025-09 起同意须单独文件</td><td>别把「法人姓名 + 手机号」批量塞进境外 CRM；数据最小化、留来源 URL 与采集日期</td></tr>
+<tr><td><strong>通讯渠道现状</strong></td><td>WhatsApp 2026-02 起被移出俄国家 DNS 全面封锁；Telegram 受限 / 降速；LinkedIn 自 2016 在俄被封；MAX 无端到端加密</td><td>主力改<strong>俄语电话 + 公司公开邮箱 + VK / 微信</strong>（中俄车商圈常用）；MAX 仅作对方要求时备选</td></tr>
+<tr><td><strong>企业公开 vs 个人隐私</strong></td><td>本批只采工商登记、年报、官网、展会目录、官方商家渠道的公开联系方式</td><td>不挖私人手机号；打码值原样保留并标注不可用</td></tr>
+<tr><td><strong>制裁与结算</strong></td><td>АО МБ РУС 出现在公开制裁名单聚合页；部分客户涉中俄转口</td><td>跨境结算前做法务审查，核实最终用户与用途</td></tr>
+<tr><td><strong>数据时效</strong></td><td>俄企高管变动频繁；登记电话邮箱多为留存值</td><td>触达前按档案 URL 复核任职状态；@daimler.com 已失效</td></tr>
+</tbody>
+</table>
+
+<h3>v6 新增：dnd@ 的「名义用途错配」处理</h3>
+<div class="box danger">
+<p>所有 <code>dnd@</code> 页面名义是招<strong>俄罗斯境内零售经销商</strong>（要求本地汽车业务经验、自有/长租展厅、临街物业），中国整车出口方不符合资格。首封<strong>绝对不要写</strong>：① 「申请成为经销商」；② 附页面提供的 .rar 申请表；③ 中文（用俄语或英语）；④ 一上来附报价单。</p>
+</div>
+<p><strong>正确做法</strong>：自报中国整车出口商身份与可稳定供货车型（T2、BYD、Chery、Geely、Haval 等），说明可配合 ЭПТС / СБКТС 认证与备件，明确<strong>不求成为经销商，只求转介</strong>到 <code>отдел закупок / дирекцию по импорту и дистрибуции</code>；引用其官网公示的开放城市或 2026 申请表作可验证锚点，证明不是群发；附一页 company profile。5–7 工作日无回复，用官网 8-800 热线礼貌跟进，报邮件日期即可，<strong>不索取个人手机号</strong>。</p>
+<pre>主题行（Jetour）：Поставка автомобилей JETOUR T2 из КНР — запрос на контакт с отделом закупок / дистрибуции
+主题行（Geely）：Vehicle supply / export partnership proposal — Chinese exporter
+主题行（OMODA）：Предложение по поставкам и расширению модельной линейки — запрос перенаправления в департамент закупок</pre>
+<p class="small">更对口的一步：直接在 <code>https://zakupki.rolf.ru/auth/registration</code> 注册 «РОЛЬФ Закупки» 整车供给平台，比任何 dnd@ 都更贴合「中国出口商卖车给俄方」。</p>
+</section>
+
+<!-- ============ 09 ============ -->
+<section class="sec" id="s9">
+<h2>09 · 工程流水线：脚本、代理、表结构</h2>
+<h3>每一轮的标准动作</h3>
+<ol>
+<li><strong>读源表</strong>：本地 Office 编辑通道 <code>sheet_get_cell_data</code> 导出 100 行 × 30 列为 CSV / JSON（<code>/tmp/russia_top100.json</code>）。</li>
+<li><strong>批量抓取</strong>：Python 脚本按 ИНН 拼 URL（<code>/tmp/saby_batch.py</code>），正则解析负责人 / 状态 / ОКВЭД / 股东 / 打码邮箱电话；官方册脚本 <code>/tmp/rmsp_official.py</code> 做 100 家核验。</li>
+<li><strong>网页取证</strong>：curl / 网页抓取通道取 HTML，解析 <code>mailto:</code>、<code>tel:</code>、JSON-LD、<code>state-view</code> 地图 JSON；失败状态（403 / 000 / 502）如实记录，不猜。</li>
+<li><strong>版本化建表</strong>：<code>.俄罗斯TOP100客户_决策人核验vN.ref/build_vN.py</code>（openpyxl）生成新表，<strong>旧版一律保留不覆盖</strong>；冻结表头、加筛选、颜色分级、超链接、数据校验与批注；写入 AIGC 标识。</li>
+<li><strong>校验与交付</strong>：重开文件核对 sheet 数、行数、链接数、等级高亮；用文件预览打开成品。</li>
+</ol>
+
+<h3>环境与踩坑</h3>
+<ul>
+<li>网络：网络中断 / 502 / ENETUNREACH / stream timeout 时改为直连网页抓取或等待网络恢复后重试；子代理常只返回摘要，需明确要求输出<strong>完整表格</strong>。</li>
+<li>代理：显式 <code>127.0.0.1:7897</code>（Clash）导致全量超时；系统自带代理可用；抓 СБИС 以直连最稳。</li>
+<li>抓取边界：`<code>curl -sS --compressed --max-time 35 -A "Mozilla/5.0"</code>`，POST 接口需带 <code>X-Requested-With: XMLHttpRequest</code> 与正确 Content-Type。</li>
+<li>建表常见错误（均已修复）：SOP 标题错位、DataValidation / Comment 落在分组行、<code>make_sheet(...)</code> 参数不匹配、等级标签滞后导致颜色误导、总览行号错误、冗余循环、<code>real(v)</code> 空值处理。</li>
+</ul>
+
+<h3>成果文件清单</h3>
+<table>
+<thead><tr><th style="width:48%">文件</th><th>sheets</th><th>该轮标志</th></tr></thead>
+<tbody>
+<tr><td>俄罗斯TOP100客户_决策人查询作业表.xlsx</td><td>4</td><td>492 个查询链接 + 空白待填列</td></tr>
+<tr><td>俄罗斯TOP100客户_决策人核验v2.xlsx</td><td>7</td><td>64 家实抓、61 家具名</td></tr>
+<tr><td>俄罗斯TOP100客户_决策人核验v3.xlsx</td><td>13</td><td>具名 80 家、146 链接</td></tr>
+<tr><td>俄罗斯TOP100客户_决策人核验v4.xlsx</td><td>20</td><td>具名 92 家、L1–L4 分级</td></tr>
+<tr><td>俄罗斯TOP100客户_决策人核验v5.xlsx</td><td>29</td><td>官方册基线、打码还原</td></tr>
+<tr><td><strong>俄罗斯TOP100客户_决策人核验v6.xlsx</strong></td><td><strong>38</strong></td><td>100×39、258 链接、L1 29 家、品牌总部通道</td></tr>
+</tbody>
+</table>
+<p class="small">方法论沉淀同时写入项目日志 <code>.workbuddy/memory/2026-11-13.md</code> 与 <code>2026-11-14.md</code>，逐轮记录有效通道、死路与口径纠错。</p>
+</section>
+
+<!-- ============ 10 ============ -->
+<section class="sec" id="s10">
+<h2>10 · 可复用 SOP 与战略判断</h2>
+<h3>拿到一批新的海外名单，照这 10 步做</h3>
+<table>
+<thead><tr><th style="width:7%">步</th><th style="width:30%">动作</th><th>出口标准</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>读表结构，列出主键字段与缺失率</td><td>确认有没有联系人列、主键（ИНН / ОГРН / 统一编号）缺多少</td></tr>
+<tr><td>2</td><td>先洗名单：代理申报、物流、非目标品类、注销、串行错误</td><td>输出「必须剔除 / 待人工」清单，通常能砍掉 25–35%</td></tr>
+<tr><td>3</td><td>官方登记册按主键全量核验（免费一手）</td><td>拿到全称、状态、行业、城市、ОГРН；标出 <code>is_active=0</code> 的正确含义</td></tr>
+<tr><td>4</td><td>主键拼 URL 批量取法定代表人 + 任职日期</td><td>具名率、打码电话 / 邮箱域名清单</td></tr>
+<tr><td>5</td><td>组合技：官方册 ОГРН → 企业档案页 → 打码还原</td><td>只采位数与首尾全吻合的值，不吻合单列「需人工」</td></tr>
+<tr><td>6</td><td>官网深页 + 团队页 + 合作页 + 门店页</td><td>职能邮箱、部门电话、指定对接人、门店清单</td></tr>
+<tr><td>7</td><td>向上穿透：集团 / 品牌总部 / 采购平台 / 经销商网络发展部</td><td>一组总部入口（覆盖多家下游），并标明层级与用途口径</td></tr>
+<tr><td>8</td><td>向中国穿透：提单伙伴 → 中方供应商 / 品牌国际业务部</td><td>中文可谈的引荐路径，明确「不是俄方决策人」</td></tr>
+<tr><td>9</td><td>地图 / 展会 / 雇主页 / WHOIS 做交叉验证与补齐</td><td>每条至少 1 个独立第二源；同名条目核 ИНН</td></tr>
+<tr><td>10</td><td>分级入表、附 URL 与日期、写 SOP + 死路清单 + 话术</td><td>L1–L4 齐全、候选单独成表、合规口径写明、旧版不覆盖</td></tr>
+</tbody>
+</table>
+
+<div class="box key">
+<p><strong>战略判断（下次别再逐个补）：</strong>这批名单剩下的多是 2022–2025 新设 1–2 人进口主体，公开层补齐边际收益趋近于零。真正的杠杆在<strong>品牌总部 / 分销商 / 采购平台入口</strong> —— 一条 <code>dnd@</code> 或一次 РОЛЬФ 平台注册覆盖的交易量，远大于逐个找 1 人公司电话。</p>
+</div>
+<h4>立刻可做的三件事（无需任何付费账号）</h4>
+<ol>
+<li>注册 <code>zakupki.rolf.ru</code> 整车供给平台，按供应商身份提交资料。</li>
+<li>按 v6 首触模板，给 3 个 <code>dnd@</code> / <code>geely.globalsales@geely.com</code> 发一对一转介请求（俄语 / 英语，不附报价单）。</li>
+<li>用 grandtech 19 家中国品牌门店名单做中文侧同行触达（17 家带公开电话，含 Jetour / SOUEAST / OMODA / HAVAL / TANK）。</li>
+</ol>
+<p class="small">仍需人工 / 付费才能突破的剩余边界：外贸邦或腾道完整伙伴榜、EGRUL 人工摘录、客户方补 ИНН、俄语电话逐家求转接。</p>
+</section>
+
+<!-- ============ 11 ============ -->
+<section class="sec pagebreak" id="s11">
+<h2>11 · 附录：关键入口 / 俄语职位词表</h2>
+<h3>A. 高频有效入口（按优先级）</h3>
+<table>
+<thead><tr><th style="width:38%">入口</th><th>用途</th></tr></thead>
+<tbody>
+<tr><td><code>https://rmsp.nalog.ru/search-proc.json</code> (POST)</td><td>官方 МСП 册：ОГРН / 全称 / 状态 / ОКВЭД / 城市</td></tr>
+<tr><td><code>https://sbis.ru/contragents/&lt;ИНН&gt;</code></td><td>СБИС 工商档案：法代姓名 / 任职日 / 股东 / 打码联系方式 / 营收</td></tr>
+<tr><td><code>https://www.org-info.com/company/&lt;ОГРН&gt;</code></td><td>法代姓名、登记电话邮箱、打码还原比对</td></tr>
+<tr><td><code>https://zakupki.rolf.ru/</code></td><td>РОЛЬФ 整车采购平台，明文面向境外进口汽车供给</td></tr>
+<tr><td><code>dnd@jetour-motor.ru</code> / <code>dnd@df-trading.ru</code> / <code>dnd@omoda-russia.ru</code> / <code>DND@exeed.ru</code></td><td>品牌总部经销商网络发展部（求转介采购/进口分销）</td></tr>
+<tr><td><code>geely.globalsales@geely.com</code></td><td>Geely 全球总部，明文接受其他形式合作</td></tr>
+<tr><td><code>https://yandex.com/maps/213/moscow/search/…</code></td><td>绕验证码取门店 title / address / phones / urls</td></tr>
+<tr><td><code>https://431263.ru/kontakty</code> → <code>grandtech.ru/kontakty/</code></td><td>单集团 19 家中国品牌门店明细，集团 <code>info@grandtech.ru</code>、+7(4922)43-30-00</td></tr>
+<tr><td><code>https://bo.nalog.gov.ru/organizations-card/…</code></td><td>官方财报库，核品牌俄主体 ИНН/ОГРН（Jetour 9726036740 等）</td></tr>
+<tr><td><code>bmw-atlas.ru/about/team</code> / <code>automotivetech.ru/partneram</code> / <code>evolute.ru/dealerships/stat-dilerom</code> / <code>dv-extreme.ru/contacts</code></td><td>官网深页样板：具名 + 职位 + 完整邮箱、供应商准入、职能邮箱、多城门店</td></tr>
+<tr><td><code>site:52wmb.com/buyer "&lt;俄文名&gt;"</code> + 企查查</td><td>中国侧供应链反查与同行引荐</td></tr>
+</tbody>
+</table>
+
+<h3>B. 俄语职位对照（判断是不是决策人）</h3>
+<table>
+<thead><tr><th style="width:48%">俄语</th><th>中文 / 判断</th></tr></thead>
+<tbody>
+<tr><td>Генеральный директор</td><td>总经理 —— 平行进口小公司往往<strong>本人即拍板人</strong></td></tr>
+<tr><td>Учредитель, Владелец</td><td>股东 / 实控人 —— 中资背景线索常在这里出现</td></tr>
+<tr><td>Коммерческий директор</td><td>商务总监 —— 大集团的实际商务决策口</td></tr>
+<tr><td>Директор по закупкам / Руководитель отдела закупок</td><td>采购总监 / 采购经理 —— 最对口</td></tr>
+<tr><td>Начальник отдела ВЭД / Специалист по ВЭД</td><td>外贸（进出口）部负责人 / 专员 —— 电话转接目标</td></tr>
+<tr><td>Директор по логистике / Таможенный представитель</td><td>物流总监 / 关务代理 —— <strong>后者不是买家</strong></td></tr>
+<tr><td>Департамент развития дилерской сети</td><td>经销商网络发展部 —— 总部转介入口，不是采购部</td></tr>
+</tbody>
+</table>
+
+<h3>C. 成果统计口径一览</h3>
+<table>
+<thead><tr><th style="width:52%">指标</th><th>数值</th></tr></thead>
+<tbody>
+<tr><td>原始名单 / 原始联系人字段</td><td>100 家 / 0</td></tr>
+<tr><td>最终成果表</td><td>38 sheets、主表 100 行 × 39 列、258 个来源链接</td></tr>
+<tr><td>具名决策人（工商法代口径）</td><td>92 家（v4 起稳定）</td></tr>
+<tr><td>ИНН 已补齐</td><td>82 家（v3）；官方册按 ИНН 命中 85 家（v5，二者口径不同）</td></tr>
+<tr><td>具名 + 有触达路径（严口径）</td><td>65 家 / 有效客户约 88%（v4）</td></tr>
+<tr><td>L1 / L2 / L3 / L4（v6）</td><td>29 / 21 / 12 / 38</td></tr>
+<tr><td>打码还原成功</td><td>6 家（v5）；v6 本批 15 个值还原 0 条</td></tr>
+<tr><td>官方册 + ОГРН 组合技</td><td>22 家法代姓名 + 4 个完全吻合固话</td></tr>
+<tr><td>品牌 / 采购平台入口</td><td>4 个 dnd@ + 1 全球总部 + 1 采购平台</td></tr>
+<tr><td>中国品牌经销门店新潜客池</td><td>19 家（17 家带公开电话）</td></tr>
+<tr><td>主体纠错与时效修正</td><td>v6 8 条；v5 口径纠错 3 条；v2 旧 CEO 等重大修正</td></tr>
+</tbody>
+</table>
+
+<div class="foot">
+<p><strong>免责与边界：</strong>本手册记录的是 2026-11-13～14 的公开信息检索方法与实测结果，所有联系方式均来自公开渠道并附来源；俄企高管、域名、经营状态变动频繁，实际触达前请按档案 URL 复核。手册不含任何未经核实的私人手机号，未登录 / 付费 / 绕过验证码。本材料含 AI 辅助生成内容。</p>
+<p>配套文件：<code>俄罗斯TOP100客户_决策人核验v6.xlsx</code>（成果表）· 本手册 HTML / PDF 双版本 · 项目日志 <code>.workbuddy/memory/2026-11-14.md</code>。</p>
+</div>
+</section>
+
+</div>
+
+<script id="ru-embed-js">
+/* 与工作台 Tab 容器（index.html）配套的嵌入协议：
+   章节锚点交给父页滚动、加载完成后通知父页重算 iframe 高度。 */
+(function(){
+  if(!/[?&]embed=1(?:&|$)/.test(location.search)) return;
+  document.documentElement.classList.add('embedded');
+  document.addEventListener('click',function(e){
+    var t=e.target;
+    while(t && t!==document && t.tagName!=='A') t=t.parentNode;
+    if(!t || t.tagName!=='A') return;
+    var href=t.getAttribute('href')||'';
+    if(href.charAt(0)==='#' && !t.getAttribute('target')){
+      e.preventDefault();
+      parent.postMessage({ruTabAnchor:href.slice(1)},'*');
+    }
+  },true);
+  window.addEventListener('load',function(){parent.postMessage({ruTabReady:true},'*');});
+})();
+</script>
+</body>
+</html>

@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
-"""把 4 个独立页面改造成「单页 Tab 菜单工作台」。
+"""把 5 个独立页面改造成「单页 Tab 菜单工作台」。
 
 - index.html  -> Tab 容器（hash 路由 / 懒加载 iframe / 高度自适应 / 章节导航）
 - 原 index.html 内容另存 analysis.html
 - 四个子页注入 embed 模式：隐藏自身导航、把模块互链 / 锚点交给父页接管
+- methodology.html（决策人方法论手册）自带 embed 协议，不参与 patch_child，
+  以免生成器覆盖手册自身的排版与章节导航
 """
 import os
 import re
@@ -22,6 +24,8 @@ TABS = [
      "desc": "EXW / FOB / CIF / DDP 实时落地成本"},
     {"key": "rules",     "url": "rules.html",     "num": "04", "name": "出口规则说明",
      "desc": "中俄两侧流程 · 单证 · 合规 · 检查清单"},
+    {"key": "methodology", "url": "methodology.html", "num": "05", "name": "决策人方法论",
+     "desc": "TOP100 客户 · 12 类通道 · 检索 SOP"},
 ]
 
 EMBED_CSS = """
@@ -39,7 +43,7 @@ EMBED_JS = """
   if(!/[?&]embed=1(?:&|$)/.test(location.search)) return;
   document.documentElement.classList.add('embedded');
   function keyOf(href){
-    var m=/(?:^|\\/)(index|analysis|segments|quotation|rules)\\.html/.exec(href);
+    var m=/(?:^|\\/)(index|analysis|segments|quotation|rules|methodology)\\.html/.exec(href);
     return m ? (m[1]==='index'?'analysis':m[1]) : null;
   }
   document.addEventListener('click',function(e){
@@ -109,7 +113,7 @@ SHELL = r'''<!DOCTYPE html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="俄罗斯汽车出口平行进口情报工作台：总览看板、细分市场、报价计算器、出口规则说明，四个模块一个入口。">
+<meta name="description" content="俄罗斯汽车出口平行进口情报工作台：总览看板、细分市场、报价计算器、出口规则说明、决策人方法论，五个模块一个入口。">
 <title>俄罗斯汽车出口 · 平行进口情报工作台</title>
 <style>
 :root{--bg:#0d141d;--panel:#151f2b;--panel2:#1b2836;--line:#2b3a4b;--text:#e6eef7;--muted:#8fa3b8;
@@ -173,9 +177,9 @@ footer b{color:var(--text)}
 </head>
 <body id="ru-tab-shell">
 <div class="apphead"><div class="wrap">
-  <div class="eyebrow">Eastar Motors · Russia Market Workbench <span>Tab 版 v4 · 更新于 2026-11-13</span></div>
+  <div class="eyebrow">Eastar Motors · Russia Market Workbench <span>Tab 版 v5 · 更新于 2026-11-14</span></div>
   <h1>俄罗斯汽车出口 · 平行进口情报工作台</h1>
-  <p class="sub">四个模块，一个入口：点上方菜单原地切换，不跳页、不丢计算参数。支持直接分享某个 Tab 的链接。</p>
+  <p class="sub">五个模块，一个入口：点上方菜单原地切换，不跳页、不丢计算参数。支持直接分享某个 Tab 的链接（如 #/methodology）。</p>
 </div></div>
 
 <div class="stickyhead">
@@ -200,6 +204,7 @@ __FRAMES__
 
 <footer><div class="wrap">
   <b>独立页面（可直接访问 / 打印 / 分享）：</b>__FOOTER_LINKS__<br>
+  决策人方法论另有 <a href="downloads/russia-top100-methodology.pdf" target="_blank" rel="noopener">PDF 版（17 页）</a>；
   数据口径与免责说明见各模块「数据来源 / 核验」章节；关单样本为 5000 行官方直采基准盘，结论请结合最新政策复核。
 </div></footer>
 
@@ -336,7 +341,7 @@ __FRAMES__
     setTimeout(function(){clearInterval(t)},8000);
   }
 
-  // 自检：?selftest=1 时依次加载 4 个 Tab 并把结果写入 DOM，供 headless 验证
+  // 自检：?selftest=1 时依次加载 5 个 Tab 并把结果写入 DOM，供 headless 验证
   if(/[?&]selftest=1/.test(location.search)){
     var order=Object.keys(MAP),i=0,res=[];
     function step(){
@@ -427,7 +432,7 @@ def build():
             patch_child('analysis.html', 'analysis.html')
     else:
         patch_child('index.html', 'analysis.html')
-    # 2) 其余三页原地改写
+    # 2) 其余三页原地改写；methodology.html 自带 embed 协议，不在此列
     for f in ('segments.html', 'quotation.html', 'rules.html'):
         patch_child(f, f)
     # 3) 生成 Tab 容器
@@ -439,7 +444,7 @@ def build():
                  {t['key']: {'name': t['name'], 'url': t['url']} for t in TABS},
                  ensure_ascii=False)))
     open(os.path.join(ROOT, 'index.html'), 'w', encoding='utf-8').write(shell)
-    for f in ('index.html', 'analysis.html', 'segments.html', 'quotation.html', 'rules.html'):
+    for f in ('index.html', 'analysis.html', 'segments.html', 'quotation.html', 'rules.html', 'methodology.html'):
         print('%-18s %8d bytes' % (f, os.path.getsize(os.path.join(ROOT, f))))
 
 
