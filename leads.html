@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TOP100 之外：候补平行进口商名单 × 决策人挖掘</title>
+<style>
+  :root{
+    --ink:#1b2430; --ink2:#3d4b5c; --muted:#6b7889;
+    --navy:#123a6b; --navy2:#1d5596; --gold:#b98326;
+    --red:#b23b32; --green:#1d7048; --line:#d9e0e8;
+    --bg:#ffffff; --soft:#f5f8fb; --code:#eef2f6;
+  }
+  @page{ size:A4; margin:17mm 15mm 18mm 15mm;
+    @top-left{ content:"候补客户名单 × 决策人挖掘"; font-size:8pt; color:#8a96a5; font-family:"PingFang SC",sans-serif; }
+    @top-right{ content:"2026-11-19"; font-size:8pt; color:#8a96a5; font-family:"PingFang SC",sans-serif; }
+    @bottom-left{ content:"Eastar Motors / 国星聊成长 · 内部客户开发资料"; font-size:7.5pt; color:#9aa5b1; font-family:"PingFang SC",sans-serif; }
+    @bottom-right{ content:"第 " counter(page) " / " counter(pages) " 页"; font-size:8pt; color:#6b7889; font-family:"PingFang SC",sans-serif; }
+  }
+  @page:first{ @top-left{content:""} @top-right{content:""} }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{ font-family:"PingFang SC","Hiragino Sans GB","Heiti SC","STHeiti","Arial Unicode MS",sans-serif;
+    color:var(--ink); font-size:10.2pt; line-height:1.68; background:#eef1f5; }
+  .page{ background:var(--bg); max-width:960px; margin:0 auto; padding:0 26px 50px; }
+  a{color:var(--navy2);text-decoration:none;border-bottom:.5px solid #a9c2e0;word-break:break-all}
+  h1,h2,h3,h4{color:var(--navy);line-height:1.35;margin:0}
+  h2{font-size:17pt;border-bottom:2px solid var(--navy);padding:0 0 7px;margin:0 0 14px;break-after:avoid}
+  h3{font-size:12.6pt;margin:20px 0 8px;break-after:avoid}
+  h4{font-size:10.8pt;margin:14px 0 6px;color:var(--navy2);break-after:avoid}
+  p{margin:6px 0 10px;text-align:justify}
+  ul,ol{margin:6px 0 10px;padding-left:20px}
+  li{margin:3px 0}
+  strong{color:var(--navy)}
+  .small{font-size:8.4pt;color:var(--muted);line-height:1.5}
+  code{background:var(--code);padding:1px 4px;border-radius:3px;font-size:8.6pt;color:#22456e;word-break:break-all}
+  table{width:100%;border-collapse:collapse;margin:9px 0 14px;font-size:8.6pt;break-inside:auto}
+  thead{display:table-header-group}
+  tr{break-inside:avoid}
+  th{background:var(--navy);color:#fff;text-align:left;padding:6px 7px;font-weight:600;border:1px solid #0f3159;font-size:8.4pt}
+  td{padding:5px 7px;border:1px solid var(--line);vertical-align:top;line-height:1.5}
+  tbody tr:nth-child(even) td{background:#f7fafd}
+  .num{text-align:center;font-weight:700;color:var(--navy);font-size:12pt;line-height:1.1}
+  .r{text-align:right}
+  .cap{font-size:8pt;color:var(--muted);margin:-8px 0 14px}
+  .box{border:1px solid var(--line);background:var(--soft);border-radius:5px;padding:9px 13px;margin:10px 0 14px;break-inside:avoid}
+  .box.key{border-left:4px solid var(--navy2);background:#eef5fd}
+  .box.warn{border-left:4px solid var(--gold);background:#fdf7e9}
+  .box.danger{border-left:4px solid var(--red);background:#fdf0ee}
+  .box.ok{border-left:4px solid var(--green);background:#eef8f2}
+  .box p:last-child,.box ul:last-child{margin-bottom:0}
+  .tag{display:inline-block;font-size:7.6pt;padding:1px 6px;border-radius:9px;color:#fff;background:var(--navy2);vertical-align:middle;margin-right:4px}
+  .tag.g{background:var(--green)} .tag.r{background:var(--red)} .tag.y{background:var(--gold)} .tag.gray{background:#7a8797}
+  .tag.s{background:#8b1e1e}
+  .dm-pending{color:#b98326;font-size:8.4pt;font-style:italic}
+  .cover{padding:34px 0 12px;break-after:page}
+  .kicker{font-size:9pt;letter-spacing:2px;color:var(--gold);font-weight:700;text-transform:uppercase;margin-bottom:12px}
+  .cover h1{font-size:27pt;line-height:1.25;letter-spacing:.5px;margin-bottom:8px}
+  .cover .sub{font-size:12.5pt;color:var(--ink2);line-height:1.6;margin-bottom:22px}
+  .cover .rule{height:4px;width:74px;background:var(--gold);margin:0 0 22px}
+  .meta{font-size:9pt;color:var(--muted);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:9px 0;margin-bottom:20px}
+  .meta span{margin-right:22px}
+  .stats{display:flex;flex-wrap:wrap;gap:9px;margin:0 0 22px}
+  .stat{flex:1 1 29%;min-width:145px;border:1px solid var(--line);border-top:3px solid var(--navy2);border-radius:4px;padding:10px 11px;background:#fbfdff}
+  .stat .n{font-size:19pt;font-weight:800;color:var(--navy);line-height:1.1}
+  .stat .n em{font-size:10pt;font-style:normal;font-weight:600;color:var(--ink2)}
+  .stat .l{font-size:8.4pt;color:var(--muted);margin-top:3px}
+  .toc{columns:2;column-gap:26px;font-size:9.3pt;margin-top:6px}
+  .toc a{display:block;padding:3px 0;border-bottom:1px dotted var(--line);color:var(--ink2)}
+  .toc b{color:var(--navy);margin-right:6px}
+  section{margin:0 0 8px}
+  .sec{margin-top:30px}
+  .sec:first-of-type{margin-top:16px}
+  .lead{font-size:10.8pt;color:var(--ink2);background:#f7fafd;border-left:3px solid var(--navy2);padding:9px 13px;margin-bottom:14px}
+  .bar{height:9px;background:#e7edf4;border-radius:5px;overflow:hidden;min-width:52px}
+  .bar > i{display:block;height:100%;background:var(--navy2)}
+  .bar.g > i{background:var(--green)} .bar.y > i{background:var(--gold)} .bar.r > i{background:var(--red)}
+  .flow{display:flex;flex-wrap:wrap;gap:8px;align-items:stretch;margin:12px 0 16px}
+  .flow .node{flex:1 1 26%;min-width:150px;border:1px solid var(--line);border-radius:5px;padding:8px 10px;background:#fbfdff}
+  .flow .node .t{font-size:9.5pt;font-weight:700;color:var(--navy)}
+  .flow .node .d{font-size:8pt;color:var(--muted);margin-top:2px}
+  .flow .arw{align-self:center;color:var(--gold);font-weight:700;font-size:13pt}
+  .kpi-row{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 14px}
+  .kpi{flex:1 1 22%;min-width:120px;border:1px solid var(--line);border-radius:4px;padding:8px 10px;background:#fbfdff}
+  .kpi .v{font-size:15pt;font-weight:800;color:var(--navy)}
+  .kpi .k{font-size:8pt;color:var(--muted)}
+  .foot{margin-top:34px;border-top:1px solid var(--line);padding-top:10px;font-size:8pt;color:var(--muted)}
+  .pagebreak{break-before:page}
+  .bad{color:var(--red);font-weight:600}
+  .good{color:var(--green);font-weight:600}
+  .ru-banner{display:none;margin:0 0 18px;padding:9px 13px;background:#eef4fb;border:1px solid #cddcec;border-radius:5px;font-size:9pt;color:#3d4b5c}
+  .ru-banner a{font-weight:600}
+  html.embedded body{background:#fff}
+  html.embedded .page{max-width:none;padding:0 18px 30px}
+  html.embedded .cover{padding-top:22px}
+  html.embedded .cover h1{font-size:22pt}
+  html.embedded .sec{margin-top:26px}
+  html.embedded .foot{margin-top:24px}
+  html.embedded .ru-banner{display:block}
+</style>
+</head>
+<body>
+<div class="page">
+<div class="ru-banner">当前是「俄罗斯汽车出口情报工作台」的第 08 个 Tab 内嵌视图 ·
+  <a href="index.html#/leads" target="_top">返回工作台</a> · <a href="leads.html" target="_blank">独立打开本报告</a>
+</div>
+<section class="cover">
+  <div class="kicker">Eastar Motors · Beyond TOP100 · Decision-Maker Mining</div>
+  <h1>TOP100 之外：候补平行进口商名单<br>与决策人挖掘</h1>
+  <p class="sub">从 771 家海关关单客户池中，剔除已入选的 100 家，按「真实采购证据 + 汽车贸易属性 + 数据新鲜度」再筛一遍——<br>捞出被评分模型漏掉的高价值买家，并逐户检索可触达的决策人。</p>
+  <div class="rule"></div>
+  <div class="meta">
+    <span>调研时点：2026-11-19</span><span>客户池：771 家（含 TOP100）</span><span>关单数据：2022-08 ~ 2025-03</span>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="n">671 <em>家</em></div><div class="l">TOP100 之外的候选池</div></div>
+    <div class="stat"><div class="n">35 <em>家</em></div><div class="l">三层筛选后入选候补名单</div></div>
+    <div class="stat"><div class="n">24 <em>家</em></div><div class="l">已查到具名决策人</div></div>
+    <div class="stat"><div class="n">17 <em>家</em></div><div class="l">L1 已验证（官方登记/官网）</div></div>
+  </div>
+  <div class="box key">
+    <p><strong>一句话结论：</strong>TOP100 不是客户池的天花板。未入选的 671 家里，<strong>20 家名字直接带「АВТО/МОТОРС（汽车/汽车）」的 2024 直采主体</strong>（进口额 $17万–87万、均价 $2.6万–7万）是被评分模型低估的真实平行进口商——
+    它们体量适中、正好是愿意对接多家中国出口商的「可切入客户」。另有 10 家老转口大户金额高达 $650万–2400万，但数据停留在 2022-23，<span class="tag y">必须先验真</span>。</p>
+  </div>
+  <h3>目录</h3>
+  <nav><div class="wrap toc">
+    <a href="#s1"><b>01</b>为什么 TOP100 之外还有肉</a>
+    <a href="#s2"><b>02</b>筛选方法：三层漏斗</a>
+    <a href="#s3"><b>03</b>T1 高置信汽车进口商（20 家）</a>
+    <a href="#s4"><b>04</b>T2 实名关单客户（5 家）</a>
+    <a href="#s5"><b>05</b>T3 老转口大户·待验真（10 家）</a>
+    <a href="#s6"><b>06</b>决策人挖掘：方法与证据等级</a>
+    <a href="#s7"><b>07</b>决策人清单汇总</a>
+    <a href="#s8"><b>08</b>触达优先级与行动建议</a>
+    <a href="#s9"><b>09</b>数据来源、合规与口径声明</a>
+  </div></nav>
+</section>
+<section class="sec" id="s1">
+  <h2>01 · 为什么 TOP100 之外还有肉</h2>
+  <p class="lead">上一版 TOP100 是按「成交概率 × 需求匹配 × 可切入性」的综合分排序截取的，且只从 S 级（41 家）和 A 级中挑选——这意味着评分模型本身会系统性漏掉两类潜在好客户。</p>
+  <h3>评分模型的两个"盲区"</h3>
+  <div class="flow">
+    <div class="node"><div class="t">盲区一：名称信号未充分利用</div><div class="d">综合分里"平行进口属性"只认转口记录与高单价，没有把"公司名含 АВТО/МОТОРС"这类强行业信号单独加权，导致一批正经汽车贸易商排在 100 名开外。</div></div>
+    <div class="arw">＋</div>
+    <div class="node"><div class="t">盲区二：金额分位平滑压低中小户</div><div class="d">采购实力用 0.65 次幂平滑，金额 $20万–80万 的活跃买家被头部官方子公司（$20亿+）拉低分位，但它们恰恰是最愿意对接独立出口商的目标。</div></div>
+    <div class="arw">＝</div>
+    <div class="node"><div class="t">结果：671 家候补池</div><div class="d">其中 82 家 A 级未入选、253 家 2024 直采主体、40 家 2024-25 实名关单客户——本页从中再精选 35 家。</div></div>
+  </div>
+  <h3>候补池的真实结构：两头分化</h3>
+  <table><thead><tr><th>数据源类型</th><th>家数</th><th>金额特征</th><th>数据新鲜度</th><th>可信度判断</th></tr></thead><tbody>
+    <tr><td>2022-23 中亚转口名单</td><td>332</td><td>金额大（部分 $2000万+）</td><td class="bad">3-4 年前，无活跃月份</td><td>待验真：须先确认 2026 是否仍存续</td></tr>
+    <tr><td>2024 中国直采名单</td><td>304</td><td>中等（多在 $100万以下）</td><td>2024，均价合理</td><td class="good">真采购主体，但需补联系方式</td></tr>
+    <tr><td>2024-25 关单明细 + 直采</td><td>51</td><td>金额小，但有名有活跃月</td><td class="good">最新（2024-07 ~ 2025-02）</td><td class="good">最真实的精准线索</td></tr>
+  </tbody></table>
+  <div class="box warn"><p><strong>关键提醒：</strong>老转口名单里的高金额有"水分"——部分均价高达 $14,414,910（#107）或 $219,394（#110），明显是豪车/特殊车辆或数据异常，不能当成普通乘用车客户的采购力。本页对这类客户单独分层并标注。</p></div>
+</section>
+<section class="sec" id="s2">
+  <h2>02 · 筛选方法：三层漏斗</h2>
+  <p class="lead">不是简单按金额排序，而是先排除"假买家"和"非汽车公司"，再按证据强度分层。三层合计 35 家。</p>
+  <table><thead><tr><th>层级</th><th>筛选条件</th><th>入选</th><th>含义</th></tr></thead><tbody>
+    <tr><td><span class="tag g">T1 高置信</span></td><td>公司名含 АВТО/МОТОРС 等汽车词 + 2024 直采数据 + 进口额 ≥ $15万；剔除品牌官方子公司</td><td class="num">20</td><td>名字就证明是汽车生意，金额适中可切入——最优先触达</td></tr>
+    <tr><td><span class="tag">T2 实名关单</span></td><td>2024-25 关单明细、有明确活跃月份、均价落在乘用车区间、与汽车相关</td><td class="num">5</td><td>有名有姓有最近进口记录，线索最实但金额偏小</td></tr>
+    <tr><td><span class="tag y">T3 待验真</span></td><td>2022-23 转口名单 + 进口额 ≥ $300万</td><td class="num">10</td><td>金额诱人但数据陈旧，先做存续核验再投入资源</td></tr>
+  </tbody></table>
+  <h3>被排除的对象</h3>
+  <ul>
+    <li><strong>品牌官方子公司</strong>：如 ООО ХАВЕЙЛ МОТОР МАНУФЭКЧУРИНГ РУС（哈弗制造俄罗斯），向中国母公司采购，不会找独立出口商——已在源表"已排除的品牌官方方"中列明。</li>
+    <li><strong>非汽车公司</strong>：ТРАНС КАРГО（货运）、ГЕОМАТЕРИАЛ（地质材料）、ЛЕСПРОМ（林业）、СТРОЙТОРГ（建材）等，只是偶然进口一台中国车，不构成平行进口商。</li>
+    <li><strong>异常均价</strong>：转口均价 &lt; $3000 或 &gt; $15万 且无汽车属性者，判定为 ATV/特种车/数据异常，剔除。</li>
+  </ul>
+  <div class="box danger"><p><strong>数据时效硬伤：</strong>本页所有名单的最近关单记录截止 2025-03（转口名单更早到 2023-07）。距离本报告已过去一年半以上——<strong>任何触达前都必须先做 INN 存续核验 + 联系方式补全</strong>，这份名单是"待验真的高价值线索池"，不是能直接打电话的客户库。</p></div>
+</section>
+<section class="sec pagebreak" id="s3">
+  <h2>03 · T1 高置信汽车进口商（20 家）</h2>
+  <p class="lead">这 20 家名字直接带汽车业务属性，来自 2024 中国直采名单，进口额 $17万–87万、均价 $2.6万–7万——正是对接中国独立出口商的主力买家画像。<span class="good">建议把这 20 家作为第一触达批次。</span></p>
+  <table><thead><tr><th style="width:40px">池内#</th><th>俄罗斯进口商（俄文 / 中文）<br>决策人（证据等级）</th><th style="width:52px">分级</th><th style="width:70px">进口额</th><th style="width:46px">关单</th><th style="width:72px">均价</th><th style="width:60px">活跃</th><th style="width:64px">地区</th></tr></thead><tbody>
+<tr>
+<td class="num">123</td>
+<td><b>ООО КОНКОРДИЯ АВТО</b><br><span class="small">康科尔迪亚汽车</span><br><b>Kushnir Viktor V.&lt;br&gt;库什尼尔·维克托</b><br><span class="small">总经理</span><br><span class="small">ИНН 3908015920(疑似)</span><br><span class="small">+7(4012)44-43-22</span><br><span class="small" style="color:#b23b32">加里宁格勒主体，多家同名，须按进口记录复核</span> <span class="tag y">L2</span></td>
+<td><span class="tag r">A</span></td>
+<td class="r">$866K</td>
+<td class="r">—</td>
+<td class="r">$36,099</td>
+<td class="small">—</td>
+<td class="small">未标注</td>
+</tr>
+<tr>
+<td class="num">114</td>
+<td><b>ООО ФЕРСТ МОТОРС</b><br><span class="small">First Motors 第一汽车</span><br><b>Arhipov Dmitrij S.&lt;br&gt;阿尔希波夫·德米特里</b><br><span class="small">总经理</span><br><span class="small">ИНН 5047279519</span><br><span class="small">未找到公开联系方式</span><br><span class="small" style="color:#b23b32">莫斯科州希姆基，2023注册，2025利润2414万卢布</span> <span class="tag g">L1</span></td>
+<td><span class="tag r">A</span></td>
+<td class="r">$685K</td>
+<td class="r">—</td>
+<td class="r">$32,628</td>
+<td class="small">—</td>
+<td class="small">未标注</td>
+</tr>
+<tr>
+<td class="num">115</td>
+<td><b>ООО АВТОБАН ЗАПАД ПЛЮС</b><br><span class="small">西部汽车大道(Avtoban Zapad)</span><br><span class="small">未找到公开数据</span><br><span class="small" style="color:#b23b32">未找到精确主体；仅得近似名AVTOBAN-ZAPAD-PREMIUM，不匹配</span> <span class="tag gray">L3</span></td>
+<td><span class="tag r">A</span></td>
+<td class="r">$683K</td>
+<td class="r">—</td>
+<td class="r">$31,024</td>
+<td class="small">—</td>
+<td class="small">未标注</td>
+</tr>
+<tr>
+<td class="num">149</td>
+<td><b>ООО АВТОЦЕНТР ГОЛЬФСТРИМ</b><br><span class="small">海湾流汽车中心</span><br><span class="small">未找到公开数据</span><br><span class="small" style="color:#b23b32">仅Bloomberg收录旧条目无决策人；同名含制裁主体已排除</span> <span class="tag gray">L3</span></td>
+<td><span class="tag r">A</span></td>
+<td class="r">$677K</td>
+<td class="r">—</td>
+<td class="r">$37,611</td>
+<td class="small">—</td>
+<td class="small">未标注</td>
+</tr>
+<tr>
+<td class="num">118</td>
+<td><b>ООО АВТОЛЮКС</b><br><span class="small">汽车豪华(AutoLux)</span><br><span class="small">未找到公开数据</span><br><span class="small" style="color:#b23b32">同名主体过多(伊万诺沃/别尔哥罗德/莫斯科等)无法钉死</span> <span class="tag gray">L3</span></td>
+<td><span class="tag r">A</span></td>
+<td class="r">$644K</td>
+<td class="r">—</td>
+<td class="r">$26,836</td>
+<td class="small">—</td>
+<td class="small">未标注</td>
+</tr>
+<tr>
+<td class="num">126</td>
+<td><b>ООО АВТОМИР ОСТРОВ</b><br><span class="small">岛屿汽车世界</span><br><span class="small">未找到公开数据</span><br><span class="small" style="color:#b23b32">未找到精确主体；仅得多家AVTOMIR近似名，不匹配</span> <span class="tag gray">L3</span></td>
+<td><span class="tag r">A</span></td>
+<td class="r">$592K</td>
+<td class="r">—</td>
+<td class="r">$26,922</td>
+<td class="small">—</td>
+<td class="small">未标注</td>
+</tr>
+<tr>
+<td class="num">176</td>
+<td><b>ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ ЭЛЕКТРОКАРС РУС</b><br><span class="small">俄罗斯电动卡斯</span><br><b>Rudko Dmitrij A.&lt;br&gt;鲁德科·德米特里</b><br><span class="small">总经理</span><br><span class="small">ИНН 7460048798</span><br><span class="small">未找到公开联系方式</span><br><span class="small" style="color:#b23b32">中国电动车(Neta/Zeekr/NIO等)官方进口商，优先开发</span> <span class="tag g">L1</span></td>
+<td><span class="tag r">A</span></td>
+<td class="r">$583K</td>
+<td class="r">—</td>
+<td class="r">$48,582</td>
+<td class="small">—</td>
+<td class="small">未标注</td>
+</tr>
+<tr>
+<td class="num">138</td>
+<td><b>ООО АВТОМАКС</b><br><span class="small">汽车马克斯(AutoMax)</span><br><span class="small">未找到公开数据</span><br><span class="small" style="color:#b23b32">同名主体多且业务杂(萨马拉/涅涅茨等)无法确认</span> <span class="tag gray">L3</span></td>
+<td><span class="tag r">A</span></td>
+<td class="r">$490K</td>
+<td class="r">—</td>
+<td class="r">$70,039</td>
+<td class="small">—</td>
+<td class="small">未标注</td>
+</tr>
+<tr>
+<td class="num">163</td>
+<td><b>ООО БЕЛГОРОД ЦЕНТР АВТО</b><br><span class="small">别尔哥罗德汽车中心</span><br><b>Mitarchan Viacheslav K.&lt;br&gt;米塔尔恰恩·维亚切斯拉夫</b><br><span class="small">总经理</span><br><span class="small">ИНН KPP312301001</span><br><span class="small">未找到公开联系方式</span><br><span class="small" style="color:#b23b32">别尔哥罗德州，2025营收1.76亿卢布，19人</span> <span class="tag g">L1</span></td>
+<td><span class="tag r">A</span></td>
+<td class="r">$421K</td>
+<td class="r">—</td>
+<td class="r">$30,098</td>
+<td class="small">—</td>
+<td class="small">未标注</td>
+</tr>
+<tr>
+<td class="num">164</td>
+<td><b>ООО АВТОВЕЙТО</b><br><span class="small">汽车维托</span><br><span class="small">未找到公开数据</span><br><span class="small" style="color:#b23b32">未找到精确主体；近似AVTOVEZYOT等名称不符</span> <span class="tag gray">L3</span></td>
+<td><span class="tag r">A</span></td>
+<td class="r">$416K</td>
+<td class="r">—</td>
+<td class="r">$26,020</td>
+<td class="small">—</td>
+<td class="small">未标注</td>
+</tr>
+<tr>
+<td class="num">193</td>
+<td><b>ООО ХЫ АВТО</b><br><span class="small">华艺汽车(HY Auto)</span><br><span class="small">未找到公开数据</span><br><span class="small" style="color:#b23b32">多轮检索无公开主体；疑似音译缩写，建议索取ИНН</span> <span class="tag gray">L3</span></td>
+<td><span class="tag y">B</span></td>
+<td class="r">$307K</td>
+<td class="r">—</td>
+<td class="r">$34,062</td>
+<td class="small">—</td>
+<td class="small">未标注</td>
+</tr>
+<tr>
+<td class="num">191</td>
+<td><b>ООО АВТО ПРЕСТИЖ</b><br><span class="small">汽车名望(Auto Prestige)</span><br><b>Ovakimyan Igor L.&lt;br&gt;奥瓦基米扬·伊戈尔</b><br><span class="small">总经理</span><br><span class="small">ИНН 7735584997</span><br><span class="small">未找到公开联系方式</span><br><span class="small" style="color:#b23b32">莫斯科泽列诺格勒主体，另有近似同名需复核</span> <span class="tag y">L2</span></td>
+<td><span class="tag y">B</span></td>
+<td class="r">$298K</td>
+<td class="r">—</td>
+<td class="r">$59,584</td>
+<td class="small">—</td>
+<td class="small">未标注</td>
+</tr>
+<tr>
+<td class="num">209</td>
+<td><b>ООО ХАЙТЭК АВТО</b><br><span class="small">海泰克汽车(Hi-Tech)</span><br><b>Kan Olga K.&lt;br&gt;甘(Kan)·奥尔加</b><br><span class="small">总经理</span><br><span class="small">ИНН 9724159137</span><br><span class="small">未找到公开联系方式</span><br><span class="small" style="color:#b23b32">莫斯科主体2023注册，另有圣彼得堡同名需复核</span> <span class="tag y">L2</span></td>
+<td><span class="tag y">B</span></td>
+<td class="r">$286K</td>
+<td class="r">—</td>
+<td class="r">$40,857</td>
+<td class="small">—</td>
+<td class="small">未标注</td>
+</tr>
+<tr>
+<td class="num">205</td>
+<td><b>ООО АВТОМОБИЛЬНАЯ КОМПАНИЯ ДСА</b><br><span class="small">DSA汽车公司</span><br><b>Dan Czechzhen&lt;br&gt;丹·切振</b><br><span class="small">总经理&lt;br&gt;创始人张振关</span><br><span class="small">ИНН 5024226550</span><br><span class="small">hczzg@126.com</span><br><span class="small" style="color:#b23b32">莫斯科州，中国人控股，2025营收15.77亿卢布，中国邮箱可直触达</span> <span class="tag g">L1</span></td>
+<td><span class="tag y">B</span></td>
+<td class="r">$257K</td>
+<td class="r">—</td>
+<td class="r">$32,128</td>
+<td class="small">—</td>
+<td class="small">未标注</td>
+</tr>
+<tr>
+<td class="num">207</td>
+<td><b>ООО ПРОМАВТОМАТИКА</b><br><span class="small">工业汽车自动化</span><br><span class="small">未找到公开数据</span><br><span class="small" style="color:#b23b32">同名主体多且主营自动化/汽配，与汽车进口关联弱</span> <span class="tag gray">L3</span></td>
+<td><span class="tag y">B</span></td>
+<td class="r">$246K</td>
+<td class="r">—</td>
+<td class="r">$27,294</td>
+<td class="small">—</td>
+<td class="small">未标注</td>
+</tr>
+<tr>
+<td class="num">235</td>
+<td><b>ООО МЭЙ ЛИН АВТО</b><br><span class="small">美林汽车(Mei Lin)</span><br><b>Syuj SHumin&lt;br&gt;苏·淑敏</b><br><span class="small">负责人&lt;br&gt;创始人陈家豪</span><br><span class="small">ИНН 9725121538</span><br><span class="small">未找到公开联系方式</span><br><span class="small" style="color:#b23b32">中俄合资，主营红旗/理想/岚图进口，2025营收3.89亿卢布</span> <span class="tag g">L1</span></td>
+<td><span class="tag y">B</span></td>
+<td class="r">$243K</td>
+<td class="r">—</td>
+<td class="r">$48,507</td>
+<td class="small">—</td>
+<td class="small">未标注</td>
+</tr>
+<tr>
+<td class="num">208</td>
+<td><b>ООО ДИНАНОВО АВТО</b><br><span class="small">迪纳诺沃汽车</span><br><b>Pugacheva Lyudmila N.&lt;br&gt;普加乔娃·柳德米拉</b><br><span class="small">总经理</span><br><span class="small">ИНН 9728086634</span><br><span class="small">alisa05188@mail.ru</span><br><span class="small" style="color:#b23b32">莫斯科，中国人控股，登记邮箱可直接触达</span> <span class="tag g">L1</span></td>
+<td><span class="tag y">B</span></td>
+<td class="r">$232K</td>
+<td class="r">—</td>
+<td class="r">$23,170</td>
+<td class="small">—</td>
+<td class="small">未标注</td>
+</tr>
+<tr>
+<td class="num">218</td>
+<td><b>ООО СТО АВТО</b><br><span class="small">汽车维修站(STO Auto)</span><br><span class="small">未找到公开数据</span><br><span class="small" style="color:#b23b32">STO AVTO通用名主体极多，多为维修/租赁，无法确认</span> <span class="tag gray">L3</span></td>
+<td><span class="tag y">B</span></td>
+<td class="r">$229K</td>
+<td class="r">—</td>
+<td class="r">$17,651</td>
+<td class="small">—</td>
+<td class="small">未标注</td>
+</tr>
+<tr>
+<td class="num">275</td>
+<td><b>ООО МУРАВЕЙ АВТО</b><br><span class="small">蚂蚁汽车(Muravey)</span><br><b>Hu TCyan&lt;br&gt;胡·展</b><br><span class="small">负责人&lt;br&gt;创始人陆敏</span><br><span class="small">ИНН 9715493551</span><br><span class="small">tykmos@yandex.ru</span><br><span class="small" style="color:#b23b32">莫斯科，外国人控股，2025营收8497万卢布，邮箱可直触达</span> <span class="tag g">L1</span></td>
+<td><span class="tag y">B</span></td>
+<td class="r">$185K</td>
+<td class="r">—</td>
+<td class="r">$36,989</td>
+<td class="small">—</td>
+<td class="small">未标注</td>
+</tr>
+<tr>
+<td class="num">231</td>
+<td><b>ООО ВОРЛИНК АВТО</b><br><span class="small">沃林克汽车</span><br><span class="small">未找到公开数据</span><br><span class="small" style="color:#b23b32">未找到俄方主体；仅得中国出口商Worlink(上游供应商)非进口商</span> <span class="tag gray">L3</span></td>
+<td><span class="tag y">B</span></td>
+<td class="r">$173K</td>
+<td class="r">—</td>
+<td class="r">$21,569</td>
+<td class="small">—</td>
+<td class="small">未标注</td>
+</tr>
+</tbody></table>
+  <p class="cap">分级来自源表综合分（S≥70 / A 60-70 / B 50-60 / C&lt;50）；"关单"列为该客户在样本中的关单记录条数，0 表示来自直采名单汇总而非关单明细；"活跃"为源表最近活跃月，"—"表示源表未记录。</p>
+</section>
+<section class="sec" id="s4">
+  <h2>04 · T2 实名关单客户（5 家）</h2>
+  <p class="lead">这 5 家有 2024 下半年的实名关单记录和明确活跃月份，虽然金额不大，但"人、公司、进口行为"三要素齐全，是最容易验证和触达的短名单。</p>
+  <table><thead><tr><th style="width:40px">池内#</th><th>俄罗斯进口商（俄文 / 中文）<br>决策人（证据等级）</th><th style="width:52px">分级</th><th style="width:70px">进口额</th><th style="width:46px">关单</th><th style="width:72px">均价</th><th style="width:60px">活跃</th><th style="width:64px">地区</th></tr></thead><tbody>
+<tr>
+<td class="num">171</td>
+<td><b>ООО ТРИТОН</b><br><span class="small">特里通(Triton)</span><br><b>Цейтлин Даниил Дмитриевич&lt;br&gt;采伊特林·丹尼尔</b><br><span class="small">总经理</span><br><span class="small">ИНН 2540296853</span><br><span class="small">TRITON-VDK@MAIL.RU</span><br><span class="small" style="color:#b23b32">主体存疑：注册主营科研、无汽车业务，疑似同名，须按关单ИНН反查</span> <span class="tag y">L2</span></td>
+<td><span class="tag r">A</span></td>
+<td class="r">$102K</td>
+<td class="r">2</td>
+<td class="r">$25,510</td>
+<td class="small">2024-11</td>
+<td class="small">符拉迪沃斯托克</td>
+</tr>
+<tr>
+<td class="num">213</td>
+<td><b>ООО АВТОМОБИЛЬНАЯ КОМПАНИЯ РВЕЛЛ РУС</b><br><span class="small">俄罗斯RVELL</span><br><b>Ван Джосун&lt;br&gt;万·若孙(音译)</b><br><span class="small">负责人(ЕГРЮЛ)</span><br><span class="small">ИНН 5024241639</span><br><span class="small">中资股东，无公开联系方式</span><br><span class="small" style="color:#b23b32">莫斯科州，股东SPIDI PUL LIMITED占99%，中资背景，存续</span> <span class="tag g">L1</span></td>
+<td><span class="tag y">B</span></td>
+<td class="r">$84K</td>
+<td class="r">2</td>
+<td class="r">$10,466</td>
+<td class="small">2024-11</td>
+<td class="small">未标注</td>
+</tr>
+<tr>
+<td class="num">391</td>
+<td><b>ООО ТД РОМАНОВ МОТОРС</b><br><span class="small">罗曼诺夫汽车</span><br><b>Давыдова Елена В.&lt;br&gt;达维多娃·叶列娜</b><br><span class="small">总经理</span><br><span class="small">ИНН 7707386827</span><br><span class="small">+7 (495) 984-96-19&lt;br&gt;romanov-motors.ru</span><br><span class="small" style="color:#b23b32">莫斯科，俄罗斯最大电动车产销集团之一，官网+莫斯科出口目录</span> <span class="tag g">L1</span></td>
+<td><span class="tag y">B</span></td>
+<td class="r">$18K</td>
+<td class="r">2</td>
+<td class="r">$6,141</td>
+<td class="small">2025-02</td>
+<td class="small">莫斯科</td>
+</tr>
+<tr>
+<td class="num">131</td>
+<td><b>ООО ПУГАРД</b><br><span class="small">普加尔德</span><br><b>Ерёмина Вероника М.&lt;br&gt;叶廖米娜·维罗妮卡</b><br><span class="small">总经理</span><br><span class="small">ИНН 2801278442</span><br><span class="small">771641@mail.ru</span><br><span class="small" style="color:#b23b32">阿穆尔州布拉戈维申斯克(中俄边境)，华裔股东，2024营收4541万卢布</span> <span class="tag g">L1</span></td>
+<td><span class="tag r">A</span></td>
+<td class="r">$207K</td>
+<td class="r">1</td>
+<td class="r">$14,794</td>
+<td class="small">2024-07</td>
+<td class="small">未标注</td>
+</tr>
+<tr>
+<td class="num">124</td>
+<td><b>ООО СПЕЦТЕКА</b><br><span class="small">特种技术(Spectehka)</span><br><span class="small">ИНН 2543169758</span><br><span class="small" style="color:#b23b32">主体L2(俄SME登记册)，决策人姓名多轮检索未获得，须查ЕГРЮЛ补全</span> <span class="tag gray">L3</span></td>
+<td><span class="tag r">A</span></td>
+<td class="r">$192K</td>
+<td class="r">1</td>
+<td class="r">$24,006</td>
+<td class="small">2024-07</td>
+<td class="small">符拉迪沃斯托克</td>
+</tr>
+</tbody></table>
+  <p class="cap">已剔除同批次中名字与汽车无关或均价异常的公司（如 СТРОЙТОРГ 建材、КЛИШИНА 均价 $548、ПТК АЗИМУТ 均价 $2,751 等）。</p>
+</section>
+<section class="sec pagebreak" id="s5">
+  <h2>05 · T3 老转口大户 · 待验真（10 家）</h2>
+  <p class="lead">这 10 家来自 2022-23 中亚转口名单，金额 $650万–2400万，都是当年经白俄/吉尔吉斯/哈萨克转口的整车大买家。<span class="tag y">全部标注"待验真"</span>——先确认 2026 年是否还在经营、是否还做中国车，再决定是否投入。</p>
+  <table><thead><tr><th style="width:40px">池内#</th><th>俄罗斯进口商（俄文 / 中文）<br>决策人（证据等级）</th><th style="width:52px">分级</th><th style="width:70px">进口额</th><th style="width:46px">关单</th><th style="width:72px">均价</th><th style="width:60px">活跃</th><th style="width:64px">地区</th></tr></thead><tbody>
+<tr>
+<td class="num">103</td>
+<td><b>ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ ГРУППА КОМПАНИЙ СБСВ КЛЮЧАВТО</b><br><span class="small">钥匙汽车(Klyuchavto)集团</span><br><b>Сергеев Антон В.&lt;br&gt;谢尔盖耶夫·安东</b><br><span class="small">总经理</span><br><span class="small">ИНН 2305002817</span><br><span class="small">e.kazakevich@keyavto.ru&lt;br&gt;+7 (86159) 4-45-88</span><br><span class="small" style="color:#b23b32">大型经销商集团711-722人，2024营收249亿卢布；有1.35亿欠税但仍存续；官网keyavto.ru</span> <span class="tag g">L1</span></td>
+<td><span class="tag r">A</span></td>
+<td class="r">$24.36M</td>
+<td class="r">—</td>
+<td class="r">$98,633</td>
+<td class="small">—</td>
+<td class="small">未标注</td>
+</tr>
+<tr>
+<td class="num">104</td>
+<td><b>МБ ИЗМАЙЛОВО</b><br><span class="small">伊兹迈洛沃市场</span><br><b>Суставов Илья К.&lt;br&gt;苏斯塔夫·伊利亚</b><br><span class="small">总经理</span><br><span class="small">ИНН 7716667101</span><br><span class="small">未找到公开联系方式</span><br><span class="small" style="color:#b23b32">莫斯科州，奔驰经销商，76人，2024营收41亿卢布，存续</span> <span class="tag g">L1</span></td>
+<td><span class="tag r">A</span></td>
+<td class="r">$22.52M</td>
+<td class="r">—</td>
+<td class="r">$183,066</td>
+<td class="small">—</td>
+<td class="small">未标注</td>
+</tr>
+<tr>
+<td class="num">107</td>
+<td><b>ИП АРГАШОКОВА ИЗАБЕЛЛА АНДРЕЕВНА</b><br><span class="small">阿尔加绍科娃(个体户)</span><br><b>Аргашокова Изabelle А.&lt;br&gt;阿尔加绍科娃(个体户本人)</b><br><span class="small">个体经营者本人</span><br><span class="small" style="color:#b23b32">个体户姓名即决策人，但无公开ИНН/登记链接，须ЕГРИП按全名核验</span> <span class="tag gray">L3</span></td>
+<td><span class="tag r">A</span></td>
+<td class="r">$14.41M</td>
+<td class="r">—</td>
+<td class="r">$14,414,910</td>
+<td class="small">—</td>
+<td class="small">未标注</td>
+</tr>
+<tr>
+<td class="num">108</td>
+<td><b>ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ СКАЙ НОРД</b><br><span class="small">天北(Sky Nord)</span><br><b>Поляков Антон А.&lt;br&gt;波利亚科夫·安东</b><br><span class="small">总经理</span><br><span class="small">ИНН 7734535676</span><br><span class="small">+7 (495) 657-99-57</span><br><span class="small" style="color:#b23b32">同名主体多；莫斯科主体体量与$13.8M相符，须按关单ИНН钉死</span> <span class="tag y">L2</span></td>
+<td><span class="tag r">A</span></td>
+<td class="r">$13.79M</td>
+<td class="r">—</td>
+<td class="r">$106,907</td>
+<td class="small">—</td>
+<td class="small">未标注</td>
+</tr>
+<tr>
+<td class="num">109</td>
+<td><b>ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ ДИЛЕРСКИЙ ЦЕНТР АЛТУФЬЕВО</b><br><span class="small">阿尔图菲耶沃经销中心</span><br><b>Цохолов Мурсаали А.&lt;br&gt;措霍洛夫·穆尔萨阿利</b><br><span class="small">总经理</span><br><span class="small">ИНН 5029236551</span><br><span class="small">janna.stanetskaya@altufievo-audi.ru</span><br><span class="small" style="color:#b23b32">莫斯科州，奥迪经销中心，214人，2025总资产33.2亿卢布，存续</span> <span class="tag g">L1</span></td>
+<td><span class="tag r">A</span></td>
+<td class="r">$11.08M</td>
+<td class="r">—</td>
+<td class="r">$184,679</td>
+<td class="small">—</td>
+<td class="small">未标注</td>
+</tr>
+<tr>
+<td class="num">110</td>
+<td><b>АКЦИОНЕРНОЕ ОБЩЕСТВО АВИЛОН АВТОМОБИЛЬНАЯ ГРУППА</b><br><span class="small">阿维隆(Avilon)集团</span><br><b>Волчков Александр С.&lt;br&gt;沃尔奇科夫(登记总经理)</b><br><span class="small">总经理/CEO</span><br><span class="small">ИНН 7705133757</span><br><span class="small">info@avilon.ru&lt;br&gt;+7 (495) 737-04-05</span><br><span class="small" style="color:#b23b32">⚠已被UK/EU/US/乌克兰制裁，接洽前必须合规筛查；高管多源不一致</span> <span class="tag g">L1</span></td>
+<td><span class="tag r">A</span></td>
+<td class="r">$10.75M</td>
+<td class="r">—</td>
+<td class="r">$219,394</td>
+<td class="small">—</td>
+<td class="small">未标注</td>
+</tr>
+<tr>
+<td class="num">111</td>
+<td><b>ООО Л АВТО МОТОРС</b><br><span class="small">L汽车马达</span><br><b>Шулаков Михаил Н.&lt;br&gt;舒拉科夫·米哈伊尔</b><br><span class="small">总经理</span><br><span class="small">ИНН 5257180450</span><br><span class="small">+7 (908) 753-59-14</span><br><span class="small" style="color:#b23b32">下诺夫哥罗德，69人，2025营收18.95亿卢布，存续</span> <span class="tag g">L1</span></td>
+<td><span class="tag r">A</span></td>
+<td class="r">$10.70M</td>
+<td class="r">—</td>
+<td class="r">$77,545</td>
+<td class="small">—</td>
+<td class="small">未标注</td>
+</tr>
+<tr>
+<td class="num">113</td>
+<td><b>ООО ОРЕНБУРГ АВТО ЦЕНТР</b><br><span class="small">奥伦堡汽车中心</span><br><b>Чертыковцев Антон И.&lt;br&gt;切尔特科夫采夫·安东</b><br><span class="small">总经理</span><br><span class="small">ИНН 5609050039</span><br><span class="small">未找到公开电话</span><br><span class="small" style="color:#b23b32">奥伦堡，47人，2024营收13亿卢布(+74.8%)，存续</span> <span class="tag g">L1</span></td>
+<td><span class="tag r">A</span></td>
+<td class="r">$7.58M</td>
+<td class="r">—</td>
+<td class="r">$82,356</td>
+<td class="small">—</td>
+<td class="small">未标注</td>
+</tr>
+<tr>
+<td class="num">116</td>
+<td><b>МБ КАН АВТО</b><br><span class="small">坎汽车(KAN)</span><br><b>Халилова Рита Р.&lt;br&gt;哈利洛娃·丽塔</b><br><span class="small">总经理</span><br><span class="small">ИНН 1657130343</span><br><span class="small">未找到公开电话</span><br><span class="small" style="color:#b23b32">鞑靼斯坦喀山，77人，2024营收22亿卢布；注意区分近名公司</span> <span class="tag g">L1</span></td>
+<td><span class="tag r">A</span></td>
+<td class="r">$6.64M</td>
+<td class="r">—</td>
+<td class="r">$179,433</td>
+<td class="small">—</td>
+<td class="small">未标注</td>
+</tr>
+<tr>
+<td class="num">117</td>
+<td><b>ООО ПЛАЗА ПЛЮС</b><br><span class="small">广场 Plus</span><br><b>Абакаев Исмаил Х.&lt;br&gt;阿巴卡耶夫·伊斯梅尔</b><br><span class="small">负责人</span><br><span class="small">ИНН 2543085770</span><br><span class="small">+7 (4232) 22-81-83</span><br><span class="small" style="color:#b23b32">同名主体多；符拉迪沃斯托克主体偏小，须核验是否同一进口商</span> <span class="tag y">L2</span></td>
+<td><span class="tag r">A</span></td>
+<td class="r">$6.52M</td>
+<td class="r">—</td>
+<td class="r">$130,444</td>
+<td class="small">—</td>
+<td class="small">未标注</td>
+</tr>
+</tbody></table>
+  <div class="box warn"><p><strong>特别注意：</strong>#107 ИП АРГАШОКОВА（个体户）转口均价 $14,414,910 明显异常；#110 АВИЛОН（Avilon）是俄罗斯知名汽车经销集团、#103 Ключавто 是大型经销商集团，这两家若能确认仍在做平行进口，价值最高，也最可能查到公开高管。</p></div>
+</section>
+<section class="sec" id="s6">
+  <h2>06 · 决策人挖掘：方法与证据等级</h2>
+  <p class="lead">本页沿用工作台第 05 Tab「决策人方法论」的作业 SOP：不在"找人网站"里撞运气，而是先用官方登记册钉死主体，再取法定代表人，最后补触达路径。</p>
+  <div class="flow">
+    <div class="node"><div class="t">① 钉主体</div><div class="d">用俄文全名查 ИНН / ОГРН（工商主键），排除同名公司——俄企"ВОСТОК АВТО"之类重名极多。</div></div>
+    <div class="arw">→</div>
+    <div class="node"><div class="t">② 取法人</div><div class="d">用主键或公司名查法定代表人（Генеральный директор / Руководитель），官方登记册直接显示姓名。</div></div>
+    <div class="arw">→</div>
+    <div class="node"><div class="t">③ 补触达</div><div class="d">官网深页、公开企业邮箱、行业目录、集团层穿透补联系方式；每条留来源 URL。</div></div>
+    <div class="arw">→</div>
+    <div class="node"><div class="t">④ 定级</div><div class="d">L1 已验证 / L2 候选待复核 / L3 未找到，找不到如实标注，绝不编造。</div></div>
+  </div>
+  <table><thead><tr><th style="width:70px">证据等级</th><th>判定标准</th><th>使用建议</th></tr></thead><tbody>
+    <tr><td><span class="tag g">L1 已验证</span></td><td>来自官方工商登记册或企业官网，法人姓名/联系方式明确</td><td class="good">可直接进入合规触达流程</td></tr>
+    <tr><td><span class="tag y">L2 候选</span></td><td>来自第三方商业目录或行业媒体，需交叉复核</td><td>二次核验后再触达</td></tr>
+    <tr><td><span class="tag gray">L3 未找到</span></td><td>公开渠道未查到具名决策人</td><td>需换渠道（展会/VK/中国侧供应链反查）</td></tr>
+  </tbody></table>
+  <div class="box danger"><p><strong>合规底线：</strong>只采集企业公开的工商登记与商务联系方式；不挖私人手机号、家庭住址、私人社交账号；不登录、不付费、不绕验证码。俄罗斯 2026 年通讯现状：WhatsApp 已被全面封锁、LinkedIn 早期被封、Telegram 受限——主力触达改用<strong>俄语电话 + 公司公开邮箱 + VK / 微信</strong>。</p></div>
+</section>
+<section class="sec" id="s7">
+  <h2>07 · 决策人清单汇总</h2>
+  <p class="lead">下列 35 家的决策人检索结果，按"有具名决策人优先、证据等级从高到低"排列。凡公开渠道查不到的，一律标注"未找到公开数据"，不做编造。</p>
+  <table><thead><tr><th style="width:40px">池内#</th><th>公司（俄文）</th><th style="width:150px">决策人</th><th style="width:110px">职位</th><th style="width:110px">ИНН</th><th style="width:150px">公开联系方式</th><th style="width:50px">等级</th></tr></thead><tbody><tr><td class="num">103</td><td class="small">ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ ГРУППА КОМПАНИЙ СБСВ КЛЮЧАВТО</td><td>Сергеев Антон В.&lt;br&gt;谢尔盖耶夫·安东</td><td class="small">总经理</td><td class="small">2305002817</td><td class="small">e.kazakevich@keyavto.ru&lt;br&gt;+7 (86159) 4-45-88</td><td><span class="tag g">L1</span></td></tr><tr><td class="num">104</td><td class="small">МБ ИЗМАЙЛОВО</td><td>Суставов Илья К.&lt;br&gt;苏斯塔夫·伊利亚</td><td class="small">总经理</td><td class="small">7716667101</td><td class="small">未找到公开联系方式</td><td><span class="tag g">L1</span></td></tr><tr><td class="num">109</td><td class="small">ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ ДИЛЕРСКИЙ ЦЕНТР АЛТУФЬЕВО</td><td>Цохолов Мурсаали А.&lt;br&gt;措霍洛夫·穆尔萨阿利</td><td class="small">总经理</td><td class="small">5029236551</td><td class="small">janna.stanetskaya@altufievo-audi.ru</td><td><span class="tag g">L1</span></td></tr><tr><td class="num">110</td><td class="small">АКЦИОНЕРНОЕ ОБЩЕСТВО АВИЛОН АВТОМОБИЛЬНАЯ ГРУППА</td><td>Волчков Александр С.&lt;br&gt;沃尔奇科夫(登记总经理)</td><td class="small">总经理/CEO</td><td class="small">7705133757</td><td class="small">info@avilon.ru&lt;br&gt;+7 (495) 737-04-05</td><td><span class="tag g">L1</span></td></tr><tr><td class="num">111</td><td class="small">ООО Л АВТО МОТОРС</td><td>Шулаков Михаил Н.&lt;br&gt;舒拉科夫·米哈伊尔</td><td class="small">总经理</td><td class="small">5257180450</td><td class="small">+7 (908) 753-59-14</td><td><span class="tag g">L1</span></td></tr><tr><td class="num">113</td><td class="small">ООО ОРЕНБУРГ АВТО ЦЕНТР</td><td>Чертыковцев Антон И.&lt;br&gt;切尔特科夫采夫·安东</td><td class="small">总经理</td><td class="small">5609050039</td><td class="small">未找到公开电话</td><td><span class="tag g">L1</span></td></tr><tr><td class="num">114</td><td class="small">ООО ФЕРСТ МОТОРС</td><td>Arhipov Dmitrij S.&lt;br&gt;阿尔希波夫·德米特里</td><td class="small">总经理</td><td class="small">5047279519</td><td class="small">未找到公开联系方式</td><td><span class="tag g">L1</span></td></tr><tr><td class="num">116</td><td class="small">МБ КАН АВТО</td><td>Халилова Рита Р.&lt;br&gt;哈利洛娃·丽塔</td><td class="small">总经理</td><td class="small">1657130343</td><td class="small">未找到公开电话</td><td><span class="tag g">L1</span></td></tr><tr><td class="num">131</td><td class="small">ООО ПУГАРД</td><td>Ерёмина Вероника М.&lt;br&gt;叶廖米娜·维罗妮卡</td><td class="small">总经理</td><td class="small">2801278442</td><td class="small">771641@mail.ru</td><td><span class="tag g">L1</span></td></tr><tr><td class="num">163</td><td class="small">ООО БЕЛГОРОД ЦЕНТР АВТО</td><td>Mitarchan Viacheslav K.&lt;br&gt;米塔尔恰恩·维亚切斯拉夫</td><td class="small">总经理</td><td class="small">KPP312301001</td><td class="small">未找到公开联系方式</td><td><span class="tag g">L1</span></td></tr><tr><td class="num">176</td><td class="small">ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ ЭЛЕКТРОКАРС РУС</td><td>Rudko Dmitrij A.&lt;br&gt;鲁德科·德米特里</td><td class="small">总经理</td><td class="small">7460048798</td><td class="small">未找到公开联系方式</td><td><span class="tag g">L1</span></td></tr><tr><td class="num">205</td><td class="small">ООО АВТОМОБИЛЬНАЯ КОМПАНИЯ ДСА</td><td>Dan Czechzhen&lt;br&gt;丹·切振</td><td class="small">总经理&lt;br&gt;创始人张振关</td><td class="small">5024226550</td><td class="small">hczzg@126.com</td><td><span class="tag g">L1</span></td></tr><tr><td class="num">208</td><td class="small">ООО ДИНАНОВО АВТО</td><td>Pugacheva Lyudmila N.&lt;br&gt;普加乔娃·柳德米拉</td><td class="small">总经理</td><td class="small">9728086634</td><td class="small">alisa05188@mail.ru</td><td><span class="tag g">L1</span></td></tr><tr><td class="num">213</td><td class="small">ООО АВТОМОБИЛЬНАЯ КОМПАНИЯ РВЕЛЛ РУС</td><td>Ван Джосун&lt;br&gt;万·若孙(音译)</td><td class="small">负责人(ЕГРЮЛ)</td><td class="small">5024241639</td><td class="small">中资股东，无公开联系方式</td><td><span class="tag g">L1</span></td></tr><tr><td class="num">235</td><td class="small">ООО МЭЙ ЛИН АВТО</td><td>Syuj SHumin&lt;br&gt;苏·淑敏</td><td class="small">负责人&lt;br&gt;创始人陈家豪</td><td class="small">9725121538</td><td class="small">未找到公开联系方式</td><td><span class="tag g">L1</span></td></tr><tr><td class="num">275</td><td class="small">ООО МУРАВЕЙ АВТО</td><td>Hu TCyan&lt;br&gt;胡·展</td><td class="small">负责人&lt;br&gt;创始人陆敏</td><td class="small">9715493551</td><td class="small">tykmos@yandex.ru</td><td><span class="tag g">L1</span></td></tr><tr><td class="num">391</td><td class="small">ООО ТД РОМАНОВ МОТОРС</td><td>Давыдова Елена В.&lt;br&gt;达维多娃·叶列娜</td><td class="small">总经理</td><td class="small">7707386827</td><td class="small">+7 (495) 984-96-19&lt;br&gt;romanov-motors.ru</td><td><span class="tag g">L1</span></td></tr><tr><td class="num">108</td><td class="small">ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ СКАЙ НОРД</td><td>Поляков Антон А.&lt;br&gt;波利亚科夫·安东</td><td class="small">总经理</td><td class="small">7734535676</td><td class="small">+7 (495) 657-99-57</td><td><span class="tag y">L2</span></td></tr><tr><td class="num">117</td><td class="small">ООО ПЛАЗА ПЛЮС</td><td>Абакаев Исмаил Х.&lt;br&gt;阿巴卡耶夫·伊斯梅尔</td><td class="small">负责人</td><td class="small">2543085770</td><td class="small">+7 (4232) 22-81-83</td><td><span class="tag y">L2</span></td></tr><tr><td class="num">123</td><td class="small">ООО КОНКОРДИЯ АВТО</td><td>Kushnir Viktor V.&lt;br&gt;库什尼尔·维克托</td><td class="small">总经理</td><td class="small">3908015920(疑似)</td><td class="small">+7(4012)44-43-22</td><td><span class="tag y">L2</span></td></tr><tr><td class="num">171</td><td class="small">ООО ТРИТОН</td><td>Цейтлин Даниил Дмитриевич&lt;br&gt;采伊特林·丹尼尔</td><td class="small">总经理</td><td class="small">2540296853</td><td class="small">TRITON-VDK@MAIL.RU</td><td><span class="tag y">L2</span></td></tr><tr><td class="num">191</td><td class="small">ООО АВТО ПРЕСТИЖ</td><td>Ovakimyan Igor L.&lt;br&gt;奥瓦基米扬·伊戈尔</td><td class="small">总经理</td><td class="small">7735584997</td><td class="small">未找到公开联系方式</td><td><span class="tag y">L2</span></td></tr><tr><td class="num">209</td><td class="small">ООО ХАЙТЭК АВТО</td><td>Kan Olga K.&lt;br&gt;甘(Kan)·奥尔加</td><td class="small">总经理</td><td class="small">9724159137</td><td class="small">未找到公开联系方式</td><td><span class="tag y">L2</span></td></tr><tr><td class="num">107</td><td class="small">ИП АРГАШОКОВА ИЗАБЕЛЛА АНДРЕЕВНА</td><td>Аргашокова Изabelle А.&lt;br&gt;阿尔加绍科娃(个体户本人)</td><td class="small">个体经营者本人</td><td class="small">—</td><td class="small">—</td><td><span class="tag gray">L3</span></td></tr><tr><td class="num">115</td><td class="small">ООО АВТОБАН ЗАПАД ПЛЮС</td><td>未找到公开数据</td><td class="small">—</td><td class="small">—</td><td class="small">—</td><td><span class="tag gray">L3</span></td></tr><tr><td class="num">118</td><td class="small">ООО АВТОЛЮКС</td><td>未找到公开数据</td><td class="small">—</td><td class="small">—</td><td class="small">—</td><td><span class="tag gray">L3</span></td></tr><tr><td class="num">124</td><td class="small">ООО СПЕЦТЕКА</td><td>未找到公开数据</td><td class="small">—</td><td class="small">2543169758</td><td class="small">—</td><td><span class="tag gray">L3</span></td></tr><tr><td class="num">126</td><td class="small">ООО АВТОМИР ОСТРОВ</td><td>未找到公开数据</td><td class="small">—</td><td class="small">—</td><td class="small">—</td><td><span class="tag gray">L3</span></td></tr><tr><td class="num">138</td><td class="small">ООО АВТОМАКС</td><td>未找到公开数据</td><td class="small">—</td><td class="small">—</td><td class="small">—</td><td><span class="tag gray">L3</span></td></tr><tr><td class="num">149</td><td class="small">ООО АВТОЦЕНТР ГОЛЬФСТРИМ</td><td>未找到公开数据</td><td class="small">—</td><td class="small">—</td><td class="small">—</td><td><span class="tag gray">L3</span></td></tr><tr><td class="num">164</td><td class="small">ООО АВТОВЕЙТО</td><td>未找到公开数据</td><td class="small">—</td><td class="small">—</td><td class="small">—</td><td><span class="tag gray">L3</span></td></tr><tr><td class="num">193</td><td class="small">ООО ХЫ АВТО</td><td>未找到公开数据</td><td class="small">—</td><td class="small">—</td><td class="small">—</td><td><span class="tag gray">L3</span></td></tr><tr><td class="num">207</td><td class="small">ООО ПРОМАВТОМАТИКА</td><td>未找到公开数据</td><td class="small">—</td><td class="small">—</td><td class="small">—</td><td><span class="tag gray">L3</span></td></tr><tr><td class="num">218</td><td class="small">ООО СТО АВТО</td><td>未找到公开数据</td><td class="small">—</td><td class="small">—</td><td class="small">—</td><td><span class="tag gray">L3</span></td></tr><tr><td class="num">231</td><td class="small">ООО ВОРЛИНК АВТО</td><td>未找到公开数据</td><td class="small">—</td><td class="small">—</td><td class="small">—</td><td><span class="tag gray">L3</span></td></tr></tbody></table>
+  <p class="cap">采集日期 2026-11-19。联系方式仅列企业公开渠道；私人手机号/住址不予收录。L2/L3 线索建议二次核验后再触达。</p>
+</section>
+<section class="sec" id="s8">
+  <h2>08 · 触达优先级与行动建议</h2>
+  <h3>三批次推进节奏</h3>
+  <table><thead><tr><th style="width:100px">批次</th><th>对象</th><th>动作</th></tr></thead><tbody>
+    <tr><td><span class="tag g">第一批</span></td><td>T1 中 A 级、均价 $2.6万–4万、决策人 L1 的客户</td><td>核验 INN 存续 → 补俄语电话/邮箱 → 用 CX-5 / 探岳 1.4T 报价切入（踩中 160 马力优惠档）</td></tr>
+    <tr><td><span class="tag">第二批</span></td><td>T1 其余 + T2 实名关单客户</td><td>先做决策人二次核验（L2→L1），再用小批量试单建立信任</td></tr>
+    <tr><td><span class="tag y">第三批</span></td><td>T3 老转口大户</td><td>只做存续核验与背景调查，确认 2026 仍做中国车后再投入，避免把资源浪费在已退出/转型的公司</td></tr>
+  </tbody></table>
+  <h3>触达话术的三个钩子</h3>
+  <ul>
+    <li><strong>税费钩子</strong>：直接给出"≤160 马力车型清单 + 报废税测算"——源表 TOP100 客户有 19 次把这条写进切入点，说明这是买家最关心的痛点。</li>
+    <li><strong>交付钩子</strong>：报价里打包"质保 + 常用备件 + 俄语车机 + 冬季底盘防腐"，回应平行进口车无官方保修的普遍抱怨。</li>
+    <li><strong>合规钩子</strong>：强调单证完整、2026-04-01 EAEU 补差新规下的合规通道——灰色转口已被封堵，合规出口商反而迎来窗口期。</li>
+  </ul>
+  <div class="box ok"><p><strong>下一步最有价值的一件事：</strong>把这 35 家 + 上一版 TOP100 合并成一张 135 家的"全量可触达客户表"，按 INN 去重、按决策人证据等级排序，交给销售按批次推进。本页第 03–05 章的表格可直接复制进 Excel。</p></div>
+</section>
+<section class="sec" id="s9">
+  <h2>09 · 数据来源、合规与口径声明</h2>
+  <table><thead><tr><th>项目</th><th>说明</th></tr></thead><tbody>
+    <tr><td>客户名单来源</td><td>项目内 russia-top100-clients.xlsx 的「全量客户池 771 家」工作表，剔除「是否入选 TOP100 = ★」的 100 家后剩 671 家候补池</td></tr>
+    <tr><td>筛选依据</td><td>公司名汽车关键词 + 数据源新鲜度（2024 直采 / 2024-25 关单）+ 进口额门槛 + 汽车类均价区间；品牌官方子公司与非汽车公司剔除</td></tr>
+    <tr><td>决策人来源</td><td>公开工商登记册、企业官网、行业目录、公开商务信息的网络检索，逐条标注来源与证据等级</td></tr>
+    <tr><td>采集日期</td><td>2026-11-19</td></tr>
+    <tr><td>合规声明</td><td>仅采集企业公开信息；不挖私人手机号/住址/私人社交账号；不登录、不付费、不绕验证码；符合数据最小化原则</td></tr>
+    <tr><td>数据局限</td><td>关单数据截止 2025-03、转口名单到 2023-07；源表"最近活跃"大量缺失；名单须验真后使用，不构成可直接触达的客户库</td></tr>
+    <tr><td>使用范围</td><td>Eastar Motors / 国星聊成长 · 内部客户开发参考</td></tr>
+  </tbody></table>
+  <div class="box warn"><p><strong>免责：</strong>本页为内部客户开发资料。企业状态、法定代表人、联系方式均可能随时间变化，触达前须自行复核；对俄出口涉及制裁与合规审查，请结合企业合规部门意见开展业务。</p></div>
+</section>
+<div class="foot">
+  俄罗斯汽车出口情报工作台 · 第 08 个 Tab ｜ TOP100 之外候补客户名单 × 决策人挖掘 ｜ 生成于 2026-11-19 ｜
+  Eastar Motors / 国星聊成长 · 内部客户开发资料
+</div>
+
+</div>
+
+<script id="ru-embed-js">
+/* 与工作台 Tab 容器（index.html）配套的嵌入协议 */
+(function(){
+  if(!/[?&]embed=1(?:&|$)/.test(location.search)) return;
+  document.documentElement.classList.add('embedded');
+  document.addEventListener('click',function(e){
+    var t=e.target;
+    while(t && t!==document && t.tagName!=='A') t=t.parentNode;
+    if(!t || t.tagName!=='A') return;
+    var href=t.getAttribute('href')||'';
+    if(href.charAt(0)==='#' && !t.getAttribute('target')){
+      e.preventDefault();
+      parent.postMessage({ruTabAnchor:href.slice(1)},'*');
+    }
+  },true);
+  window.addEventListener('load',function(){parent.postMessage({ruTabReady:true},'*');});
+})();
+</script>
+</body>
+</html>
