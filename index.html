@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="俄罗斯汽车出口平行进口情报工作台：总览看板、细分市场、报价计算器、出口规则说明、决策人方法论，五个模块一个入口。">
+<meta name="description" content="俄罗斯汽车出口平行进口情报工作台：总览看板、细分市场、报价计算器、出口规则说明、决策人方法论、车型对俄调研，六个模块一个入口。">
 <title>俄罗斯汽车出口 · 平行进口情报工作台</title>
 <style>
 :root{--bg:#0d141d;--panel:#151f2b;--panel2:#1b2836;--line:#2b3a4b;--text:#e6eef7;--muted:#8fa3b8;
@@ -67,9 +67,9 @@ footer b{color:var(--text)}
 </head>
 <body id="ru-tab-shell">
 <div class="apphead"><div class="wrap">
-  <div class="eyebrow">Eastar Motors · Russia Market Workbench <span>Tab 版 v5 · 更新于 2026-11-14</span></div>
+  <div class="eyebrow">Eastar Motors · Russia Market Workbench <span>Tab 版 v6 · 更新于 2026-11-19</span></div>
   <h1>俄罗斯汽车出口 · 平行进口情报工作台</h1>
-  <p class="sub">五个模块，一个入口：点上方菜单原地切换，不跳页、不丢计算参数。支持直接分享某个 Tab 的链接（如 #/methodology）。</p>
+  <p class="sub">六个模块，一个入口：点上方菜单原地切换，不跳页、不丢计算参数。支持直接分享某个 Tab 的链接（如 #/models）。</p>
 </div></div>
 
 <div class="stickyhead">
@@ -79,6 +79,7 @@ footer b{color:var(--text)}
 <button class="tab" data-key="quotation" type="button"><span class="num">03</span><span class="tt"><b>报价计算器</b><i>EXW / FOB / CIF / DDP 实时落地成本</i></span></button>
 <button class="tab" data-key="rules" type="button"><span class="num">04</span><span class="tt"><b>出口规则说明</b><i>中俄两侧流程 · 单证 · 合规 · 检查清单</i></span></button>
 <button class="tab" data-key="methodology" type="button"><span class="num">05</span><span class="tt"><b>决策人方法论</b><i>TOP100 客户 · 12 类通道 · 检索 SOP</i></span></button>
+<button class="tab" data-key="models" type="button"><span class="num">06</span><span class="tt"><b>车型对俄调研</b><i>CX-5/CX-50/探岳/bZ3X/bZ5 · 税负与选品</i></span></button>
   </div></div>
   <div class="wrap"><div class="subbar">
     <div class="chips" id="chips"></div>
@@ -98,17 +99,18 @@ footer b{color:var(--text)}
 <iframe class="frame" id="f-quotation" data-src="quotation.html?embed=1" title="报价计算器" scrolling="no" loading="eager"></iframe>
 <iframe class="frame" id="f-rules" data-src="rules.html?embed=1" title="出口规则说明" scrolling="no" loading="eager"></iframe>
 <iframe class="frame" id="f-methodology" data-src="methodology.html?embed=1" title="决策人方法论" scrolling="no" loading="eager"></iframe>
+<iframe class="frame" id="f-models" data-src="models.html?embed=1" title="车型对俄调研" scrolling="no" loading="eager"></iframe>
 </div>
 
 <footer><div class="wrap">
-  <b>独立页面（可直接访问 / 打印 / 分享）：</b><a href="analysis.html" target="_blank" rel="noopener">总览看板</a> · <a href="segments.html" target="_blank" rel="noopener">细分市场</a> · <a href="quotation.html" target="_blank" rel="noopener">报价计算器</a> · <a href="rules.html" target="_blank" rel="noopener">出口规则说明</a> · <a href="methodology.html" target="_blank" rel="noopener">决策人方法论</a><br>
+  <b>独立页面（可直接访问 / 打印 / 分享）：</b><a href="analysis.html" target="_blank" rel="noopener">总览看板</a> · <a href="segments.html" target="_blank" rel="noopener">细分市场</a> · <a href="quotation.html" target="_blank" rel="noopener">报价计算器</a> · <a href="rules.html" target="_blank" rel="noopener">出口规则说明</a> · <a href="methodology.html" target="_blank" rel="noopener">决策人方法论</a> · <a href="models.html" target="_blank" rel="noopener">车型对俄调研</a><br>
   决策人方法论另有 <a href="downloads/russia-top100-methodology.pdf" target="_blank" rel="noopener">PDF 版（17 页）</a>；
   数据口径与免责说明见各模块「数据来源 / 核验」章节；关单样本为 5000 行官方直采基准盘，结论请结合最新政策复核。
 </div></footer>
 
 <script>
 (function(){
-  var MAP={"analysis": {"name": "总览看板", "url": "analysis.html"}, "segments": {"name": "细分市场", "url": "segments.html"}, "quotation": {"name": "报价计算器", "url": "quotation.html"}, "rules": {"name": "出口规则说明", "url": "rules.html"}, "methodology": {"name": "决策人方法论", "url": "methodology.html"}};
+  var MAP={"analysis": {"name": "总览看板", "url": "analysis.html"}, "segments": {"name": "细分市场", "url": "segments.html"}, "quotation": {"name": "报价计算器", "url": "quotation.html"}, "rules": {"name": "出口规则说明", "url": "rules.html"}, "methodology": {"name": "决策人方法论", "url": "methodology.html"}, "models": {"name": "车型对俄调研", "url": "models.html"}};
   var buttons=[].slice.call(document.querySelectorAll('#tabbar .tab'));
   var chips=document.getElementById('chips');
   var loading=document.getElementById('loading');
