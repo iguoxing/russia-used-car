@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>海关数据 × TOP100 客户 × 五款车 · 对俄选品交叉分析</title>
+<style>
+  :root{
+    --ink:#1b2430; --ink2:#3d4b5c; --muted:#6b7889;
+    --navy:#123a6b; --navy2:#1d5596; --gold:#b98326;
+    --red:#b23b32; --green:#1d7048; --line:#d9e0e8;
+    --bg:#ffffff; --soft:#f5f8fb; --code:#eef2f6;
+  }
+  @page{
+    size:A4; margin:17mm 15mm 18mm 15mm;
+    @top-left{ content:"海关数据 × TOP100 × 五款车 · 对俄选品交叉分析"; font-size:8pt; color:#8a96a5; font-family:"PingFang SC","Hiragino Sans GB",sans-serif; }
+    @top-right{ content:"2026-11-19"; font-size:8pt; color:#8a96a5; font-family:"PingFang SC","Hiragino Sans GB",sans-serif; }
+    @bottom-left{ content:"Eastar Motors / 国星聊成长 · 内部选品参考"; font-size:7.5pt; color:#9aa5b1; font-family:"PingFang SC","Hiragino Sans GB",sans-serif; }
+    @bottom-right{ content:"第 " counter(page) " / " counter(pages) " 页"; font-size:8pt; color:#6b7889; font-family:"PingFang SC","Hiragino Sans GB",sans-serif; }
+  }
+  @page:first{ @top-left{content:""} @top-right{content:""} }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:"PingFang SC","Hiragino Sans GB","Heiti SC","STHeiti","Arial Unicode MS",sans-serif;
+    color:var(--ink); font-size:10.2pt; line-height:1.68; background:#eef1f5;
+  }
+  .page{ background:var(--bg); max-width:960px; margin:0 auto; padding:0 26px 50px; }
+  a{color:var(--navy2);text-decoration:none;border-bottom:.5px solid #a9c2e0;word-break:break-all}
+  h1,h2,h3,h4{color:var(--navy);line-height:1.35;margin:0}
+  h2{font-size:17pt;border-bottom:2px solid var(--navy);padding:0 0 7px;margin:0 0 14px;break-after:avoid}
+  h3{font-size:12.6pt;margin:20px 0 8px;break-after:avoid}
+  h4{font-size:10.8pt;margin:14px 0 6px;color:var(--navy2);break-after:avoid}
+  p{margin:6px 0 10px;text-align:justify}
+  ul,ol{margin:6px 0 10px;padding-left:20px}
+  li{margin:3px 0}
+  strong{color:var(--navy)}
+  .small{font-size:8.7pt;color:var(--muted)}
+  code{background:var(--code);padding:1px 4px;border-radius:3px;font-size:8.6pt;color:#22456e;word-break:break-all}
+  table{width:100%;border-collapse:collapse;margin:9px 0 14px;font-size:8.6pt;break-inside:auto}
+  thead{display:table-header-group}
+  tr{break-inside:avoid}
+  th{background:var(--navy);color:#fff;text-align:left;padding:6px 7px;font-weight:600;border:1px solid #0f3159;font-size:8.4pt}
+  td{padding:5px 7px;border:1px solid var(--line);vertical-align:top;line-height:1.52}
+  tbody tr:nth-child(even) td{background:#f7fafd}
+  .num{text-align:center;font-weight:700;color:var(--navy);font-size:12pt;line-height:1.1}
+  .r{text-align:right}
+  .cap{font-size:8pt;color:var(--muted);margin:-8px 0 14px}
+  .box{border:1px solid var(--line);background:var(--soft);border-radius:5px;padding:9px 13px;margin:10px 0 14px;break-inside:avoid}
+  .box.key{border-left:4px solid var(--navy2);background:#eef5fd}
+  .box.warn{border-left:4px solid var(--gold);background:#fdf7e9}
+  .box.danger{border-left:4px solid var(--red);background:#fdf0ee}
+  .box.ok{border-left:4px solid var(--green);background:#eef8f2}
+  .box p:last-child,.box ul:last-child{margin-bottom:0}
+  .tag{display:inline-block;font-size:7.6pt;padding:1px 6px;border-radius:9px;color:#fff;background:var(--navy2);vertical-align:middle;margin-right:4px}
+  .tag.g{background:var(--green)} .tag.r{background:var(--red)} .tag.y{background:var(--gold)} .tag.gray{background:#7a8797}
+  .tag.s{background:#8b1e1e}
+  /* cover */
+  .cover{padding:34px 0 12px;break-after:page}
+  .kicker{font-size:9pt;letter-spacing:2px;color:var(--gold);font-weight:700;text-transform:uppercase;margin-bottom:12px}
+  .cover h1{font-size:28pt;line-height:1.25;letter-spacing:.5px;margin-bottom:8px}
+  .cover .sub{font-size:12.5pt;color:var(--ink2);line-height:1.6;margin-bottom:22px}
+  .cover .rule{height:4px;width:74px;background:var(--gold);margin:0 0 22px}
+  .meta{font-size:9pt;color:var(--muted);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:9px 0;margin-bottom:20px}
+  .meta span{margin-right:22px}
+  .stats{display:flex;flex-wrap:wrap;gap:9px;margin:0 0 22px}
+  .stat{flex:1 1 29%;min-width:145px;border:1px solid var(--line);border-top:3px solid var(--navy2);border-radius:4px;padding:10px 11px;background:#fbfdff}
+  .stat .n{font-size:19pt;font-weight:800;color:var(--navy);line-height:1.1}
+  .stat .n em{font-size:10pt;font-style:normal;font-weight:600;color:var(--ink2)}
+  .stat .l{font-size:8.4pt;color:var(--muted);margin-top:3px}
+  .toc{columns:2;column-gap:26px;font-size:9.3pt;margin-top:6px}
+  .toc a{display:block;padding:3px 0;border-bottom:1px dotted var(--line);color:var(--ink2)}
+  .toc b{color:var(--navy);margin-right:6px}
+  section{margin:0 0 8px}
+  .sec{margin-top:30px}
+  .sec:first-of-type{margin-top:16px}
+  .lead{font-size:10.8pt;color:var(--ink2);background:#f7fafd;border-left:3px solid var(--navy2);padding:9px 13px;margin-bottom:14px}
+  /* matrix / bars */
+  .bar{height:9px;background:#e7edf4;border-radius:5px;overflow:hidden;min-width:52px}
+  .bar > i{display:block;height:100%;background:var(--navy2)}
+  .bar.g > i{background:var(--green)} .bar.y > i{background:var(--gold)} .bar.r > i{background:var(--red)}
+  .flow{display:flex;flex-wrap:wrap;gap:8px;align-items:stretch;margin:12px 0 16px}
+  .flow .node{flex:1 1 26%;min-width:150px;border:1px solid var(--line);border-radius:5px;padding:8px 10px;background:#fbfdff;position:relative}
+  .flow .node .t{font-size:9.5pt;font-weight:700;color:var(--navy)}
+  .flow .node .d{font-size:8pt;color:var(--muted);margin-top:2px}
+  .flow .arw{align-self:center;color:var(--gold);font-weight:700;font-size:13pt}
+  .kpi-row{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 14px}
+  .kpi{flex:1 1 22%;min-width:120px;border:1px solid var(--line);border-radius:4px;padding:8px 10px;background:#fbfdff}
+  .kpi .v{font-size:15pt;font-weight:800;color:var(--navy)}
+  .kpi .k{font-size:8pt;color:var(--muted)}
+  .foot{margin-top:34px;border-top:1px solid var(--line);padding-top:10px;font-size:8pt;color:var(--muted)}
+  .pagebreak{break-before:page}
+  .bad{color:var(--red);font-weight:600}
+  .good{color:var(--green);font-weight:600}
+  /* ---- 工作台 Tab 内嵌态（?embed=1）---- */
+  .ru-banner{display:none;margin:0 0 18px;padding:9px 13px;background:#eef4fb;
+    border:1px solid #cddcec;border-radius:5px;font-size:9pt;color:#3d4b5c}
+  .ru-banner a{font-weight:600}
+  html.embedded body{background:#fff}
+  html.embedded .page{max-width:none;padding:0 18px 30px}
+  html.embedded .cover{padding-top:22px}
+  html.embedded .cover h1{font-size:23pt}
+  html.embedded .sec{margin-top:26px}
+  html.embedded .foot{margin-top:24px}
+  html.embedded .ru-banner{display:block}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="ru-banner">当前是「俄罗斯汽车出口情报工作台」的第 07 个 Tab 内嵌视图 ·
+  <a href="index.html#/cross" target="_top">返回工作台</a> · <a href="cross.html" target="_blank">独立打开本报告</a>
+</div>
+
+<!-- ============ 封面 ============ -->
+<section class="cover">
+  <div class="kicker">Eastar Motors · Customs Data × Client Pool × Product Fit</div>
+  <h1>海关数据 × TOP100 客户 × 五款车<br>对俄选品交叉分析</h1>
+  <p class="sub">把「771 家海关关单客户池 + 100 家重点客户」与「五款车对俄调研」两套独立数据放在一起对撞——<br>看哪款车既有真实买家、又踩中 2026 税负优惠档。</p>
+  <div class="rule"></div>
+  <div class="meta">
+    <span>调研时点：2026-11-19</span><span>关单数据：2022-08 ~ 2025-03</span><span>政策数据：2026-11</span>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="n">$7.39 <em>亿</em></div><div class="l">TOP100 累计进口额（海关关单）</div></div>
+    <div class="stat"><div class="n">96.8<em>%</em></div><div class="l">金额来自中国直采</div></div>
+    <div class="stat"><div class="n">20 <em>家</em></div><div class="l">命中五款车关联品牌的客户</div></div>
+    <div class="stat"><div class="n">$1.40 <em>亿</em></div><div class="l">这 20 家合计进口额</div></div>
+  </div>
+  <div class="box key">
+    <p><strong>一句话结论：</strong>两套独立数据指向同一个结论——<strong>「≤160 马力 + 合规 + 售后包」是对俄选品的通关密码</strong>。
+    海关侧：TOP100 客户表里的「建议切入点」有 <strong>19 次</strong>写着"160 马力以下车型清单 + 报废税测算"；
+    产品侧：五款车调研把 160 马力定为生死线。
+    落到具体车：<span class="tag g">双料首选</span><strong>马自达 CX-5、大众探岳 1.4T</strong>——既踩中优惠档，又有关单验证的真实买家池。</p>
+  </div>
+  <h3>目录</h3>
+  <nav><div class="wrap toc">
+    <a href="#s1"><b>01</b>核心结论：两个数据源的交叉验证</a>
+    <a href="#s2"><b>02</b>数据底座：海关关单与 TOP100 客户池</a>
+    <a href="#s3"><b>03</b>品牌交叉：五款车命中多少真实买家</a>
+    <a href="#s4"><b>04</b>20 家关联客户逐户清单</a>
+    <a href="#s5"><b>05</b>价位带验证：五款车落在哪个采购区间</a>
+    <a href="#s6"><b>06</b>地域与活跃度：客户在哪、还活跃吗</a>
+    <a href="#s7"><b>07</b>时效风险：名单必须验真</a>
+    <a href="#s8"><b>08</b>落地行动：从名单到第一单</a>
+    <a href="#s9"><b>09</b>数据来源与口径声明</a>
+  </div></nav>
+</section>
+
+<!-- ============ 01 核心结论 ============ -->
+<section class="sec" id="s1">
+  <h2>01 · 核心结论：两个数据源的交叉验证</h2>
+  <p class="lead">这次不是"再写一遍调研"，而是把两套<strong>互相独立生成</strong>的数据放在一起——如果它们指向同一个结论，这个结论的可信度就大幅提升。</p>
+  <div class="flow">
+    <div class="node"><div class="t">① 海关关单数据</div><div class="d">771 家客户池 / 5000 行关单明细 / TOP100 名单，金额与台数来自真实报关记录</div></div>
+    <div class="arw">→</div>
+    <div class="node"><div class="t">② 客户切入点</div><div class="d">逐户"建议切入点"字段：19 次强调 160 马力以下 + 报废税测算</div></div>
+    <div class="arw">→</div>
+    <div class="node"><div class="t">③ 五款车调研</div><div class="d">2026 政策口径：160 马力是报废税分水岭，与①②完全吻合</div></div>
+    <div class="arw">→</div>
+    <div class="node"><div class="t">④ 交叉结论</div><div class="d">CX-5 / 探岳1.4T 双首选；bZ3X 可做；CX-50只推2.0L；bZ5观察</div></div>
+  </div>
+
+  <h3>交叉后的四条硬结论</h3>
+  <ol>
+    <li><strong>买家是真实存在的，不是想象出来的。</strong>TOP100 里 20 家客户的历史关单命中丰田/大众/马自达品牌，合计进口额 <strong>$1.40 亿</strong>、直采 <strong>8,255 台</strong>。五款车不需要"教育市场"，需求已被海关数据证明。</li>
+    <li><strong>客户的采购价位带正好覆盖五款车。</strong>直采均价中位数 <strong>$26,663/台</strong>，31 家高价值客户集中在 $15k–45k 区间（合计 $4.82 亿 / 24,477 台）——CX-5、探岳、bZ3X 的出口报价都落在这里。</li>
+    <li><strong>丰田系是五款车里最强的买家信号。</strong>TOP100 中 TOYOTA 命中 <strong>14 家</strong>（$1.30 亿 / 6,920 台），远超 VW（4 家）和 MAZDA（2 家）。但要注意：这些客户多同时采购宝马/奔驰等豪华品牌，bZ3X/bZ5 作为纯电新品仍需单独验证。</li>
+    <li><strong>最大的风险不是选错车，是名单太旧。</strong>关单数据最新到 2025-03，TOP100 里 2025 年有记录的仅 6 家、36 家无活跃月份。所有客户触达前必须做 INN 存续核验与联系人补验——这是把"数据"变成"订单"的关键一步。</li>
+  </ol>
+</section>
+
+<!-- ============ 02 数据底座 ============ -->
+<section class="sec pagebreak" id="s2">
+  <h2>02 · 数据底座：海关关单与 TOP100 客户池</h2>
+  <p class="lead">先交代清楚"100 个客户"是怎么来的——它不是随便找的 100 家公司，而是从 771 家客户池里按海关金额、平行属性、需求信号综合评分选出的 S/A 级客户。</p>
+
+  <div class="kpi-row">
+    <div class="kpi"><div class="v">771</div><div class="k">客户池（5 份名单归一化去重）</div></div>
+    <div class="kpi"><div class="v">100</div><div class="k">重点客户（S 41 + A 59）</div></div>
+    <div class="kpi"><div class="v">$7.39亿</div><div class="k">TOP100 累计进口额</div></div>
+    <div class="kpi"><div class="v">70,510台</div><div class="k">直采 49,967 + 转口 20,543</div></div>
+  </div>
+
+  <h3>2.1 数据从哪来：5 份原始名单</h3>
+  <table>
+    <thead><tr><th>来源</th><th>行数</th><th>时间范围</th><th>金额 / 用途</th><th>质量问题</th></tr></thead>
+    <tbody>
+      <tr><td>自中国进口汽车关单明细（前 5000）</td><td>5,000</td><td>2024-04 ~ 2025-03</td><td>$1.28 亿；官方品牌子公司直采整车，HS 8703</td><td>"前 5000 条"截断导出，月度量不可直接同比</td></tr>
+      <tr><td>经中亚进口中国汽车关单明细</td><td>5,000</td><td>同上</td><td>与上者 MD5 完全一致，已去重不重复计入</td><td>重复文件</td></tr>
+      <tr><td>经白俄/吉尔吉斯/哈萨克转口明细</td><td>1,084</td><td>2022-08 ~ 2023-07</td><td>$951 万；多为 ATV/雪地车，单价中位 $478</td><td>品类非乘用车，仅作转口通道信号</td></tr>
+      <tr><td>俄罗斯进口中国汽车经销商名单</td><td>424</td><td>2024-01 ~ 2025-01</td><td>$81.2 亿；TOP7 官方子公司占约 90%</td><td>长尾 417 家才是平行进口目标池</td></tr>
+      <tr><td>经中亚进口汽车主体汇总</td><td>385</td><td>2022-08 ~ 2023-07</td><td>$11.2 亿；高单价豪华车转口</td><td>全称/缩写并存需归并</td></tr>
+    </tbody>
+  </table>
+  <p class="cap">口径说明：TOP100 的金额与台数统一采用"同源配对"——金额与台数取全量汇总名单，均价由二者相除，不引用源表疑似重复计数的"贸易次数"列。</p>
+
+  <h3>2.2 钱从哪来、车从哪来</h3>
+  <table>
+    <thead><tr><th>维度</th><th>金额 USD</th><th>占比</th><th>台数</th><th>解读</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tag g">中国直采</span></td><td class="r">$715,226,014</td><td class="r">96.8%</td><td class="r">49,967</td><td>绝对主流——俄罗斯买家已从"经中亚转口"转向"直接从中国进口"，对合规供应链是利好</td></tr>
+      <tr><td><span class="tag y">经中亚/白俄转口</span></td><td class="r">$23,995,902</td><td class="r">3.2%</td><td class="r">20,543</td><td>金额小但台数多（均价低），多为 2022–23 年记录；2026-04 新规后这条路基本被堵</td></tr>
+      <tr><td><strong>合计</strong></td><td class="r"><strong>$739,221,916</strong></td><td class="r">100%</td><td class="r"><strong>70,510</strong></td><td>整体均价约 $10,486/台（含大量低价转口车拉低）</td></tr>
+    </tbody>
+  </table>
+  <div class="box warn">
+    <p><strong>重要背景：</strong>转口金额 3.2%、台数 29.1% 的"倒挂"说明转口多为低价车。2026-04-01 起，俄罗斯对 EAEU 转口启用自动化欠税补偿机制（补差额 = 俄本土应缴 − 联盟国已缴），<span class="bad">这条低价通道的经济性已被大幅削弱</span>——这也是本次分析强调"合规直采"的原因。</p>
+  </div>
+</section>
+
+<!-- ============ 03 品牌交叉 ============ -->
+<section class="sec" id="s3">
+  <h2>03 · 品牌交叉：五款车命中多少真实买家</h2>
+  <p class="lead">把 TOP100 客户的"主采品牌/品类"字段与五款车品牌做匹配，看每款车背后站着多少真实买家。</p>
+
+  <table>
+    <thead><tr><th>车系 / 品牌</th><th>命中客户数</th><th>占 TOP100</th><th>合计进口额</th><th>直采台数</th><th>对应本报告车型</th><th>交叉判断</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>TOYOTA</strong></td><td class="num">14</td>
+        <td><div class="bar"><i style="width:14%"></i></div>14%</td>
+        <td class="r">$130.09M</td><td class="r">6,920</td>
+        <td>bZ3X / bZ5</td>
+        <td><span class="tag g">信号强</span>但多为多品牌混采、含豪华车；纯电新品需单独验证</td>
+      </tr>
+      <tr>
+        <td><strong>VW / 一汽大众</strong></td><td class="num">4</td>
+        <td><div class="bar"><i style="width:4%"></i></div>4%</td>
+        <td class="r">$2.48M</td><td class="r">81</td>
+        <td>探岳 Tayron</td>
+        <td><span class="tag y">信号中</span>客户少但均价 $23k–38k，与探岳价位高度契合</td>
+      </tr>
+      <tr>
+        <td><strong>MAZDA</strong></td><td class="num">2</td>
+        <td><div class="bar"><i style="width:2%"></i></div>2%</td>
+        <td class="r">$7.50M</td><td class="r">254</td>
+        <td>CX-5 / CX-50</td>
+        <td><span class="tag y">信号中</span>客户少但单价高（$29k–34k）、采购稳定；与 CX-5 在俄爆款地位吻合</td>
+      </tr>
+      <tr style="background:#f0f6fd">
+        <td><strong>合计（去重 20 家）</strong></td><td class="num"><strong>20</strong></td>
+        <td>20%</td><td class="r"><strong>$140.07M</strong></td><td class="r"><strong>8,255</strong></td>
+        <td>五款车全部</td>
+        <td>占 TOP100 进口额的 <strong>18.9%</strong>，是真实可触达的买家池</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="cap">注：按主采品牌字段匹配，一家客户可能命中多个品牌；合计按客户去重为 20 家。</p>
+
+  <div class="box key">
+    <p><strong>交叉解读：</strong>五款车的品牌在 TOP100 里有 20 家真实买家、$1.4 亿采购记录——这解释了为什么上一轮调研里 CX-5 能占马自达在俄销量 90%+、探岳能成为进口榜首：<strong>不是凭空冒出的需求，而是这批客户长期采购的延续</strong>。
+    但也别忽略结构差异：丰田买家多（14 家）却以混采为主，bZ3X 要在这批客户里卖动，仍需证明纯电产品的冬季适用性与售后能力。</p>
+  </div>
+</section>
+
+<!-- ============ 04 关联客户清单 ============ -->
+<section class="sec pagebreak" id="s4">
+  <h2>04 · 20 家关联客户逐户清单</h2>
+  <p class="lead">这是把"数据"变成"名单"的一页——按 TOP100 排名排序，标注每家的品牌、采购规模、均价与活跃月份。触达前请先做 INN 存续核验（见第 07 章）。</p>
+  <table>
+    <thead><tr><th>#</th><th>级</th><th>进口商名称（俄文）</th><th>地区</th><th>命中品牌</th><th>累计进口额</th><th>直采台数</th><th>均价</th><th>活跃月</th></tr></thead>
+    <tbody>
+      <tr><td class="num">4</td><td><span class="tag s">S</span></td><td>ООО МЭЙДЖОР АВТО ЦЕНТР</td><td>未标注</td><td>TOYOTA</td><td class="r">$7.41M</td><td class="r">221</td><td class="r">$32,374</td><td>2024-06</td></tr>
+      <tr><td class="num">5</td><td><span class="tag s">S</span></td><td>OOO ЖЕФКО</td><td>莫斯科</td><td>CHERY/GEELY/JETOUR/OMODA/TOYOTA</td><td class="r">$89.06M</td><td class="r">5,412</td><td class="r">$16,456</td><td>2024-07</td></tr>
+      <tr><td class="num">12</td><td><span class="tag s">S</span></td><td>ООО ХОРС</td><td>符拉迪沃斯托克</td><td>BMW/CHEVROLET/NISSAN/TOYOTA</td><td class="r">$3.70M</td><td class="r">189</td><td class="r">$19,581</td><td>2024-12</td></tr>
+      <tr><td class="num">13</td><td><span class="tag s">S</span></td><td>ООО ЛОТОС МОТОРС</td><td>莫斯科</td><td>BMW/LAND ROVER/NISSAN/TOYOTA/VOLVO</td><td class="r">$6.65M</td><td class="r">176</td><td class="r">$37,810</td><td>2024-12</td></tr>
+      <tr><td class="num">17</td><td><span class="tag s">S</span></td><td>ООО ИМПОРТНО ЭКСПОРТНАЯ АВТОМОБИЛЬНАЯ КОМПАНИЯ ХУАЮНЬ</td><td>莫斯科</td><td>FENGDU/TOYOTA</td><td class="r">$14.52M</td><td class="r">555</td><td class="r">$26,154</td><td>2024-12</td></tr>
+      <tr><td class="num">18</td><td><span class="tag s">S</span></td><td>ООО МАТОЛОГИСТИКС ПЛЮС</td><td>莫斯科</td><td>MAZDA</td><td class="r">$6.56M</td><td class="r">226</td><td class="r">$29,015</td><td>2024-12</td></tr>
+      <tr><td class="num">20</td><td><span class="tag s">S</span></td><td>ООО АМИМПОРТ</td><td>莫斯科</td><td>HYUNDAI/TOYOTA</td><td class="r">$4.67M</td><td class="r">207</td><td class="r">$22,561</td><td>2024-07</td></tr>
+      <tr><td class="num">33</td><td><span class="tag s">S</span></td><td>ООО АУРА</td><td>未标注</td><td>TOYOTA</td><td class="r">$1.11M</td><td class="r">42</td><td class="r">$26,390</td><td>2024-11</td></tr>
+      <tr><td class="num">37</td><td><span class="tag s">S</span></td><td>ООО АМИКС</td><td>圣彼得堡</td><td>TOYOTA</td><td class="r">$0.58M</td><td class="r">26</td><td class="r">$22,500</td><td>2024-12</td></tr>
+      <tr><td class="num">40</td><td><span class="tag s">S</span></td><td>ООО РУС АВТО</td><td>罗斯托夫</td><td>FAW-VOLKSWAGEN</td><td class="r">$0.95M</td><td class="r">36</td><td class="r">$26,426</td><td>2024-11</td></tr>
+      <tr><td class="num">41</td><td><span class="tag s">S</span></td><td>ООО НЕВА АВТОКОМ</td><td>莫斯科州</td><td>VOLKSWAGEN</td><td class="r">$0.92M</td><td class="r">27</td><td class="r">$33,934</td><td>2024-11</td></tr>
+      <tr><td class="num">46</td><td><span class="tag y">A</span></td><td>ООО АЛЬФАБЕТА Н</td><td>喀山</td><td>MAZDA</td><td class="r">$0.95M</td><td class="r">28</td><td class="r">$33,824</td><td>2024-04</td></tr>
+      <tr><td class="num">72</td><td><span class="tag y">A</span></td><td>ООО СПАРК</td><td>莫斯科州</td><td>VOLKSWAGEN</td><td class="r">$0.38M</td><td class="r">12</td><td class="r">$31,800</td><td>2024-12</td></tr>
+      <tr><td class="num">73</td><td><span class="tag y">A</span></td><td>ООО УЛЕЙ АВТО ЗАПАД</td><td>未标注</td><td>TOYOTA</td><td class="r">$0.65M</td><td class="r">24</td><td class="r">$27,129</td><td>2024-12</td></tr>
+      <tr><td class="num">74</td><td><span class="tag y">A</span></td><td>ООО ТОРГОВЫЙ ДОМ АВТОРИТЕТ</td><td>新西伯利亚</td><td>TOYOTA</td><td class="r">$0.44M</td><td class="r">16</td><td class="r">$27,614</td><td>2024-12</td></tr>
+      <tr><td class="num">80</td><td><span class="tag y">A</span></td><td>ООО ВИРА ВК</td><td>符拉迪沃斯托克</td><td>TOYOTA</td><td class="r">$0.40M</td><td class="r">16</td><td class="r">$25,100</td><td>2024-06</td></tr>
+      <tr><td class="num">86</td><td><span class="tag y">A</span></td><td>ООО ИМПОРТ И ЭКСПОРТ АВТОКОМПАНИЯ ЮНЬТУН</td><td>莫斯科州</td><td>TOYOTA</td><td class="r">$0.33M</td><td class="r">14</td><td class="r">$23,571</td><td>2024-04</td></tr>
+      <tr><td class="num">93</td><td><span class="tag y">A</span></td><td>ООО ТЕХНОЛОГИЯ</td><td>未标注</td><td>TOYOTA</td><td class="r">$0.30M</td><td class="r">9</td><td class="r">$32,892</td><td>2024-11</td></tr>
+      <tr><td class="num">94</td><td><span class="tag y">A</span></td><td>ООО АЛТАГАЯ</td><td>未标注</td><td>NISSAN/TOYOTA</td><td class="r">$0.27M</td><td class="r">13</td><td class="r">$20,779</td><td>2024-11</td></tr>
+      <tr><td class="num">100</td><td><span class="tag y">A</span></td><td>ООО КЫРГЫЗАВТОТРЕЙД</td><td>下诺夫哥罗德</td><td>VOLKSWAGEN</td><td class="r">$0.23M</td><td class="r">6</td><td class="r">$37,669</td><td>2024-07</td></tr>
+    </tbody>
+  </table>
+  <p class="cap">完整字段（INN、注册地址、逐户跟进原因、切入点）见工作台第 05 个 Tab「决策人方法论」与 downloads/russia-top100-clients.xlsx。</p>
+
+  <div class="box ok">
+    <p><strong>优先触达建议：</strong>从 <strong>#18 МАТОЛОГИСТИКС ПЛЮС（MAZDA，226 台，均价 $29k）</strong>和 <strong>#40 РУС АВТО（一汽大众，36 台，均价 $26k）</strong>开始——这两家品牌专一、采购稳定、均价与 CX-5/探岳高度匹配，是最容易切入的"精准买家"。#5 ЖЕФКО 虽金额最大（$89M），但以中国品牌低价车为主、多源比价，适合走量报价而非高毛利。</p>
+  </div>
+</section>
+
+<!-- ============ 05 价位带 ============ -->
+<section class="sec" id="s5">
+  <h2>05 · 价位带验证：五款车落在哪个采购区间</h2>
+  <p class="lead">海关数据给出的采购均价，正好能验证五款车的出口报价有没有市场。这是"产品定价 × 买家预算"的直接对撞。</p>
+
+  <div class="kpi-row">
+    <div class="kpi"><div class="v">$26,663</div><div class="k">TOP100 直采均价中位数</div></div>
+    <div class="kpi"><div class="v">31 家</div><div class="k">均价 $15k–45k 且直采≥50 台</div></div>
+    <div class="kpi"><div class="v">$4.82亿</div><div class="k">该价位带合计进口额</div></div>
+    <div class="kpi"><div class="v">24,477台</div><div class="k">该价位带合计台数</div></div>
+  </div>
+
+  <h3>5.1 价位带对照表</h3>
+  <table>
+    <thead><tr><th>车型</th><th>中国出口参考价</th><th>TOP100 对应买家均价</th><th>匹配度</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td><strong>马自达 CX-5</strong> 2.0L</td><td>约 $22k–30k</td><td>MAZDA 客户 $29,015 / $33,824</td><td><span class="tag g">高</span></td><td>价位吻合，且 155 马力踩中优惠档</td></tr>
+      <tr><td><strong>大众探岳</strong> 1.4T</td><td>约 $20k–26k</td><td>VW 客户 $26,426 / $33,934</td><td><span class="tag g">高</span></td><td>落在 VW 客户均价下沿，有价格优势</td></tr>
+      <tr><td><strong>马自达 CX-50</strong> 2.0L</td><td>约 $23k–28k</td><td>MAZDA 客户 $29,015 / $33,824</td><td><span class="tag g">高</span></td><td>同 CX-5 买家池，可搭售；2.5L 需避开</td></tr>
+      <tr><td><strong>丰田 bZ3X</strong></td><td>约 $15k–22k</td><td>TOYOTA 客户均价 $16k–38k（跨度大）</td><td><span class="tag y">中</span></td><td>价位在带内，但纯电需单独验证冬季适用性</td></tr>
+      <tr><td><strong>丰田 bZ5</strong></td><td>约 $18k–28k</td><td>TOYOTA 客户均价 $16k–38k（跨度大）</td><td><span class="tag y">中</span></td><td>价位合适，但俄罗斯无渠道、无价格验证</td></tr>
+    </tbody>
+  </table>
+  <p class="cap">中国出口参考价为量级估计（FOB，不含运保税费），俄罗斯终端因平行进口全税费通常上浮 35%–45%。</p>
+
+  <h3>5.2 两个必须说清的价位风险</h3>
+  <ol>
+    <li><strong>别被"均价中位数 $26k"误导。</strong>这个数字被大量低价车（ATV、旧车、转口车）拉低。五款车里 CX-5/探岳的合理报价在 $22k–30k，属于中上区间，要靠"合规 + 质保 + 俄语 + 备件"的组合包支撑溢价。</li>
+    <li><strong>2026 新规会改变价位结构。</strong>报废税按功率分档后，&gt;160 马力的车落地成本跳升 80 万卢布以上，直接把 2.5L CX-50、2.0T 探岳、272 马力 bZ5 推出价格竞争力区间——<strong>价位匹配必须叠加功率测算才有意义</strong>。</li>
+  </ol>
+</section>
+
+<!-- ============ 06 地域与活跃度 ============ -->
+<section class="sec" id="s6">
+  <h2>06 · 地域与活跃度：客户在哪、还活跃吗</h2>
+  <h3>6.1 TOP100 地域分布</h3>
+  <table>
+    <thead><tr><th>地区</th><th>客户数</th><th>占比</th><th>对五款车的意义</th></tr></thead>
+    <tbody>
+      <tr><td>莫斯科</td><td class="num">23</td><td><div class="bar"><i style="width:23%"></i></div>23%</td><td>最大单一市场，经销商集中；bZ3X 由 Rolf 在莫斯科/圣彼得堡销售</td></tr>
+      <tr><td>莫斯科州</td><td class="num">12</td><td><div class="bar"><i style="width:12%"></i></div>12%</td><td> Satellite 城市，与莫斯科构成核心圈</td></tr>
+      <tr><td>圣彼得堡</td><td class="num">4</td><td><div class="bar"><i style="width:4%"></i></div>4%</td><td>波罗的海口岸，Rolf bZ3X 销售城市之一</td></tr>
+      <tr><td>新西伯利亚</td><td class="num">3</td><td><div class="bar"><i style="width:3%"></i></div>3%</td><td>西伯利亚枢纽，冬季严寒→热泵空调是卖点</td></tr>
+      <tr><td>符拉迪沃斯托克</td><td class="num">3</td><td><div class="bar"><i style="width:3%"></i></div>3%</td><td>远东口岸，日韩车与并行进口通道核心</td></tr>
+      <tr><td>克拉斯诺达尔等</td><td class="num">7</td><td><div class="bar"><i style="width:7%"></i></div>7%</td><td>南方地区，分散客户</td></tr>
+      <tr><td><span class="bad">未标注</span></td><td class="num">48</td><td><div class="bar r"><i style="width:48%"></i></div>48%</td><td>近半客户地区缺失，触达前必须从 INN 反查注册地址</td></tr>
+    </tbody>
+  </table>
+
+  <h3>6.2 活跃度分布——最需要警惕的一页</h3>
+  <table>
+    <thead><tr><th>最近活跃年份</th><th>客户数</th><th>占比</th><th>含义</th></tr></thead>
+    <tbody>
+      <tr><td>2025 年</td><td class="num">6</td><td>6%</td><td>相对活跃，优先触达</td></tr>
+      <tr><td>2024 年</td><td class="num">49</td><td>49%</td><td>1–2 年前活跃，需验真</td></tr>
+      <tr><td>2023 年</td><td class="num">9</td><td>9%</td><td>3 年前记录，大概率已变化</td></tr>
+      <tr><td><span class="bad">无记录（—）</span></td><td class="num">36</td><td>36%</td><td>只有汇总金额，无月份、无品牌、无地域</td></tr>
+    </tbody>
+  </table>
+  <div class="box danger">
+    <p><strong>结论：</strong>只有 6% 的客户在 2025 年有记录，55% 停留在 2024 年或更早，36% 完全无活跃信息。<span class="bad">这份名单是"待验真线索池"，不是"可直接打电话的客户库"</span>——TOP100 中没有任何电话、邮箱、WhatsApp 字段，仅 64 家有 INN。触达前必须补齐联系人并通过 СБИС 等渠道核验 INN 存续状态。</p>
+  </div>
+</section>
+
+<!-- ============ 07 时效风险 ============ -->
+<section class="sec pagebreak" id="s7">
+  <h2>07 · 时效风险：名单必须验真</h2>
+  <p class="lead">这是两套数据对撞后暴露出的最大问题——不是车选错了，而是买家名单可能已经"过期"。2026 年的俄罗斯和 2024 年已经不是同一个市场。</p>
+
+  <h3>7.1 三重时间差</h3>
+  <table>
+    <thead><tr><th>数据层</th><th>时间</th><th>距今</th><th>风险</th><th>应对</th></tr></thead>
+    <tbody>
+      <tr><td>关单明细</td><td>最新 2025-03</td><td>约 20 个月</td><td>客户可能已停进、转行或换主体</td><td>INN 存续核验</td></tr>
+      <tr><td>中亚转口明细</td><td>2023-07</td><td>约 3 年</td><td>通道已被 2026-04 新规封堵，参考价值有限</td><td>仅作历史信号</td></tr>
+      <tr><td>五款车调研</td><td>2026-11</td><td>当前</td><td>政策口径新，但缺客户侧验证</td><td>与名单交叉后落地</td></tr>
+    </tbody>
+  </table>
+
+  <h3>7.2 2026 政策如何改变这批客户的价值</h3>
+  <ul>
+    <li><strong>有转口记录的客户分级需下调。</strong>原 v1 评分把"经中亚转口"当正向信号（+8 平行属性 +2 新鲜度 ≈ +10 分），但 2026-04 新规后这条路被堵——v3 示范评分已改为负向（合规 −4、风险 −3），TOP100 中 19 家受影响。</li>
+    <li><strong>"2014–2025 年进口额"不等于"2026 年采购能力"。</strong>报废税指数化（每年 10%–20%）+ 关税上调（20%–38%）后，同样预算能买到的车更少；客户可能正在观望或转向本地组装品牌。</li>
+    <li><strong>联系方式缺口是硬伤。</strong>100 家里 0 家有电话/邮箱，36 家连 INN 都没有——必须先做一轮数据补全，否则所有分析都停在纸面。</li>
+  </ul>
+
+  <div class="box warn">
+    <p><strong>验真优先级：</strong>① 64 家有 INN 的客户 → СБИС / 税务注册核验存续与经营范围；② 20 家关联客户 → 优先，因为品牌与五款车直接匹配；③ 6 家 2025 年活跃客户 → 最高优先；④ 36 家无 INN 客户 → 通过 Yandex 地图 / 行业协会 / 中国侧提单反查补齐身份。</p>
+  </div>
+</section>
+
+<!-- ============ 08 落地行动 ============ -->
+<section class="sec" id="s8">
+  <h2>08 · 落地行动：从名单到第一单</h2>
+  <p class="lead">把两份数据和五款车调研浓缩成一套可执行的动作——按"选品 → 客户 → 报价 → 交付"四步走。</p>
+  <table>
+    <thead><tr><th>步骤</th><th>动作</th><th>用哪份数据</th><th>产出</th></tr></thead>
+    <tbody>
+      <tr><td class="num">1</td><td><strong>锁定双首选车型报价</strong>：CX-5 2.0L + 探岳 1.4T，按 ≤160 马力口径准备车型清单</td><td>五款车调研 + 客户切入点 19 次强调</td><td>两页式车型报价单（含功率/排量/认证状态）</td></tr>
+      <tr><td class="num">2</td><td><strong>筛出首批触达名单</strong>：20 家关联客户中，先做 11 家 S 级 + 2 家 MAZDA 专一客户</td><td>TOP100 品牌命中 + 均价匹配</td><td>13 家优先客户清单（含 INN、地区、切入点）</td></tr>
+      <tr><td class="num">3</td><td><strong>补齐联系方式并验真</strong>：СБИС 核 INN 存续，Yandex/行业渠道补联系人</td><td>TOP100 决策人方法论（工作台 Tab 05）</td><td>可拨号/可发邮件的客户表</td></tr>
+      <tr><td class="num">4</td><td><strong>按 2026 口径算落地成本</strong>：逐 VIN 算报废税 + 关税 + VAT，报价含俄语/质保/备件包</td><td>工作台 Tab 03 报价计算器 + 本报告第 05 章</td><td>基于真实税负的 CIF/DDP 报价</td></tr>
+      <tr><td class="num">5</td><td><strong>小批量试单验证通道</strong>：先 1–2 台走通清关、OTTC/СБКТС、ЭПТС，再放量</td><td>客户切入点原文建议</td><td>可复制的交付 SOP</td></tr>
+    </tbody>
+  </table>
+  <div class="box key">
+    <p><strong>给业务的一句话：</strong>这套分析的价值不在于"又发现了什么新市场"，而在于把已有数据<strong>拧成一股绳</strong>——五款车调研告诉你"该卖什么"，海关数据告诉你"谁在买、买多少钱"，客户切入点告诉你"怎么开口"。三者重合的地方，就是最值得投入的第一单。</p>
+  </div>
+</section>
+
+<!-- ============ 09 来源 ============ -->
+<section class="sec" id="s9">
+  <h2>09 · 数据来源与口径声明</h2>
+  <h3>9.1 数据来源</h3>
+  <ul class="small">
+    <li><strong>海关关单与客户池</strong>：项目 downloads/russia-top100-clients.xlsx（8 个工作表：TOP100 重点客户、评分模型与口径、数据审计、全量客户池 771 家、已排除品牌官方方、外部来源与行动清单、数据核验 v2、v3 维度优化示范）。</li>
+    <li><strong>分析口径报告</strong>：downloads/russia-parallel-import-report.md（四维分析报告）、data-verification-report.md（第一轮核验）、review-and-dimension-optimization.md（框架复核与 v3 示范）。</li>
+    <li><strong>五款车调研</strong>：本工作台第 06 个 Tab「车型对俄调研」，2026-11 公开资料汇总。</li>
+    <li><strong>原始关单数据</strong>：俄罗斯自中国进口汽车关单明细 5,000 行（2024-04 ~ 2025-03，$1.28 亿）、进口商汇总名单 424 家、中亚转口名单 385 家 + 明细 1,084 行（2022-08 ~ 2023-07）。</li>
+  </ul>
+  <h3>9.2 口径与局限</h3>
+  <ul>
+    <li><strong>金额/台数同源配对</strong>：取全量汇总名单，均价由二者相除；源表"贸易次数"列 91% 与"数量"重复，已判定不可信并剔除。</li>
+    <li><strong>品牌命中为文本匹配</strong>：按"主采品牌/品类"字段关键词识别，一家客户可能命中多品牌；36 家汇总名单未标注品牌，无法参与交叉。</li>
+    <li><strong>出口参考价为量级估计</strong>：FOB 口径，未含运保税费与 2026 年报废税/关税；俄罗斯终端通常上浮 35%–45%。</li>
+    <li><strong>名单非最新</strong>：关单最新 2025-03，转口明细 2023-07；活跃度字段仅反映样本内相对新旧，不代表当前仍在进口。</li>
+  </ul>
+  <div class="box warn"><p><strong>免责说明：</strong>本报告为内部选品参考，所有税负测算须以当期俄罗斯政府令附表及报关行核定为准；客户名单触达前必须完成 INN 存续核验与联系方式补全。政策与数据建议每季度复核一次。</p></div>
+</section>
+
+<div class="foot">
+  俄罗斯汽车出口情报工作台 · 第 07 个 Tab ｜ 海关数据 × TOP100 客户 × 五款车交叉分析 ｜ 生成于 2026-11-19 ｜
+  Eastar Motors / 国星聊成长 · 内部选品参考
+</div>
+
+</div>
+
+<script id="ru-embed-js">
+/* 与工作台 Tab 容器（index.html）配套的嵌入协议 */
+(function(){
+  if(!/[?&]embed=1(?:&|$)/.test(location.search)) return;
+  document.documentElement.classList.add('embedded');
+  document.addEventListener('click',function(e){
+    var t=e.target;
+    while(t && t!==document && t.tagName!=='A') t=t.parentNode;
+    if(!t || t.tagName!=='A') return;
+    var href=t.getAttribute('href')||'';
+    if(href.charAt(0)==='#' && !t.getAttribute('target')){
+      e.preventDefault();
+      parent.postMessage({ruTabAnchor:href.slice(1)},'*');
+    }
+  },true);
+  window.addEventListener('load',function(){parent.postMessage({ruTabReady:true},'*');});
+})();
+</script>
+</body>
+</html>
