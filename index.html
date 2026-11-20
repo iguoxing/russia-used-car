@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="俄罗斯汽车出口平行进口情报工作台：总览看板、细分市场、报价计算器、出口规则说明、决策人方法论、车型对俄调研、数据交叉分析、候补客户名单与决策人，八个模块一个入口。">
+<meta name="description" content="俄罗斯汽车出口平行进口情报工作台：总览看板、细分市场、报价计算器、出口规则说明，四个模块一个入口。">
 <title>俄罗斯汽车出口 · 平行进口情报工作台</title>
 <style>
 :root{--bg:#0d141d;--panel:#151f2b;--panel2:#1b2836;--line:#2b3a4b;--text:#e6eef7;--muted:#8fa3b8;
@@ -38,6 +38,8 @@ h1{font-size:34px;margin:10px 0 6px;letter-spacing:-.5px;line-height:1.3}
 .tab .tt{display:flex;flex-direction:column;line-height:1.35}
 .tab .tt b{font-size:14.5px;color:inherit}
 .tab .tt i{font-style:normal;font-size:11.5px;color:var(--muted);white-space:nowrap}
+/* 本站仅展示前 4 个 Tab；后 4 个保留文件但前端隐藏 */
+#tabbar .tab[data-key="methodology"],#tabbar .tab[data-key="models"],#tabbar .tab[data-key="cross"],#tabbar .tab[data-key="leads"]{display:none!important}
 .subbar{display:flex;align-items:center;gap:14px;border-top:1px solid var(--line);padding:8px 0 9px;min-height:44px}
 .chips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;flex:1}
 .chips::-webkit-scrollbar{display:none}
@@ -69,7 +71,7 @@ footer b{color:var(--text)}
 <div class="apphead"><div class="wrap">
   <div class="eyebrow">Eastar Motors · Russia Market Workbench <span>Tab 版 v8 · 更新于 2026-11-19</span></div>
   <h1>俄罗斯汽车出口 · 平行进口情报工作台</h1>
-  <p class="sub">八个模块，一个入口：点上方菜单原地切换，不跳页、不丢计算参数。支持直接分享某个 Tab 的链接（如 #/leads）。</p>
+  <p class="sub">四个模块，一个入口：点上方菜单原地切换，不跳页、不丢计算参数。支持直接分享某个 Tab 的链接（如 #/rules）。</p>
 </div></div>
 
 <div class="stickyhead">
@@ -107,15 +109,17 @@ footer b{color:var(--text)}
 </div>
 
 <footer><div class="wrap">
-  <b>独立页面（可直接访问 / 打印 / 分享）：</b><a href="analysis.html" target="_blank" rel="noopener">总览看板</a> · <a href="segments.html" target="_blank" rel="noopener">细分市场</a> · <a href="quotation.html" target="_blank" rel="noopener">报价计算器</a> · <a href="rules.html" target="_blank" rel="noopener">出口规则说明</a> · <a href="methodology.html" target="_blank" rel="noopener">决策人方法论</a> · <a href="models.html" target="_blank" rel="noopener">车型对俄调研</a> · <a href="cross.html" target="_blank" rel="noopener">数据交叉分析</a> · <a href="leads.html" target="_blank" rel="noopener">候补客户·决策人</a><br>
-  决策人方法论另有 <a href="downloads/russia-top100-methodology.pdf" target="_blank" rel="noopener">PDF 版（17 页）</a>；
+  <b>独立页面（可直接访问 / 打印 / 分享）：</b><a href="analysis.html" target="_blank" rel="noopener">总览看板</a> · <a href="segments.html" target="_blank" rel="noopener">细分市场</a> · <a href="quotation.html" target="_blank" rel="noopener">报价计算器</a> · <a href="rules.html" target="_blank" rel="noopener">出口规则说明</a><br>
   数据口径与免责说明见各模块「数据来源 / 核验」章节；关单样本为 5000 行官方直采基准盘，结论请结合最新政策复核。
 </div></footer>
 
 <script>
 (function(){
-  var MAP={"analysis": {"name": "总览看板", "url": "analysis.html"}, "segments": {"name": "细分市场", "url": "segments.html"}, "quotation": {"name": "报价计算器", "url": "quotation.html"}, "rules": {"name": "出口规则说明", "url": "rules.html"}, "methodology": {"name": "决策人方法论", "url": "methodology.html"}, "models": {"name": "车型对俄调研", "url": "models.html"}, "cross": {"name": "数据交叉分析", "url": "cross.html"}, "leads": {"name": "候补客户·决策人", "url": "leads.html"}};
-  var buttons=[].slice.call(document.querySelectorAll('#tabbar .tab'));
+  var MAP={"analysis": {"name": "总览看板", "url": "analysis.html"}, "segments": {"name": "细分市场", "url": "segments.html"}, "quotation": {"name": "报价计算器", "url": "quotation.html"}, "rules": {"name": "出口规则说明", "url": "rules.html"}};
+  var HIDDEN={methodology:1,models:1,cross:1,leads:1}; // 前端隐藏的 Tab（文件保留）
+  var buttons=[].slice.call(document.querySelectorAll('#tabbar .tab')).filter(function(b){
+    return !HIDDEN[b.getAttribute('data-key')];
+  });
   var chips=document.getElementById('chips');
   var loading=document.getElementById('loading');
   var active='analysis', loaded={}, currentChip='';
